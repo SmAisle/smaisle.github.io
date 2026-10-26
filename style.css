@@ -1,0 +1,40 @@
+:root{
+  --navy:#0A0F2C; --purple:#B56BFF; --cyan:#13E2F5;
+  --bg:#ffffff; --ink:#0A0F2C; --muted:#4d5470; --line:#e3e5ee; --card:#f6f7fb;
+  --link:#7a2fd6;
+  color-scheme:light dark;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0A0F2C; --ink:#f3f4fa; --muted:#a8aecb; --line:#222a52; --card:#111841; --link:#13E2F5;
+}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 "Nunito",system-ui,-apple-system,sans-serif}
+a{color:var(--link)}
+.wrap{max-width:720px;margin:0 auto;padding:0 20px}
+header.top{border-bottom:1px solid var(--line)}
+header.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:68px;flex-wrap:wrap}
+.mark{font-weight:900;font-size:28px;letter-spacing:-.02em;color:var(--ink);text-decoration:none;line-height:1}
+.mark b{font-weight:900;background:linear-gradient(90deg,var(--purple),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+nav a{color:var(--muted);text-decoration:none;font-weight:700;margin-left:18px;font-size:15px}
+nav a:first-child{margin-left:0}
+nav a:hover,nav a[aria-current]{color:var(--ink)}
+main{padding:40px 0 56px}
+h1{font-weight:900;font-size:clamp(30px,6vw,42px);line-height:1.15;margin:0 0 12px;letter-spacing:-.01em}
+h2{font-weight:800;font-size:22px;margin:36px 0 8px}
+h3{font-weight:800;font-size:18px;margin:22px 0 4px}
+p,li{color:var(--ink)}
+.lead{font-size:19px;color:var(--muted);margin:0 0 28px}
+.meta{color:var(--muted);font-size:15px}
+.games{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin-top:8px}
+.game{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px}
+.game h2{margin:0 0 6px}
+.game p{margin:0 0 16px;color:var(--muted)}
+.btn{display:inline-block;font-weight:800;text-decoration:none;border-radius:999px;padding:10px 18px;background:var(--navy);color:#fff}
+@media (prefers-color-scheme:dark){.btn{background:linear-gradient(90deg,var(--purple),var(--cyan));color:var(--navy)}}
+.soon{display:inline-block;margin-left:10px;font-size:14px;color:var(--muted);font-weight:700}
+.note{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:20px 0}
+ul{padding-left:22px}
+li{margin:4px 0}
+footer{border-top:1px solid var(--line);padding:24px 0 40px;color:var(--muted);font-size:14px}
+footer a{color:var(--muted)}
