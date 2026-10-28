@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>smAisle Stats</title>
+<style>
+  :root{--bg:#0A0F2C;--paper:#141a3d;--ink:#eef1ff;--muted:#9aa3c7;--line:#262e5c;--purple:#B56BFF;--cyan:#13E2F5}
+  *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+  header{position:sticky;top:0;background:var(--bg);border-bottom:1px solid var(--line);padding:12px 16px;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;z-index:2}
+  h1{font-size:1.25rem;margin:0} h1 em{font-style:normal;color:var(--cyan)} main{max-width:900px;margin:0 auto;padding:16px}
+  button{font:600 .9rem inherit;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:8px;padding:6px 12px;cursor:pointer}
+  button.primary{background:var(--purple);border-color:var(--purple);color:#fff}
+  .muted{color:var(--muted)} .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .games{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+  .game{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+  .game.total{border-color:var(--purple)}
+  .game h2{font-size:1.05rem;margin:0 0 8px;display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+  .game h2 a{font-size:.8rem;font-weight:500;color:var(--cyan);text-decoration:none;white-space:nowrap}
+  .nums{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .nums div b{display:block;font-size:1.5rem;line-height:1.1;font-variant-numeric:tabular-nums}
+  .nums div span{color:var(--muted);font-size:.78rem}
+  .note{font-size:.85rem;margin-top:8px}
+</style>
+</head>
+<body>
+<header>
+  <h1>sm<em>Ai</em>sle stats</h1>
+  <div class="row"><span id="who" class="muted"></span><button id="signin" class="primary" hidden>Sign in with Google</button><button id="signout" hidden>Sign out</button></div>
+</header>
+<main>
+  <p id="msg" class="muted">Loading…</p>
+  <div id="games" class="games" hidden></div>
+  <p id="foot" class="muted note" hidden>Counts phones and computers, not people, and only the website versions (not the Claude links or iPhone apps). "Opened" means the device opened the game at least once that day or week. Tap "Details" for each game's own page.</p>
+</main>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+const FIREBASE_CONFIG = {"apiKey":"AIzaSyAlbSCTpAiK-1tojkyWrY3QuJsSzILHSfs","authDomain":"aislerun-88e79.firebaseapp.com","projectId":"aislerun-88e79","storageBucket":"aislerun-88e79.firebasestorage.app","messagingSenderId":"589354345822","appId":"1:589354345822:web:c254c32c792212af381bcf"};
+// One row per game: its check-in collection and its own owner page. Add new games here.
+const GAMES=[
+  ["Straight Down","pd_devices","StraightDown"],
+  ["The Daily 15","dg_devices","DailyGrid"],
+  ["Bullseye Roulette","br_devices","BullseyeRoulette"],
+  ["Shuffle Blast","sb_devices","ShuffleBlast"],
+  ["Connello","cn_devices","Connello"],
+  ["Steal Home","sh_devices","StealHome"],
+  ["Aisle Run","devices","AisleRun-1"]
+];
+const $=s=>document.querySelector(s), esc=t=>String(t??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const num=n=>n==null?"–":Number(n).toLocaleString();
+const dayStr=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+const ago=n=>dayStr(new Date(Date.now()-n*864e5));
+// Games played, from whichever field each game sends. null when a game doesn't count games.
+function gamesOf(d){
+  if(d.games!=null) return +d.games||0;
+  if(d.solo!=null||d.duo!=null) return (+d.solo||0)+(+d.duo||0);
+  if(d.daily!=null) return +d.daily||0;
+  return null;
+}
+firebase.initializeApp(FIREBASE_CONFIG);
+const auth=firebase.auth(), db=firebase.firestore();
+$("#signin").onclick=()=>auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(e=>{$("#msg").textContent="Sign-in didn't work: "+e.message;});
+$("#signout").onclick=()=>auth.signOut();
+auth.onAuthStateChanged(async u=>{
+  $("#signin").hidden=!!u; $("#signout").hidden=!u; $("#who").textContent=u?u.email:""; $("#games").hidden=true; $("#foot").hidden=true;
+  if(!u){ $("#msg").textContent="Sign in with the smAisle owner's Google account to see how many people play each game."; return; }
+  $("#msg").textContent="Loading…";
+  const res=await Promise.all(GAMES.map(async([name,coll,path])=>{
+    try{ const s=await db.collection(coll).limit(10000).get(); return {name,path,dev:s.docs.map(d=>d.data())}; }
+    catch(e){ return {name,path,err:e.code==="permission-denied"?"No access":"Couldn't load"}; }
+  }));
+  if(res.every(r=>r.err==="No access")){ $("#msg").textContent="This account can't view usage. Only the smAisle owner can."; return; }
+  $("#msg").textContent=""; draw(res); $("#games").hidden=false; $("#foot").hidden=false;
+});
+function draw(res){
+  const today=ago(0), w=ago(6), m=ago(29);
+  const tot={today:0,week:0,month:0,ever:0,neww:0,games:0};
+  const card=(title,link,s,cls)=>`<div class="game ${cls||""}"><h2><span>${esc(title)}</span>${link||""}</h2>${s}</div>`;
+  const nums=c=>`<div class="nums"><div><b>${num(c.today)}</b><span>opened today</span></div><div><b>${num(c.week)}</b><span>this week</span></div><div><b>${num(c.month)}</b><span>this month</span></div><div><b>${num(c.ever)}</b><span>devices ever</span></div><div><b>${num(c.neww)}</b><span>new this week</span></div><div><b>${num(c.games)}</b><span>games played</span></div></div>`;
+  const cards=res.map(r=>{
+    const link=`<a href="/${r.path}/owner.html">Details</a>`;
+    if(r.err) return card(r.name,link,`<p class="muted">${r.err}</p>`);
+    const D=r.dev, cnt=f=>D.filter(f).length, g=D.map(gamesOf).filter(x=>x!=null);
+    const c={today:cnt(d=>d.last===today),week:cnt(d=>d.last>=w),month:cnt(d=>d.last>=m),ever:D.length,neww:cnt(d=>d.first>=w),games:g.length?g.reduce((a,b)=>a+b,0):null};
+    for(const k in tot) tot[k]+=c[k]||0;
+    return card(r.name,link,D.length?nums(c):`<p class="muted">No players yet</p>`);
+  });
+  $("#games").innerHTML=card("All games",`<span class="muted" style="font-size:.8rem">${new Date().toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"})}</span>`,nums(tot),"total")+cards.join("");
+}
+</script>
+</body>
+</html>
