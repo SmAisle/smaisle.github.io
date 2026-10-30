@@ -22,17 +22,34 @@
   .nums div b{display:block;font-size:1.5rem;line-height:1.1;font-variant-numeric:tabular-nums}
   .nums div span{color:var(--muted);font-size:.78rem}
   .note{font-size:.85rem;margin-top:8px}
+  .codes{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-top:16px}
+  .codes h2{font-size:1.05rem;margin:0 0 4px}
+  .codes input,.codes select{font:inherit;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:6px 10px}
+  .codes table{width:100%;border-collapse:collapse;margin-top:10px}
+  .codes td{padding:6px 4px;border-top:1px solid var(--line)} .codes td:last-child{text-align:right}
 </style>
 </head>
 <body>
 <header>
-  <h1>sm<em>Ai</em>sle stats</h1>
+  <h1>sm<em>Ai</em>sle stats <span class="muted" style="font-size:.75rem;font-weight:400">v1.1 · Oct 30</span></h1>
   <div class="row"><span id="who" class="muted"></span><button id="signin" class="primary" hidden>Sign in with Google</button><button id="signout" hidden>Sign out</button></div>
 </header>
 <main>
   <p id="msg" class="muted">Loading…</p>
   <div id="games" class="games" hidden></div>
   <p id="foot" class="muted note" hidden>Counts phones and computers, not people, and only the website versions (not the Claude links or iPhone apps). "Opened" means the device opened the game at least once that day or week. Tap "Details" for each game's own page.</p>
+  <section id="codes" class="codes" hidden>
+    <h2>Invite codes</h2>
+    <p class="muted note" style="margin-top:0">On smaisle.app, Family&amp;Friends shows the invite-only games. Each game then needs one of its own codes, made here. Letters and numbers only, 3 to 20 long.</p>
+    <form id="newcode" class="row" autocomplete="off">
+      <input id="ccode" placeholder="CODE" maxlength="20" style="text-transform:uppercase;width:9em">
+      <select id="cgame"></select>
+      <input id="cnote" placeholder="Who it's for (optional)" maxlength="60" style="flex:1;min-width:10em">
+      <button class="primary" type="submit">Add code</button>
+    </form>
+    <p id="cmsg" class="muted note"></p>
+    <table id="clist"></table>
+  </section>
 </main>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
@@ -62,10 +79,37 @@ function gamesOf(d){
 }
 firebase.initializeApp(FIREBASE_CONFIG);
 const auth=firebase.auth(), db=firebase.firestore();
+// Invite-only games that take a per-game code on smaisle.app (keys match data-game there).
+const INVITE_GAMES=[["daily15","The Daily 15"],["shuffleblast","Shuffle Blast"],["abcdeal","A, B, C, Deal"]];
+const gameName=k=>(INVITE_GAMES.find(g=>g[0]===k)||[k,k])[1];
+$("#cgame").innerHTML=INVITE_GAMES.map(([k,n])=>`<option value="${k}">${esc(n)}</option>`).join("");
+async function loadCodes(){
+  try{
+    const s=await db.collection("invite_codes").get();
+    const rows=s.docs.map(d=>({code:d.id,...d.data()})).sort((a,b)=>gameName(a.game).localeCompare(gameName(b.game))||a.code.localeCompare(b.code));
+    $("#clist").innerHTML=rows.length?rows.map(r=>`<tr><td><b>${esc(r.code)}</b></td><td>${esc(gameName(r.game))}</td><td class="muted">${esc(r.note||"")}</td><td><button data-del="${esc(r.code)}">Delete</button></td></tr>`).join(""):`<tr><td class="muted">No codes yet.</td></tr>`;
+    $("#cmsg").textContent=""; $("#codes").hidden=false;
+  }catch(e){ $("#codes").hidden=false; $("#cmsg").textContent=e.code==="permission-denied"?"Invite codes need the updated Firestore rules.":"Couldn't load invite codes."; }
+}
+$("#newcode").onsubmit=async e=>{
+  e.preventDefault();
+  const code=$("#ccode").value.replace(/\s+/g,"").toUpperCase();
+  if(!/^[A-Z0-9]{3,20}$/.test(code)){ $("#cmsg").textContent="Use 3 to 20 letters or numbers."; return; }
+  const ref=db.collection("invite_codes").doc(code);
+  try{
+    if((await ref.get()).exists){ $("#cmsg").textContent=code+" is already used."; return; }
+    await ref.set({game:$("#cgame").value,note:$("#cnote").value.trim().slice(0,60),t:Date.now()});
+    $("#ccode").value=""; $("#cnote").value=""; loadCodes();
+  }catch(err){ $("#cmsg").textContent="Couldn't save: "+err.message; }
+};
+$("#clist").onclick=async e=>{
+  const c=e.target.getAttribute&&e.target.getAttribute("data-del"); if(!c) return;
+  try{ await db.collection("invite_codes").doc(c).delete(); loadCodes(); }catch(err){ $("#cmsg").textContent="Couldn't delete: "+err.message; }
+};
 $("#signin").onclick=()=>auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(e=>{$("#msg").textContent="Sign-in didn't work: "+e.message;});
 $("#signout").onclick=()=>auth.signOut();
 auth.onAuthStateChanged(async u=>{
-  $("#signin").hidden=!!u; $("#signout").hidden=!u; $("#who").textContent=u?u.email:""; $("#games").hidden=true; $("#foot").hidden=true;
+  $("#signin").hidden=!!u; $("#signout").hidden=!u; $("#who").textContent=u?u.email:""; $("#games").hidden=true; $("#foot").hidden=true; $("#codes").hidden=true;
   if(!u){ $("#msg").textContent="Sign in with the smAisle owner's Google account to see how many people play each game."; return; }
   $("#msg").textContent="Loading…";
   const res=await Promise.all(GAMES.map(async([name,coll,path])=>{
@@ -73,7 +117,7 @@ auth.onAuthStateChanged(async u=>{
     catch(e){ return {name,path,err:e.code==="permission-denied"?"No access":"Couldn't load"}; }
   }));
   if(res.every(r=>r.err==="No access")){ $("#msg").textContent="This account can't view usage. Only the smAisle owner can."; return; }
-  $("#msg").textContent=""; draw(res); $("#games").hidden=false; $("#foot").hidden=false;
+  $("#msg").textContent=""; draw(res); $("#games").hidden=false; $("#foot").hidden=false; loadCodes();
 });
 function draw(res){
   const today=ago(0), w=ago(6), m=ago(29);
