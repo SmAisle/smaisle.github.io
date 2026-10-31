@@ -33,7 +33,7 @@ html{touch-action:manipulation}
 </head>
 <body>
 <header>
-  <h1>sm<em>Ai</em>sle stats <span class="muted" style="font-size:.75rem;font-weight:400">v1.6 · Oct 31</span></h1>
+  <h1>sm<em>Ai</em>sle stats <span class="muted" style="font-size:.75rem;font-weight:400">v1.7 · Oct 31</span></h1>
   <div class="row"><span id="who" class="muted"></span><button id="signin" class="primary" hidden>Sign in with Google</button><button id="signout" hidden>Sign out</button></div>
 </header>
 <main>
@@ -66,7 +66,7 @@ const GAMES=[
   ["Shuffle Blast","sb_devices","ShuffleBlast"],
   ["Connello","cn_devices","Connello"],
   ["Steal Home","sh_devices","StealHome"],
-  ["Reel Words","rw_devices","reelwords"],
+  ["Gramble","rw_devices","gramble"],
   ["Aisle Run","devices","AisleRun-1"]
 ];
 const $=s=>document.querySelector(s), esc=t=>String(t??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -83,7 +83,7 @@ function gamesOf(d){
 firebase.initializeApp(FIREBASE_CONFIG);
 const auth=firebase.auth(), db=firebase.firestore();
 // Invite-only games that take a per-game code on smaisle.app (keys match data-game there).
-const INVITE_GAMES=[["daily15","The Daily 15"],["shuffleblast","Shuffle Blast"],["abcdeal","A, B, C, Deal"],["gramble","Gramble"],["reelwords","Reel Words"],["all","Every game"]];
+const INVITE_GAMES=[["daily15","The Daily 15"],["shuffleblast","Shuffle Blast"],["abcdeal","A, B, C, Deal"],["gramble","Gramble"],["all","Every game"]];
 // game is one key, "all", or several keys joined by commas.
 const gameName=k=>String(k||"").split(",").map(x=>(INVITE_GAMES.find(g=>g[0]===x)||[x,x])[1]).join(", ");
 $("#cgame").innerHTML=INVITE_GAMES.map(([k,n])=>`<label><input type="checkbox" value="${k}"> ${esc(n)}</label>`).join("");
