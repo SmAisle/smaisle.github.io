@@ -8,7 +8,7 @@
   --bg:#0A0F2C; --ink:#f3f4fa; --muted:#a8aecb; --line:#222a52; --card:#111841; --link:#13E2F5;
 }}
 *{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
+html{-webkit-text-size-adjust:100%;touch-action:manipulation}
 body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 "Nunito",system-ui,-apple-system,sans-serif}
 a{color:var(--link)}
 .wrap{max-width:720px;margin:0 auto;padding:0 20px}
