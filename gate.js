@@ -21,8 +21,11 @@
   // Counts one use of the code on the stats page (Firestore invite_uses). Fire and forget.
   function logUse(c,where){ try{ fetch(DOC.replace('invite_codes/','invite_uses')+'?key='+API,{method:'POST',keepalive:true,headers:{'Content-Type':'application/json'},body:JSON.stringify({fields:{code:{stringValue:c},where:{stringValue:where},t:{integerValue:String(Date.now())}}})}).catch(function(){}); }catch(e){} }
   if(ok()){ if(/[?&]code=/.test(location.search)) history.replaceState(null,'',location.pathname+location.hash); return; }
+  // iPhone zooms in on a focused text box when the page can still zoom. Make sure it can't, even when this
+  // script runs before the game's own viewport tag, and keep the box at 17px (iOS zooms on anything under 16).
+  if(!document.querySelector('meta[name=viewport]')){ var vm=document.createElement('meta'); vm.name='viewport'; vm.content='width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no'; document.head.appendChild(vm); }
   var st=document.createElement('style');
-  st.textContent='body>*:not(#smGate){display:none!important}#smGate{touch-action:manipulation;position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#111;color:#fff;font:17px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;padding:24px;z-index:99999}#smGate form{max-width:360px;width:100%;text-align:center}#smGate h1{font-size:28px;margin:0 0 8px}#smGate input{width:100%;box-sizing:border-box;font:inherit;letter-spacing:.08em;text-transform:uppercase;padding:12px;border:0;border-radius:12px;background:#fff;color:#111;margin:14px 0 10px}#smGate button{font:inherit;font-weight:700;padding:12px 26px;border:0;border-radius:12px;background:#ffd23f;color:#111;cursor:pointer}#smGate p{margin:0;opacity:.85}#smGate .bad{color:#ff8a80;opacity:1;margin-top:12px}';
+  st.textContent='body>*:not(#smGate){display:none!important}#smGate{touch-action:manipulation;position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#111;color:#fff;font:17px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;padding:24px;z-index:99999}#smGate form{max-width:360px;width:100%;text-align:center}#smGate h1{font-size:28px;margin:0 0 8px}#smGate input{width:100%;box-sizing:border-box;font:inherit;font-size:17px;letter-spacing:.08em;text-transform:uppercase;padding:12px;border:0;border-radius:12px;background:#fff;color:#111;margin:14px 0 10px}#smGate button{font:inherit;font-weight:700;padding:12px 26px;border:0;border-radius:12px;background:#ffd23f;color:#111;cursor:pointer}#smGate p{margin:0;opacity:.85}#smGate .bad{color:#ff8a80;opacity:1;margin-top:12px}';
   document.head.appendChild(st);
   function show(){
     var g=document.createElement('div'); g.id='smGate';
@@ -33,7 +36,7 @@
     f.addEventListener('submit',function(e){
       e.preventDefault();
       var typed=f.querySelector('input').value.replace(/\s+/g,'').toUpperCase();
-      check(typed).then(function(y){ if(y){ keep(y); logUse(typed,GAME); location.reload(); } else f.querySelector('.bad').hidden=false; });
+      check(typed).then(function(y){ if(y){ keep(y); logUse(typed,GAME); f.querySelector('input').blur(); location.reload(); } else f.querySelector('.bad').hidden=false; });
     });
   }
   // Arriving from smaisle.app with ?code=...: check it, then drop it from the address bar.
