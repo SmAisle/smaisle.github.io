@@ -25,12 +25,13 @@
   // script runs before the game's own viewport tag, and keep the box at 17px (iOS zooms on anything under 16).
   if(!document.querySelector('meta[name=viewport]')){ var vm=document.createElement('meta'); vm.name='viewport'; vm.content='width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no'; document.head.appendChild(vm); }
   var st=document.createElement('style');
-  st.textContent='body>*:not(#smGate){display:none!important}#smGate{touch-action:manipulation;position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#111;color:#fff;font:17px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;padding:24px;z-index:99999}#smGate form{max-width:360px;width:100%;text-align:center}#smGate h1{font-size:28px;margin:0 0 8px}#smGate input{width:100%;box-sizing:border-box;font:inherit;font-size:17px;letter-spacing:.08em;text-transform:uppercase;padding:12px;border:0;border-radius:12px;background:#fff;color:#111;margin:14px 0 10px}#smGate button{font:inherit;font-weight:700;padding:12px 26px;border:0;border-radius:12px;background:#ffd23f;color:#111;cursor:pointer}#smGate p{margin:0;opacity:.85}#smGate .bad{color:#ff8a80;opacity:1;margin-top:12px}';
+  // Same cream newspaper look as The Daily 15's own invite screen and smAisle Daily, so every game's invite screen matches.
+  st.textContent='body>*:not(#smGate){display:none!important}#smGate{touch-action:manipulation;position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#f4efe3;color:#1a1a1a;font:17px/1.5 Georgia,serif;padding:24px;z-index:99999}#smGate form{max-width:360px;width:100%;text-align:center}#smGate h1{font-size:28px;margin:0 0 8px}#smGate input{width:100%;box-sizing:border-box;font:inherit;font-size:17px;letter-spacing:.08em;text-transform:uppercase;padding:10px 12px;border:2px solid #1a1a1a;border-radius:0;background:#fff;color:#1a1a1a;margin:12px 0 8px;-webkit-appearance:none}#smGate button{font:inherit;font-weight:bold;padding:10px 22px;border:2px solid #1a1a1a;border-radius:0;background:#1a1a1a;color:#f4efe3;cursor:pointer}#smGate p{margin:0}#smGate .bad{color:#b3261e;margin-top:10px}';
   document.head.appendChild(st);
   function show(){
     var g=document.createElement('div'); g.id='smGate';
-    g.innerHTML='<form autocomplete="off"><h1></h1><p>This game is in testing. Enter your invite code to play.</p><input aria-label="Invite code" placeholder="Invite code" autocapitalize="characters" spellcheck="false"><button type="submit">Play</button><p class="bad" hidden>That code didn\'t work. Check it and try again.</p></form>';
-    g.querySelector('h1').textContent=NAME;
+    g.innerHTML='<form autocomplete="off"><h1></h1><p><span class="gn"></span> is in testing. Enter your invite code to play.</p><input aria-label="Invite code" placeholder="Invite code" autocapitalize="characters" spellcheck="false"><button type="submit">Play</button><p class="bad" hidden>That code didn\'t work. Check it and try again.</p></form>';
+    g.querySelector('h1').textContent=NAME; g.querySelector('.gn').textContent=NAME;
     document.body.appendChild(g);
     var f=g.querySelector('form');
     f.addEventListener('submit',function(e){
