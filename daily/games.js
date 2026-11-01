@@ -20,7 +20,9 @@
      desc:'A daily word card game. Hold and hit to clear 10 words with 50 coins. Then bank it, or keep going.',url:BASE+'gramble/'},
     // Apps on the App Store (appStore is filled in once each app is live)
     {id:'sd',name:'Straight Down',store:true,appStore:'',icon:ICONS+'straight-down.png',tag:'Arcade',sub:'Falling-card poker game',
-     desc:'Cards fall one at a time. Line them up in a row or column to make poker hands. An invite code unlocks the full version, with levels, a daily challenge, bombs and wild cards.',url:BASE+'StraightDown/'},
+     desc:'Cards fall one at a time. Line them up in a row or column to make poker hands. An invite code unlocks the full version, with levels, a daily challenge, bombs and wild cards.',url:BASE+'StraightDown/',
+     // smAisle Daily is invite only, so the hub opens the full version (Straight Down Blast) and passes this device's invite code.
+     fullUrl:BASE+'StraightDown/full.html'},
     {id:'sb',name:'Shuffle Blast',store:true,appStore:'',icon:ICONS+'shuffle-blast.png',tag:'Puzzle',sub:'Block puzzle with endless levels',
      desc:'Drop blocks to clear lines. Play an endless Journey of levels with bombs, rubble and quakes, plus a new daily level every day.',url:BASE+'ShuffleBlast/'},
     // Play on the web
