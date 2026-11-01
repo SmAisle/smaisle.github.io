@@ -4,20 +4,22 @@
 // Remembered per browser in smaisle_inv, shared by every game on this site. A soft lock only.
 (function(){
   var me=document.currentScript, GAME=me.getAttribute('data-game'), NAME=me.getAttribute('data-name')||'This game';
+  // data-any lets a page open with a code for any of the games listed (smAisle Daily: any daily game's code).
+  var OPEN=[GAME].concat((me.getAttribute('data-any')||'').split(',').filter(Boolean));
   // Each game's icon on its invite screen (same icons as smAisle Daily and smaisle.app).
-  var ICON={daily15:'daily-15',abcdeal:'abc-deal',gramble:'gramble',shuffleblast:'shuffle-blast',sdblast:'straight-down'}[GAME];
+  var ICON={daily:'smaisle-daily',daily15:'daily-15',abcdeal:'abc-deal',gramble:'gramble',shuffleblast:'shuffle-blast',sdblast:'straight-down'}[GAME];
   if(!/github\.io$|smaisle\.app$/.test(location.hostname)) return;
   var KEY='smaisle_inv', DOC='https://firestore.googleapis.com/v1/projects/aislerun-88e79/databases/(default)/documents/invite_codes/';
   var API='AIzaSyAlbSCTpAiK-1tojkyWrY3QuJsSzILHSfs';
   function list(){ try{ return JSON.parse(localStorage.getItem(KEY)||'[]'); }catch(e){ return []; } }
-  function ok(){ var l=list(); return l.indexOf(GAME)>=0||l.indexOf('all')>=0; }
+  function ok(){ var l=list(); return l.indexOf('all')>=0||OPEN.some(function(g){ return l.indexOf(g)>=0; }); }
   function keep(g){ var l=list(); if(l.indexOf(g)<0){ l.push(g); try{ localStorage.setItem(KEY,JSON.stringify(l)); }catch(e){} } }
   // Resolves to the code's game when it opens this one, else null.
   function check(raw){
     var c=String(raw||'').replace(/\s+/g,'').toUpperCase();
     if(!/^[A-Z0-9]{3,20}$/.test(c)) return Promise.resolve(null);
     return fetch(DOC+c+'?key='+API).then(function(r){ return r.ok?r.json():null; })
-      .then(function(d){ var g=d&&d.fields&&d.fields.game?d.fields.game.stringValue:null; var l=String(g||'').split(','); return l.indexOf(GAME)>=0||g==='all'?(g==='all'?'all':GAME):null; })
+      .then(function(d){ var g=d&&d.fields&&d.fields.game?d.fields.game.stringValue:null; var l=String(g||'').split(','); if(g==='all') return 'all'; for(var i=0;i<OPEN.length;i++) if(l.indexOf(OPEN[i])>=0) return OPEN[i]; return null; })
       .catch(function(){ return null; });
   }
   // Counts one use of the code on the stats page (Firestore invite_uses). Fire and forget.
