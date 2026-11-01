@@ -117,7 +117,7 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
 <div class="sheet" id="sheet"><div class="grab"></div><div id="sheetBody"></div></div>
 <script src="games.js"></script>
 <script>
-const VERSION='1.03',VDATE='Nov 1',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
+const VERSION='1.04',VDATE='Nov 1',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
 const $=id=>document.getElementById(id);
 const SM=window.SMAISLE,GAMES=SM.games,DAILY=GAMES.filter(g=>g.daily),N=DAILY.length;
 // On smaisle.github.io games open in this tab (and share its storage). Anywhere else (the Claude link) they open in a new tab.
@@ -178,8 +178,8 @@ function openGame(id){const g=SM.game(id),d=g.daily&&(H[dayAt(0)]||[]).indexOf(i
 const SHEETS={
   archive:()=>{let rows='';for(let i=1;i<=14;i++){const d=dayAt(i),l=H[d]||[];
       rows+=`<div class="li">${fmtDay(d)}<span class="dots">${DAILY.map(g=>`<i class="${l.indexOf(g.id)>=0?'on':''}" title="${esc(g.name)}"><img src="${g.icon}" alt=""></i>`).join('')}</span></div>`}
-    return `<h2 class="t">Archive</h2><p>Which daily games you finished on each day. To play an earlier day, open the game and tap Archive in its menu.</p>
-    <div class="list">${rows}</div><h3>OPEN A GAME'S ARCHIVE</h3>${DAILY.map(g=>`<a class="big-btn o" href="${g.url}" data-tap="${g.id}-arch"${TGT}>${esc(g.name)}</a>`).join('')}`},
+    return `<h2 class="t">Archive</h2><p>Which daily games you finished on each day. To play an earlier day, open the game and tap Archive in its menu.${DAILY.some(g=>!g.archive)?' '+DAILY.filter(g=>!g.archive).map(g=>esc(g.name)).join(' and ')+' has no Archive yet.':''}</p>
+    <div class="list">${rows}</div><h3>OPEN A GAME'S ARCHIVE</h3>${DAILY.filter(g=>g.archive).map(g=>`<a class="big-btn o" href="${g.url}" data-tap="${g.id}-arch"${TGT}>${esc(g.name)}</a>`).join('')}`},
   stats:()=>{const st=streaks(H),days=Object.keys(H),per=id=>days.filter(d=>H[d].indexOf(id)>=0).length,all=days.filter(d=>H[d].length>=N).length;
     return `<h2 class="t">Stats</h2><p>One streak across all your daily games. A day counts when you finish at least one of them.</p>
     <div class="stats"><div><b>${st.cur}</b><span>STREAK</span></div><div><b>${st.best}</b><span>BEST STREAK</span></div><div><b>${st.total}</b><span>DAYS PLAYED</span></div></div>

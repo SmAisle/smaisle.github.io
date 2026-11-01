@@ -4,6 +4,7 @@
 // "Finished today" is shared through this site's browser storage (every game lives on smaisle.github.io):
 //   - A game can call SMAISLE.markDone('d15') when today's game is finished. That writes
 //     localStorage 'smaisle_done' = {"YYYY-MM-DD": ["d15", ...]} (last 60 days kept).
+// archive:true marks games that have their own Archive of past days.
 //   - Until each game does that, SMAISLE.isDone() also reads the games' own saved results.
 // Days use the device's own date, the same as the games do.
 (function(){
@@ -11,9 +12,9 @@
   var ICONS=BASE+'daily/icons/';
   var GAMES=[
     // Today's Games (daily)
-    {id:'d15',name:'The Daily 15',daily:true,icon:ICONS+'daily-15.png',sub:'Word grid · new puzzle daily',tag:'Daily word puzzle',
+    {id:'d15',name:'The Daily 15',daily:true,archive:true,icon:ICONS+'daily-15.png',sub:'Word grid · new puzzle daily',tag:'Daily word puzzle',
      desc:'Fit 15 words into a crossword-style grid. A new puzzle every day, the same for everyone, with stars and streaks.',url:BASE+'DailyGrid/'},
-    {id:'abc',name:'A, B, C, Deal',daily:true,icon:ICONS+'abc-deal.png',sub:"Beat the dealer's word · 5 hands",tag:'Daily card game',
+    {id:'abc',name:'A, B, C, Deal',daily:true,archive:true,icon:ICONS+'abc-deal.png',sub:"Beat the dealer's word · 5 hands",tag:'Daily card game',
      desc:'Played like blackjack with letter cards. Make a better word than the dealer across five hands a day.',url:BASE+'abcdeal/'},
     {id:'gr',name:'Gramble',daily:true,icon:ICONS+'gramble.png',sub:'Clear 10 words with $5',tag:'Daily card game',
      desc:'Hold and hit letter cards to clear 10 words with $5, then cash out or let it ride. Play money only.',url:BASE+'gramble/'},
