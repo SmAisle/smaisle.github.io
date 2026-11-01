@@ -16,8 +16,8 @@
      desc:'Cross 15 words onto a newspaper-style grid. A new puzzle every day, the same for everyone, with stars and streaks.',url:BASE+'DailyGrid/'},
     {id:'abc',name:'A, B, C, Deal',daily:true,archive:true,icon:ICONS+'abc-deal.png',sub:"Beat the dealer's word · 2 modes",tag:'Daily card game',
      desc:"A daily word game played with letter cards. Beat the dealer's word across five hands, in two modes: Classic (5-card poker) and Deal 'Em (Texas hold 'em style).",url:BASE+'abcdeal/'},
-    {id:'gr',name:'Gramble',daily:true,icon:ICONS+'gramble.png',sub:'Find 10 words with 50 credits',tag:'Daily card game',
-     desc:'A word card game. Hold and hit letter cards to find 10 words before your 50 credits run out, then cash out or let it ride into the High Roller 10.',url:BASE+'gramble/'},
+    {id:'gr',name:'Gramble',daily:true,icon:ICONS+'gramble.png',sub:'Find 10 words with 50 coins',tag:'Daily card game',
+     desc:'A daily word card game. Hold and hit to clear 10 words with 50 coins. Then bank it, or keep going.',url:BASE+'gramble/'},
     // Apps on the App Store (appStore is filled in once each app is live)
     {id:'sd',name:'Straight Down',store:true,appStore:'',icon:ICONS+'straight-down.png',tag:'Arcade',sub:'Falling-card poker game',
      desc:'Cards fall one at a time. Line them up in a row or column to make poker hands. An invite code unlocks the full version, with levels, a daily challenge, bombs and wild cards.',url:BASE+'StraightDown/'},
