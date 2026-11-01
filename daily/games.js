@@ -1,14 +1,14 @@
 // smAisle games list: one file that feeds smAisle Daily and every "More from smAisle" page.
-// Load it with a script tag pointing at https://smaisle.github.io/daily/games.js, then use window.SMAISLE.
+// Load it with a script tag pointing at https://smaisle.app/daily/games.js, then use window.SMAISLE.
 //
-// "Finished today" is shared through this site's browser storage (every game lives on smaisle.github.io):
+// "Finished today" is shared through this site's browser storage (every game lives on smaisle.app):
 //   - A game can call SMAISLE.markDone('d15') when today's game is finished. That writes
 //     localStorage 'smaisle_done' = {"YYYY-MM-DD": ["d15", ...]} (last 60 days kept).
 // archive:true marks games that have their own Archive of past days.
 //   - Until each game does that, SMAISLE.isDone() also reads the games' own saved results.
 // Days use the device's own date, the same as the games do.
 (function(){
-  var BASE='https://smaisle.github.io/';
+  var BASE='https://smaisle.app/';
   var ICONS=BASE+'daily/icons/';
   var GAMES=[
     // Today's Games (daily)

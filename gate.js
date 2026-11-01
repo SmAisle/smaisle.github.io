@@ -6,7 +6,7 @@
   var me=document.currentScript, GAME=me.getAttribute('data-game'), NAME=me.getAttribute('data-name')||'This game';
   // Each game's icon on its invite screen (same icons as smAisle Daily and smaisle.app).
   var ICON={daily15:'daily-15',abcdeal:'abc-deal',gramble:'gramble',shuffleblast:'shuffle-blast',sdblast:'straight-down'}[GAME];
-  if(!/github\.io$/.test(location.hostname)) return;
+  if(!/github\.io$|smaisle\.app$/.test(location.hostname)) return;
   var KEY='smaisle_inv', DOC='https://firestore.googleapis.com/v1/projects/aislerun-88e79/databases/(default)/documents/invite_codes/';
   var API='AIzaSyAlbSCTpAiK-1tojkyWrY3QuJsSzILHSfs';
   function list(){ try{ return JSON.parse(localStorage.getItem(KEY)||'[]'); }catch(e){ return []; } }
