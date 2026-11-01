@@ -16,6 +16,7 @@
 html,body{touch-action:manipulation;background:var(--paper);background-image:radial-gradient(#e3dcc7 1px,transparent 1px);background-size:6px 6px;color:var(--ink);font-family:'Libre Franklin',sans-serif;min-height:100%;-webkit-text-size-adjust:100%}
 button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touch-action:manipulation;text-decoration:none}
 .wrap{max-width:440px;margin:0 auto;padding:calc(16px + env(safe-area-inset-top)) 18px 130px}
+.home{display:inline-block;font:800 12px 'Libre Franklin';color:var(--ink2);padding:2px 0 8px}
 .bar{display:flex;align-items:center;justify-content:space-between}
 .logo{display:flex;align-items:baseline;gap:7px}
 .logo .sm{font:800 13px 'Libre Franklin';background:var(--hi);border:1.5px solid var(--ink);padding:1px 6px}
@@ -93,6 +94,7 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
 .shelf .ver{color:#8b90a8;margin-top:34px}
 </style></head><body>
 <div class="wrap">
+ <a class="home" href="https://smaisle.app/">‹ smAisle Home</a>
  <div class="bar"><div class="logo"><span class="sm">smAisle</span><span class="d">Daily</span></div><span class="date" id="date"></span></div>
  <div class="widget"><div class="t">TODAY</div><div class="big" id="streak"></div>
   <div class="prog" id="prog"></div>
@@ -117,7 +119,7 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
 <div class="sheet" id="sheet"><div class="grab"></div><div id="sheetBody"></div></div>
 <script src="games.js"></script>
 <script>
-const VERSION='1.05',VDATE='Nov 1',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
+const VERSION='1.06',VDATE='Nov 1',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
 const $=id=>document.getElementById(id);
 const SM=window.SMAISLE,GAMES=SM.games,DAILY=GAMES.filter(g=>g.daily),N=DAILY.length;
 // On smaisle.app (or smaisle.github.io) games open in this tab (and share its storage). Anywhere else (the Claude link) they open in a new tab.
