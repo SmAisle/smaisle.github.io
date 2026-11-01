@@ -4,12 +4,64 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>smAisle</title>
-<link rel="canonical" href="https://smaisle.app/">
-<meta http-equiv="refresh" content="0; url=https://smaisle.app/">
-<script>location.replace('https://smaisle.app/'+location.search+location.hash)</script>
-<style>body{margin:0;padding:40px 20px;font:17px/1.6 system-ui,-apple-system,sans-serif;background:#0A0F2C;color:#f3f4fa;touch-action:manipulation}a{color:#13E2F5}</style>
+<meta name="description" content="Family-friendly games you can learn in a minute and play solo or with the people who matter to you.">
+<link rel="icon" href="favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://smaisle.app/">
+<meta property="og:site_name" content="smAisle">
+<meta property="og:title" content="smAisle: family-friendly games">
+<meta property="og:description" content="Family-friendly games you can learn in a minute and play solo or with the people who matter to you.">
+<meta property="og:image" content="https://smaisle.app/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap">
+<link rel="stylesheet" href="style.css">
 </head>
-<body>
-<p>smAisle has moved to <a href="https://smaisle.app/">smaisle.app</a>.</p>
+<body class="wide">
+<header class="top"><div class="wrap">
+  <a class="mark" href="./">sm<b>Ai</b>sle</a>
+  <nav><a href="./" aria-current="page">Games</a><a href="about.html">The details</a></nav>
+</div></header>
+<main><div class="wrap">
+  <h1>Small games, big smiles.</h1>
+  <p class="lead">smAisle (say it like "smile"): family-friendly games you can learn in a minute and play solo or with the people who matter to you.</p>
+  <h2 class="section">Games</h2>
+  <div class="tiles">
+    <a class="tile" href="/StraightDown/"><img src="icons/straight-down.png" alt="" width="72" height="72"><b>Straight Down</b><span>The falling poker puzzle</span></a>
+    <a class="tile" href="/BullseyeRoulette/"><img src="icons/bullseye-roulette.png" alt="" width="72" height="72"><b>Bullseye Roulette</b><span>Darts on a roulette wheel</span></a>
+    <a class="tile" href="/Connello/"><img src="icons/connello.png" alt="" width="72" height="72"><b>Connello</b><span>Drop four, flip to win</span></a>
+  </div>
+
+  <h2 class="section">Invite only</h2>
+  <p class="meta">New games we're still testing. Have an invite code? Enter it here.</p>
+  <form class="unlock" id="unlock" autocomplete="off">
+    <input type="text" placeholder="Invite code" aria-label="Invite code" autocapitalize="off" spellcheck="false">
+    <button class="btn" type="submit">Unlock</button>
+  </form>
+  <p class="meta" id="bad" hidden>That code didn't work. Check it and try again.</p>
+  <p class="meta" id="mine" hidden><a href="invite.html">See your invite-only games →</a></p>
+  <section class="note" id="contact"><strong>Say hi.</strong> Questions, ideas or a bug to report? Email <a href="mailto:smaisle.app@gmail.com">smaisle.app@gmail.com</a> and we'll get back to you.</section>
+</div></main>
+<footer><div class="wrap">
+  © 2026 smAisle · v1.46 · Nov 1 · <a href="support.html">Support</a> · <a href="privacy.html">Privacy policy</a> · <a href="mailto:smaisle.app@gmail.com">smaisle.app@gmail.com</a>
+</div></footer>
+<script src="invite.js?v=1.45"></script>
+<script>
+(function(){
+  var form=document.getElementById('unlock'), bad=document.getElementById('bad');
+  if(Invite.family()||Invite.owned().length) document.getElementById('mine').hidden=false;
+  form.addEventListener('submit',function(e){
+    e.preventDefault(); bad.hidden=true;
+    Invite.check(form.querySelector('input').value).then(function(r){
+      if(r==='family'||r==='all'||r==='some') location.href='invite.html';
+      else if(r) Invite.go(r);
+      else bad.hidden=false;
+    });
+  });
+})();
+</script>
 </body>
 </html>

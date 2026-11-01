@@ -117,11 +117,11 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
 <div class="sheet" id="sheet"><div class="grab"></div><div id="sheetBody"></div></div>
 <script src="games.js"></script>
 <script>
-const VERSION='1.04',VDATE='Nov 1',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
+const VERSION='1.05',VDATE='Nov 1',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
 const $=id=>document.getElementById(id);
 const SM=window.SMAISLE,GAMES=SM.games,DAILY=GAMES.filter(g=>g.daily),N=DAILY.length;
-// On smaisle.github.io games open in this tab (and share its storage). Anywhere else (the Claude link) they open in a new tab.
-const SITE=/github\.io$/.test(location.hostname);
+// On smaisle.app (or smaisle.github.io) games open in this tab (and share its storage). Anywhere else (the Claude link) they open in a new tab.
+const SITE=/github\.io$|smaisle\.app$/.test(location.hostname);
 const TGT=SITE?'':' target="_blank" rel="noopener"';
 const store={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:v}catch(e){return d}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}},
   json(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},put(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
@@ -173,7 +173,7 @@ function openGame(id){const g=SM.game(id),d=g.daily&&(H[dayAt(0)]||[]).indexOf(i
   open(`<div class="sh-head"><div class="pic">${pic(g)}</div><div><h2>${esc(g.name)}</h2><div class="tag">${esc(g.tag)}${g.daily?'':g.store?' · App Store':' · Play on the web'}</div></div></div>
   <p>${esc(g.desc)}</p>${btns}
   ${g.daily&&d?'<div class="small">✓ You finished today\'s game.</div>':''}
-  ${g.daily&&!SITE?'<div class="small">Games open in a new tab here. On smaisle.github.io/daily your Done checks and streak fill in by themselves.</div>':''}`);
+  ${g.daily&&!SITE?'<div class="small">Games open in a new tab here. On smaisle.app/daily your Done checks and streak fill in by themselves.</div>':''}`);
 }
 const SHEETS={
   archive:()=>{let rows='';for(let i=1;i<=14;i++){const d=dayAt(i),l=H[d]||[];

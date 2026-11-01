@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Invite only · smAisle</title>
+<meta name="description" content="smAisle games in testing.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Playfair+Display:wght@900&family=Libre+Franklin:wght@600;800&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="mark" href="./">sm<b>Ai</b>sle</a>
+  <nav><a href="./">Games</a><a href="about.html">The details</a></nav>
+</div></header>
+<main><div class="wrap">
+  <h1>Invite only <span class="beta">Beta</span></h1>
+  <p class="lead">Games in testing. Your code unlocks them.</p>
+  <a class="hubcard" data-hub="daily" href="/daily/" hidden>
+    <span class="hc1"><img src="icons/smaisle-daily.png" alt="" width="64" height="64"><span><span class="lg"><span class="sm">smAisle</span><span class="dd">Daily</span></span><span class="hs">Three new games every day. One streak.</span></span></span>
+    <span class="minis"><img src="icons/daily-15.png" alt="" width="34" height="34"><img src="icons/abc-deal.png" alt="" width="34" height="34"><img src="icons/gramble.png?v=2" alt="" width="34" height="34"><span>The Daily 15 · A, B, C, Deal · Gramble</span></span>
+    <span class="hbtn">OPEN SMAISLE DAILY</span>
+  </a>
+  <h2 class="slab">IN TESTING</h2>
+  <div class="lrows">
+    <div class="lrow" data-game="shuffleblast">
+      <a class="lhead play"><img src="icons/shuffle-blast.png" alt="" width="44" height="44"><b>Shuffle Blast</b><span class="ok">Unlocked ✓</span></a>
+      <button type="button" class="lhead lockbtn"><img src="icons/shuffle-blast.png" alt="" width="44" height="44"><b>Shuffle Blast</b><span class="lk">🔒 Code</span></button>
+      <form class="gunlock" autocomplete="off" hidden><input type="text" placeholder="Game code" aria-label="Game code" autocapitalize="characters" spellcheck="false"><button class="btn" type="submit">Unlock</button></form>
+      <p class="meta gbad" hidden>That code isn't for this game.</p>
+    </div>
+    <div class="lrow" data-game="sdblast">
+      <a class="lhead play"><img src="icons/straight-down.png" alt="" width="44" height="44"><b>Straight Down Blast</b><span class="ok">Unlocked ✓</span></a>
+      <button type="button" class="lhead lockbtn"><img src="icons/straight-down.png" alt="" width="44" height="44"><b>Straight Down Blast</b><span class="lk">🔒 Code</span></button>
+      <form class="gunlock" autocomplete="off" hidden><input type="text" placeholder="Game code" aria-label="Game code" autocapitalize="characters" spellcheck="false"><button class="btn" type="submit">Unlock</button></form>
+      <p class="meta gbad" hidden>That code isn't for this game.</p>
+    </div>
+  </div>
+  <p class="meta" id="nomore" hidden>More games in testing are coming soon.</p>
+</div></main>
+<footer><div class="wrap">
+  © 2026 smAisle · v1.46 · Nov 1 · <a href="support.html">Support</a> · <a href="privacy.html">Privacy policy</a> · <a href="mailto:smaisle.app@gmail.com">smaisle.app@gmail.com</a>
+</div></footer>
+<script src="invite.js?v=1.45"></script>
+<script>
+(function(){
+  // Needs Family&Friends (or any game code) first; otherwise back to the home page.
+  if(!Invite.family()&&!Invite.owned().length){ location.replace('./#unlock'); return; }
+  // smAisle Daily (the daily-games hub): for Family&Friends or anyone with a code for one of its games.
+  // Each game inside it asks for its own code.
+  var hub=document.querySelector('[data-hub=daily]');
+  if(Invite.family()||['daily15','abcdeal','gramble'].some(function(k){ return Invite.owned().indexOf(k)>=0; })) hub.hidden=false;
+  var shown=0;
+  document.querySelectorAll('.lrow[data-game]').forEach(function(row){
+    var g=row.getAttribute('data-game');
+    var mine=Invite.owned().indexOf(g)>=0;
+    // Someone who only has game codes sees just their games.
+    if(!Invite.family()&&!mine){ row.hidden=true; return; }
+    shown++;
+    if(mine){ Invite.show(row); return; }
+    row.querySelector('.play').hidden=true;
+    row.querySelector('.lockbtn').addEventListener('click',function(){ var f=row.querySelector('.gunlock'); f.hidden=!f.hidden; if(!f.hidden) f.querySelector('input').focus(); });
+    row.querySelector('.gunlock').addEventListener('submit',function(e){
+      e.preventDefault();
+      Invite.check(row.querySelector('input').value).then(function(r){
+        if(r===g) Invite.go(r); else if(r==='all'||(r==='some'&&Invite.owned().indexOf(g)>=0)) location.reload(); else row.querySelector('.gbad').hidden=false;
+      });
+    });
+  });
+  if(!shown) document.querySelector('.slab').hidden=true;
+})();
+</script>
+</body>
+</html>
