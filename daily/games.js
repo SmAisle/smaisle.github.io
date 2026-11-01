@@ -26,9 +26,7 @@
     {id:'br',name:'Bullseye Roulette',icon:ICONS+'bullseye-roulette.png',tag:'Darts',sub:'Darts plus roulette',
      desc:'Darts plus roulette, with a vs Computer mode.',url:BASE+'BullseyeRoulette/'},
     {id:'cn',name:'Connello',icon:ICONS+'connello.png',tag:'Strategy',sub:'Drop-four game with flips',
-     desc:'Drop-four game with flips, in Classic and Bank modes.',url:BASE+'Connello/'},
-    {id:'sh',name:'Steal Home',icon:null,ph:['#2f6b3a','#fffdf6','⚾'],tag:'Sports',sub:'Baseball base-stealing game',
-     desc:'Baseball base-stealing game.',url:'https://claude.ai/artifact/FumNu1akWamxX1zSuL6knp'}
+     desc:'Drop-four game with flips, in Classic and Bank modes.',url:BASE+'Connello/'}
   ];
   var HUB={id:'daily',name:'smAisle Daily',icon:ICONS+'smaisle-daily.png',url:BASE+'daily/',
     sub:'The Daily 15, A, B, C, Deal and Gramble in one place'};

@@ -99,7 +99,7 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
   <div class="row"><span id="played"></span><span id="next"></span></div></div>
  <div class="sec">TODAY'S GAMES</div>
  <div id="daily"></div>
- <div class="moreWrap"><button class="moreBtn" id="openShelf"><div class="mini" id="mini"></div><div class="tx"><div class="n">More games by smAisle</div><div class="s">Arcade, puzzle and sports games</div></div><span class="arr">›</span></button></div>
+ <div class="moreWrap"><button class="moreBtn" id="openShelf"><div class="mini" id="mini"></div><div class="tx"><div class="n">More games by smAisle</div><div class="s">Arcade, puzzle and strategy games</div></div><span class="arr">›</span></button></div>
  <div class="ver" id="ver"></div>
 </div>
 <nav class="dock">
@@ -110,15 +110,14 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
 </nav>
 <div class="shelf" id="shelf"><div><button id="closeShelf" class="back">‹ smAisle Daily</button></div>
  <div class="shelf-h">More games<span>by smAisle</span></div>
- <div class="sec2">APPS ON THE APP STORE</div><div class="grid" id="apps"></div>
- <div class="sec2">PLAY ON THE WEB</div><div class="grid" id="more"></div>
+ <div class="grid" id="more" style="margin-top:26px"></div>
  <div class="ver" id="ver2"></div>
 </div>
 <div class="scrim" id="scrim"></div>
 <div class="sheet" id="sheet"><div class="grab"></div><div id="sheetBody"></div></div>
 <script src="games.js"></script>
 <script>
-const VERSION='1.02',VDATE='Nov 1',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
+const VERSION='1.03',VDATE='Nov 1',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
 const $=id=>document.getElementById(id);
 const SM=window.SMAISLE,GAMES=SM.games,DAILY=GAMES.filter(g=>g.daily),N=DAILY.length;
 // On smaisle.github.io games open in this tab (and share its storage). Anywhere else (the Claude link) they open in a new tab.
@@ -144,7 +143,7 @@ function streaks(h){
 
 /* ---------- Main screen ---------- */
 function pic(g,cls){return g.icon?`<img src="${g.icon}" alt=""${cls?` class="${cls}"`:''}>`:`<div class="phi ${cls||''}" style="background:${g.ph[0]};color:${g.ph[1]}">${g.ph[2]}</div>`}
-function tile(g){return `<button class="app" data-g="${g.id}"><div class="ico" style="${g.icon?'':`background:${g.ph[0]};color:${g.ph[1]}`}"><div class="in">${g.icon?`<img src="${g.icon}" alt="">`:g.ph[2]}</div>${g.store?'<span class="as">App Store</span>':''}</div><div class="nm">${esc(g.name).replace(' ','<br>')}</div></button>`}
+function tile(g){return `<button class="app" data-g="${g.id}"><div class="ico" style="${g.icon?'':`background:${g.ph[0]};color:${g.ph[1]}`}"><div class="in">${g.icon?`<img src="${g.icon}" alt="">`:g.ph[2]}</div></div><div class="nm">${esc(g.name).replace(' ','<br>')}</div></button>`}
 let H={};
 function render(){
   H=remember();const today=dayAt(0),done=H[today]||[],n=done.length,st=streaks(H);
@@ -155,8 +154,7 @@ function render(){
   $('daily').innerHTML=DAILY.map(g=>{const d=done.indexOf(g.id)>=0,s=!d&&SM.isStarted(g.id,today);
     return `<button class="r" data-g="${g.id}">${pic(g)}<div class="tx"><div class="n">${esc(g.name)}</div><div class="s">${esc(g.sub)}</div></div><span class="b ${d?'done':s?'go':''}">${d?'✓ DONE':s?'KEEP GOING':'PLAY'}</span></button>`}).join('');
   $('mini').innerHTML=['sd','sb','br'].map(id=>`<img src="${SM.game(id).icon}" alt="">`).join('');
-  $('apps').innerHTML=GAMES.filter(g=>g.store).map(tile).join('');
-  $('more').innerHTML=GAMES.filter(g=>!g.daily&&!g.store).map(tile).join('')+`<div class="app soon"><div class="ico"></div><div class="nm">Coming<br>soon</div></div>`;
+  $('more').innerHTML=GAMES.filter(g=>!g.daily).map(tile).join('')+`<div class="app soon"><div class="ico"></div><div class="nm">Coming<br>soon</div></div>`;
   $('ver').textContent=$('ver2').textContent=VER;
 }
 function tick(){const now=new Date(),mid=new Date(now);mid.setHours(24,0,0,0);const m=Math.max(0,Math.ceil((mid-now)/60000));$('next').textContent=`New games in ${Math.floor(m/60)}h ${m%60}m`;
@@ -171,8 +169,8 @@ scrim.onclick=close;
 function openGame(id){const g=SM.game(id),d=g.daily&&(H[dayAt(0)]||[]).indexOf(id)>=0;
   let btns;
   if(g.store)btns=(g.appStore?`<a class="big-btn store-btn" href="${g.appStore}" data-tap="${g.id}-app"${TGT}>GET THE FREE APP</a>`:`<div class="big-btn off">APP STORE: COMING SOON</div>`)+`<a class="big-btn o" href="${g.url}" data-tap="${g.id}"${TGT}>PLAY ON THE WEB</a>`;
-  else btns=`<a class="big-btn" href="${g.url}" data-tap="${g.id}"${TGT}>${g.daily?(d?'PLAY AGAIN':"PLAY TODAY'S GAME"):'PLAY'}</a>`;
-  open(`<div class="sh-head"><div class="pic">${pic(g)}</div><div><h2>${esc(g.name)}</h2><div class="tag">${esc(g.tag)}</div></div></div>
+  else btns=`<a class="big-btn" href="${g.url}" data-tap="${g.id}"${TGT}>${g.daily?(d?'PLAY AGAIN':"PLAY TODAY'S GAME"):'PLAY ON THE WEB'}</a>`;
+  open(`<div class="sh-head"><div class="pic">${pic(g)}</div><div><h2>${esc(g.name)}</h2><div class="tag">${esc(g.tag)}${g.daily?'':g.store?' · App Store':' · Play on the web'}</div></div></div>
   <p>${esc(g.desc)}</p>${btns}
   ${g.daily&&d?'<div class="small">✓ You finished today\'s game.</div>':''}
   ${g.daily&&!SITE?'<div class="small">Games open in a new tab here. On smaisle.github.io/daily your Done checks and streak fill in by themselves.</div>':''}`);
