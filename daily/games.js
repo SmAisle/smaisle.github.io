@@ -13,21 +13,21 @@
   var GAMES=[
     // Today's Games (daily)
     {id:'d15',name:'The Daily 15',daily:true,archive:true,icon:ICONS+'daily-15.png',sub:'Word grid · new puzzle daily',tag:'Daily word puzzle',
-     desc:'Fit 15 words into a crossword-style grid. A new puzzle every day, the same for everyone, with stars and streaks.',url:BASE+'DailyGrid/'},
-    {id:'abc',name:'A, B, C, Deal',daily:true,archive:true,icon:ICONS+'abc-deal.png',sub:"Beat the dealer's word · 5 hands",tag:'Daily card game',
-     desc:'Played like blackjack with letter cards. Make a better word than the dealer across five hands a day.',url:BASE+'abcdeal/'},
+     desc:'Cross 15 words onto a newspaper-style grid. A new puzzle every day, the same for everyone, with stars and streaks.',url:BASE+'DailyGrid/'},
+    {id:'abc',name:'A, B, C, Deal',daily:true,archive:true,icon:ICONS+'abc-deal.png',sub:"Beat the dealer's word · 2 modes",tag:'Daily card game',
+     desc:"A daily word game played with letter cards. Beat the dealer's word across five hands, in two modes: Classic (5-card poker) and Deal 'Em (Texas hold 'em style).",url:BASE+'abcdeal/'},
     {id:'gr',name:'Gramble',daily:true,icon:ICONS+'gramble.png',sub:'Find 10 words with 50 credits',tag:'Daily card game',
      desc:'A word card game. Hold and hit letter cards to find 10 words before your 50 credits run out, then cash out or let it ride into the High Roller 10.',url:BASE+'gramble/'},
     // Apps on the App Store (appStore is filled in once each app is live)
     {id:'sd',name:'Straight Down',store:true,appStore:'',icon:ICONS+'straight-down.png',tag:'Arcade',sub:'Falling-card poker game',
-     desc:'Falling-card poker game. Steer the cards and build the best hands.',url:BASE+'StraightDown/'},
-    {id:'sb',name:'Shuffle Blast',store:true,appStore:'',icon:ICONS+'shuffle-blast.png',tag:'Puzzle',sub:'Block puzzle with bombs',
-     desc:'Block puzzle with bombs, rubble and shuffles.',url:BASE+'ShuffleBlast/'},
+     desc:'Cards fall one at a time. Line them up in a row or column to make poker hands. An invite code unlocks the full version, with levels, a daily challenge, bombs and wild cards.',url:BASE+'StraightDown/'},
+    {id:'sb',name:'Shuffle Blast',store:true,appStore:'',icon:ICONS+'shuffle-blast.png',tag:'Puzzle',sub:'Block puzzle with endless levels',
+     desc:'Drop blocks to clear lines. Play an endless Journey of levels with bombs, rubble and quakes, plus a new daily level every day.',url:BASE+'ShuffleBlast/'},
     // Play on the web
-    {id:'br',name:'Bullseye Roulette',icon:ICONS+'bullseye-roulette.png',tag:'Darts',sub:'Darts plus roulette',
-     desc:'Darts plus roulette, with a vs Computer mode.',url:BASE+'BullseyeRoulette/'},
+    {id:'br',name:'Bullseye Roulette',icon:ICONS+'bullseye-roulette.png',tag:'Darts',sub:'Darts on a spinning roulette wheel',
+     desc:'Bet red or black, spin the wheel, then throw darts to count down from 301. Play solo, against the computer or with a friend, with Normal, Hard, Daily and Blackout modes.',url:BASE+'BullseyeRoulette/'},
     {id:'cn',name:'Connello',icon:ICONS+'connello.png',tag:'Strategy',sub:'Drop-four game with flips',
-     desc:'Drop-four game with flips, in Classic and Bank modes.',url:BASE+'Connello/'}
+     desc:"Drop chips to make four in a row, and trap your opponent's chips to flip them to your color. Play Classic or Bank, against the computer or a friend.",url:BASE+'Connello/'}
   ];
   var HUB={id:'daily',name:'smAisle Daily',icon:ICONS+'smaisle-daily.png',url:BASE+'daily/',
     sub:'The Daily 15, A, B, C, Deal and Gramble in one place'};
