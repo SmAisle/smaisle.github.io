@@ -1,6 +1,7 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>smAisle Daily</title>
+<meta name="robots" content="noindex">
 <meta name="description" content="Today's daily games from smAisle: The Daily 15, A, B, C, Deal and Gramble.">
 <meta name="theme-color" content="#f4efe1">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -117,7 +118,7 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
 <div class="sheet" id="sheet"><div class="grab"></div><div id="sheetBody"></div></div>
 <script src="games.js"></script>
 <script>
-const VERSION='1.01',VDATE='Nov 1',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
+const VERSION='1.02',VDATE='Nov 1',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
 const $=id=>document.getElementById(id);
 const SM=window.SMAISLE,GAMES=SM.games,DAILY=GAMES.filter(g=>g.daily),N=DAILY.length;
 // On smaisle.github.io games open in this tab (and share its storage). Anywhere else (the Claude link) they open in a new tab.
