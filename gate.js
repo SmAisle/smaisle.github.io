@@ -31,9 +31,9 @@
     var pad=function(n){return (n<10?'0':'')+n}, d=new Date(), day=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
     var dev=localStorage.getItem('smaisle_dev'); if(!dev){ dev=Array.from(crypto.getRandomValues(new Uint8Array(12)),function(b){return 'abcdefghijklmnopqrstuvwxyz0123456789'[b%36];}).join(''); localStorage.setItem('smaisle_dev',dev); }
     var u=JSON.parse(localStorage.getItem('smaisle_seen')||'null')||{first:day,o:{},d:{}};
-    u.o[GAME]=(u.o[GAME]||0)+1; u.d[GAME]=day; localStorage.setItem('smaisle_seen',JSON.stringify(u));
+    u.o[GAME]=(u.o[GAME]||0)+1; u.d[GAME]=day; u.tm=u.tm||{}; u.tm[GAME]=Date.now(); localStorage.setItem('smaisle_seen',JSON.stringify(u));
     var I=function(n){return {integerValue:String(n)}}, T=function(v){return {stringValue:String(v)}}, M=function(m,f){var o={};for(var k in m)o[k.replace(/[^A-Za-z0-9_]/g,'_')]=f(m[k]);return {mapValue:{fields:o}}};
-    var body={fields:{code:T(codeFor()),first:T(u.first),last:T(day),o:M(u.o,I),d:M(u.d,T),desk:{booleanValue:innerWidth>=820},t:I(Date.now())}};
+    var body={fields:{code:T(codeFor()),first:T(u.first),last:T(day),o:M(u.o,I),d:M(u.d,T),tm:M(u.tm,I),desk:{booleanValue:innerWidth>=820},t:I(Date.now())}};
     fetch(DOC.replace('invite_codes/','inv_devices/')+dev+'?key='+API,{method:'PATCH',keepalive:true,headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}).catch(function(){});
   }catch(e){} }
   if(ok()){ if(/[?&]code=/.test(location.search)) history.replaceState(null,'',location.pathname+location.hash); seen(); return; }
