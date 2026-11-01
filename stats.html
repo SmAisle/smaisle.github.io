@@ -43,12 +43,13 @@ html{touch-action:manipulation}
   <section id="codes" class="codes" hidden>
     <h2>Invite codes</h2>
     <p style="margin:0 0 .6em"><a href="smAisle-invite.pdf?v=2" target="_blank" rel="noopener">📄 Printable invite (PDF)</a> <span class="muted">· write the person's code in the box</span></p>
-    <p class="muted note" style="margin-top:0">On smaisle.app, Family&amp;Friends shows the invite-only games. Each code opens the games you tick: one, a few, or every game (which also covers games added later). Letters and numbers only, 3 to 20 long.</p>
+    <p class="muted note" style="margin-top:0">Each code opens the games you tick: one, a few, or every game (which also covers games added later). Letters and numbers only, 3 to 20 long. Tap Edit to change which games a code opens.</p>
     <form id="newcode" class="row" autocomplete="off">
       <input id="ccode" placeholder="CODE" maxlength="20" style="text-transform:uppercase;width:9em">
       <span id="cgame" class="picks"></span>
       <input id="cnote" placeholder="Who it's for (optional)" maxlength="60" style="flex:1;min-width:10em">
       <button class="primary" type="submit">Add code</button>
+      <button type="button" id="ccancel" hidden>Cancel</button>
     </form>
     <p id="cmsg" class="muted note"></p>
     <table id="clist"></table>
@@ -91,6 +92,8 @@ const INVITE_GAMES=[["daily15","The Daily 15"],["shuffleblast","Shuffle Blast"],
 const gameName=k=>String(k||"").split(",").map(x=>(INVITE_GAMES.find(g=>g[0]===x)||[x,x])[1]).join(", ");
 $("#cgame").innerHTML=INVITE_GAMES.map(([k,n])=>`<label><input type="checkbox" value="${k}"> ${esc(n)}</label>`).join("");
 $("#cgame").onchange=()=>{ const all=$("#cgame input[value=all]").checked; $("#cgame").querySelectorAll("input:not([value=all])").forEach(i=>{ i.disabled=all; if(all) i.checked=false; }); };
+let editing=null, codeRows={};
+function resetForm(){ editing=null; $("#ccode").value=""; $("#ccode").readOnly=false; $("#cnote").value=""; $("#cgame").querySelectorAll("input").forEach(i=>{ i.checked=false; i.disabled=false; }); $("#newcode button.primary").textContent="Add code"; $("#ccancel").hidden=true; }
 async function loadCodes(){
   try{
     const s=await db.collection("invite_codes").get();
@@ -98,8 +101,8 @@ async function loadCodes(){
     const uses={};
     try{ (await db.collection("invite_uses").limit(10000).get()).docs.forEach(d=>{ const u=d.data(), x=uses[u.code]||(uses[u.code]={n:0,last:0}); x.n++; x.last=Math.max(x.last,+u.t||0); }); }catch(e){}
     const when=t=>t?new Date(t).toLocaleDateString(undefined,{month:"short",day:"numeric"}):"";
-    const rows=s.docs.map(d=>({code:d.id,...d.data()})).sort((a,b)=>gameName(a.game).localeCompare(gameName(b.game))||a.code.localeCompare(b.code));
-    $("#clist").innerHTML=rows.length?`<tr class="muted"><td>Code</td><td>Games</td><td>For</td><td>Used</td><td></td></tr>`+rows.map(r=>{ const u=uses[r.code]; return `<tr><td><b>${esc(r.code)}</b></td><td>${esc(gameName(r.game))}</td><td class="muted">${esc(r.note||"")}</td><td>${u?`${u.n}× <span class="muted">· last ${esc(when(u.last))}</span>`:`<span class="muted">0</span>`}</td><td><button data-del="${esc(r.code)}">Delete</button></td></tr>`; }).join(""):`<tr><td class="muted">No codes yet.</td></tr>`;
+    const rows=s.docs.map(d=>({code:d.id,...d.data()})); codeRows={}; rows.forEach(r=>codeRows[r.code]=r); rows.sort((a,b)=>gameName(a.game).localeCompare(gameName(b.game))||a.code.localeCompare(b.code));
+    $("#clist").innerHTML=rows.length?`<tr class="muted"><td>Code</td><td>Games</td><td>For</td><td>Used</td><td></td></tr>`+rows.map(r=>{ const u=uses[r.code]; return `<tr><td><b>${esc(r.code)}</b></td><td>${esc(gameName(r.game))}</td><td class="muted">${esc(r.note||"")}</td><td>${u?`${u.n}× <span class="muted">· last ${esc(when(u.last))}</span>`:`<span class="muted">0</span>`}</td><td style="white-space:nowrap"><button data-edit="${esc(r.code)}">Edit</button> <button data-del="${esc(r.code)}">Delete</button></td></tr>`; }).join(""):`<tr><td class="muted">No codes yet.</td></tr>`;
     $("#cmsg").textContent=""; $("#codes").hidden=false;
   }catch(e){ $("#codes").hidden=false; $("#cmsg").textContent=e.code==="permission-denied"?"Invite codes need the updated Firestore rules.":"Couldn't load invite codes."; }
 }
@@ -109,17 +112,25 @@ $("#newcode").onsubmit=async e=>{
   if(!/^[A-Z0-9]{3,20}$/.test(code)){ $("#cmsg").textContent="Use 3 to 20 letters or numbers."; return; }
   const ref=db.collection("invite_codes").doc(code);
   try{
-    if((await ref.get()).exists){ $("#cmsg").textContent=code+" is already used."; return; }
+    if(editing!==code && (await ref.get()).exists){ $("#cmsg").textContent=code+" is already used."; return; }
     const picked=[...$("#cgame").querySelectorAll("input:checked")].map(i=>i.value);
     if(!picked.length){ $("#cmsg").textContent="Tick at least one game."; return; }
-    await ref.set({game:picked.includes("all")?"all":picked.join(","),note:$("#cnote").value.trim().slice(0,60),t:Date.now()});
-    $("#ccode").value=""; $("#cnote").value=""; $("#cgame").querySelectorAll("input").forEach(i=>{ i.checked=false; i.disabled=false; }); $("#cmsg").textContent=""; loadCodes();
+    await ref.set({game:picked.includes("all")?"all":picked.join(","),note:$("#cnote").value.trim().slice(0,60),t:editing===code&&codeRows[code]&&codeRows[code].t||Date.now()});
+    const was=editing; resetForm(); await loadCodes(); $("#cmsg").textContent=was?was+" updated.":"";
   }catch(err){ $("#cmsg").textContent="Couldn't save: "+err.message; }
 };
 $("#clist").onclick=async e=>{
+  const ed=e.target.getAttribute&&e.target.getAttribute("data-edit");
+  if(ed&&codeRows[ed]){ const r=codeRows[ed], gs=String(r.game||"").split(","); editing=ed;
+    $("#ccode").value=ed; $("#ccode").readOnly=true; $("#cnote").value=r.note||"";
+    $("#cgame").querySelectorAll("input").forEach(i=>{ i.checked=gs.includes(i.value); i.disabled=false; }); $("#cgame").onchange();
+    $("#newcode button.primary").textContent="Save changes"; $("#ccancel").hidden=false; $("#cmsg").textContent="Editing "+ed+": change the ticks or name, then Save changes.";
+    $("#newcode").scrollIntoView({behavior:"smooth",block:"center"}); return; }
   const c=e.target.getAttribute&&e.target.getAttribute("data-del"); if(!c) return;
+  if(editing===c) resetForm();
   try{ await db.collection("invite_codes").doc(c).delete(); loadCodes(); }catch(err){ $("#cmsg").textContent="Couldn't delete: "+err.message; }
 };
+$("#ccancel").onclick=()=>{ resetForm(); $("#cmsg").textContent=""; };
 $("#signin").onclick=()=>auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(e=>{$("#msg").textContent="Sign-in didn't work: "+e.message;});
 $("#signout").onclick=()=>auth.signOut();
 auth.onAuthStateChanged(async u=>{
