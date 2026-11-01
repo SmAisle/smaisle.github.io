@@ -22,7 +22,21 @@
   }
   // Counts one use of the code on the stats page (Firestore invite_uses). Fire and forget.
   function logUse(c,where){ try{ fetch(DOC.replace('invite_codes/','invite_uses')+'?key='+API,{method:'POST',keepalive:true,headers:{'Content-Type':'application/json'},body:JSON.stringify({fields:{code:{stringValue:c},where:{stringValue:where},t:{integerValue:String(Date.now())}}})}).catch(function(){}); }catch(e){} }
-  if(ok()){ if(/[?&]code=/.test(location.search)) history.replaceState(null,'',location.pathname+location.hash); return; }
+  // Which code this device used (for the "By code" table on stats.html). smaisle.app's Invite only page
+  // keeps smaisle_codes = {game: code}; this screen keeps the last code typed here in smaisle_code.
+  function codeFor(){ var c=''; try{ c=(JSON.parse(localStorage.getItem('smaisle_codes')||'{}')||{})[GAME]||localStorage.getItem('smaisle_code')||''; }catch(e){}
+    if(!c){ try{ if(localStorage.getItem('d15_unlocked')==='1'||localStorage.getItem('dg_invite')==='1') c='FAMILY&FRIENDS'; }catch(e){} } return c||'unknown'; }
+  // Anonymous check-in per device: its code and which testing games it opened (inv_devices). Website only.
+  function seen(){ try{
+    var pad=function(n){return (n<10?'0':'')+n}, d=new Date(), day=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+    var dev=localStorage.getItem('smaisle_dev'); if(!dev){ dev=Array.from(crypto.getRandomValues(new Uint8Array(12)),function(b){return 'abcdefghijklmnopqrstuvwxyz0123456789'[b%36];}).join(''); localStorage.setItem('smaisle_dev',dev); }
+    var u=JSON.parse(localStorage.getItem('smaisle_seen')||'null')||{first:day,o:{},d:{}};
+    u.o[GAME]=(u.o[GAME]||0)+1; u.d[GAME]=day; localStorage.setItem('smaisle_seen',JSON.stringify(u));
+    var I=function(n){return {integerValue:String(n)}}, T=function(v){return {stringValue:String(v)}}, M=function(m,f){var o={};for(var k in m)o[k.replace(/[^A-Za-z0-9_]/g,'_')]=f(m[k]);return {mapValue:{fields:o}}};
+    var body={fields:{code:T(codeFor()),first:T(u.first),last:T(day),o:M(u.o,I),d:M(u.d,T),desk:{booleanValue:innerWidth>=820},t:I(Date.now())}};
+    fetch(DOC.replace('invite_codes/','inv_devices/')+dev+'?key='+API,{method:'PATCH',keepalive:true,headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}).catch(function(){});
+  }catch(e){} }
+  if(ok()){ if(/[?&]code=/.test(location.search)) history.replaceState(null,'',location.pathname+location.hash); seen(); return; }
   // iPhone zooms in on a focused text box when the page can still zoom. Make sure it can't, even when this
   // script runs before the game's own viewport tag, and keep the box at 17px (iOS zooms on anything under 16).
   if(!document.querySelector('meta[name=viewport]')){ var vm=document.createElement('meta'); vm.name='viewport'; vm.content='width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no'; document.head.appendChild(vm); }
@@ -39,7 +53,7 @@
     f.addEventListener('submit',function(e){
       e.preventDefault();
       var typed=f.querySelector('input').value.replace(/\s+/g,'').toUpperCase();
-      check(typed).then(function(y){ if(y){ keep(y); logUse(typed,GAME); f.querySelector('input').blur(); location.reload(); } else f.querySelector('.bad').hidden=false; });
+      check(typed).then(function(y){ if(y){ keep(y); try{ localStorage.setItem('smaisle_code',typed); }catch(e){} logUse(typed,GAME); f.querySelector('input').blur(); location.reload(); } else f.querySelector('.bad').hidden=false; });
     });
   }
   // Arriving from smaisle.app with ?code=...: check it, then drop it from the address bar.
@@ -47,7 +61,7 @@
   if(m){
     var url=location.pathname+location.hash;
     check(decodeURIComponent(m[1])).then(function(y){
-      if(y){ keep(y); location.replace(url); }
+      if(y){ keep(y); try{ localStorage.setItem('smaisle_code',decodeURIComponent(m[1]).replace(/\s+/g,'').toUpperCase()); }catch(e){} location.replace(url); }
       else { history.replaceState(null,'',url); if(document.body) show(); else document.addEventListener('DOMContentLoaded',show); }
     });
     return;

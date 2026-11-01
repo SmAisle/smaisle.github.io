@@ -33,7 +33,7 @@ html{touch-action:manipulation}
 </head>
 <body>
 <header>
-  <h1>sm<em>Ai</em>sle stats <span class="muted" style="font-size:.75rem;font-weight:400">v1.11 · Nov 1</span></h1>
+  <h1>sm<em>Ai</em>sle stats <span class="muted" style="font-size:.75rem;font-weight:400">v1.12 · Nov 1</span></h1>
   <div class="row"><span id="who" class="muted"></span><button id="signin" class="primary" hidden>Sign in with Google</button><button id="signout" hidden>Sign out</button></div>
 </header>
 <main>
@@ -53,6 +53,9 @@ html{touch-action:manipulation}
     </form>
     <p id="cmsg" class="muted note"></p>
     <table id="clist"></table>
+    <h2 style="margin-top:18px">By code</h2>
+    <p class="muted note" style="margin-top:0">Which testing games each code's devices have opened. Counted from Nov 1 on, on the website only. Devices, not people. "unknown" means a device opened a game before it had a code saved.</p>
+    <table id="bycode"></table>
   </section>
 </main>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -105,7 +108,18 @@ async function loadCodes(){
     const rows=s.docs.map(d=>({code:d.id,...d.data()})); codeRows={}; rows.forEach(r=>codeRows[r.code]=r); rows.sort((a,b)=>gameName(a.game).localeCompare(gameName(b.game))||a.code.localeCompare(b.code));
     $("#clist").innerHTML=rows.length?`<tr class="muted"><td>Code</td><td>Games</td><td>For</td><td>Used</td><td></td></tr>`+rows.map(r=>{ const u=uses[r.code]; return `<tr><td><b>${esc(r.code)}</b></td><td>${esc(gameName(r.game))}</td><td class="muted">${esc(r.note||"")}</td><td>${u?`${u.n}× <span class="muted">· last ${esc(when(u.last))}</span>`:`<span class="muted">0</span>`}</td><td style="white-space:nowrap"><button data-edit="${esc(r.code)}">Edit</button> <button data-del="${esc(r.code)}">Delete</button></td></tr>`; }).join(""):`<tr><td class="muted">No codes yet.</td></tr>`;
     $("#cmsg").textContent=""; $("#codes").hidden=false;
+    loadByCode(codeRows);
   }catch(e){ $("#codes").hidden=false; $("#cmsg").textContent=e.code==="permission-denied"?"Invite codes need the updated Firestore rules.":"Couldn't load invite codes."; }
+}
+async function loadByCode(codeRows){
+  try{
+    const ds=(await db.collection("inv_devices").limit(10000).get()).docs.map(d=>d.data()), by={};
+    const when=d=>d?new Date(d+"T12:00").toLocaleDateString(undefined,{month:"short",day:"numeric"}):"";
+    ds.forEach(d=>{ const c=d.code||"unknown", x=by[c]||(by[c]={dev:0,last:"",g:{}}); x.dev++; if((d.last||"")>x.last) x.last=d.last||"";
+      Object.entries(d.o||{}).forEach(([k,n])=>{ const y=x.g[k]||(x.g[k]={dev:0,n:0,last:""}); y.dev++; y.n+=+n||0; const l=(d.d||{})[k]||""; if(l>y.last) y.last=l; }); });
+    const rows=Object.entries(by).sort((a,b)=>b[1].last.localeCompare(a[1].last));
+    $("#bycode").innerHTML=rows.length?`<tr class="muted"><td>Code</td><td>For</td><td>Games opened</td><td>Last seen</td></tr>`+rows.map(([c,x])=>`<tr><td><b>${esc(c)}</b></td><td class="muted">${esc((codeRows[c]||{}).note||"")}</td><td>${Object.entries(x.g).sort((a,b)=>b[1].n-a[1].n).map(([k,y])=>`${esc(gameName(k))} <span class="muted">(${y.n}× · ${y.dev} ${y.dev===1?"device":"devices"} · ${when(y.last)})</span>`).join("<br>")}</td><td>${when(x.last)}</td></tr>`).join(""):`<tr><td class="muted">No check-ins yet. They start the next time someone opens a testing game.</td></tr>`;
+  }catch(e){ $("#bycode").innerHTML=`<tr><td class="muted">Couldn't load: ${esc(e.message)}</td></tr>`; }
 }
 $("#newcode").onsubmit=async e=>{
   e.preventDefault();
