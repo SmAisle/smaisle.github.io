@@ -55,7 +55,7 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
 .scrim.on{opacity:1;pointer-events:auto}
 .sheet{position:fixed;left:50%;bottom:0;transform:translate(-50%,105%);width:min(460px,100%);max-height:86vh;overflow:auto;background:var(--paper);border:2px solid var(--ink);border-bottom:0;border-radius:22px 22px 0 0;padding:10px 20px calc(28px + env(safe-area-inset-bottom));transition:transform .25s ease;z-index:12}
 .sheet.on{transform:translate(-50%,0)}
-.grab{width:40px;height:5px;border-radius:3px;background:var(--fade);margin:0 auto 12px;opacity:.6}
+.grab{width:40px;height:5px;border-radius:3px;background:var(--fade);margin:0 auto 12px;opacity:.6;cursor:pointer;box-sizing:content-box;padding:8px 30px;background-clip:content-box;margin-top:-8px}
 .sh-head{display:flex;gap:14px;align-items:center}
 .sh-head .pic{width:72px;height:72px;border-radius:17px;overflow:hidden;border:1px solid rgba(0,0,0,.2);flex:none}
 .sh-head .pic img,.sh-head .pic .phi{width:100%;height:100%;border:0;border-radius:0}
@@ -119,7 +119,7 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
 <div class="sheet" id="sheet"><div class="grab"></div><div id="sheetBody"></div></div>
 <script src="games.js"></script>
 <script>
-const VERSION='1.06',VDATE='Nov 1',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
+const VERSION='1.07',VDATE='Nov 1',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
 const $=id=>document.getElementById(id);
 const SM=window.SMAISLE,GAMES=SM.games,DAILY=GAMES.filter(g=>g.daily),N=DAILY.length;
 // On smaisle.app (or smaisle.github.io) games open in this tab (and share its storage). Anywhere else (the Claude link) they open in a new tab.
@@ -168,6 +168,12 @@ const sheet=$('sheet'),scrim=$('scrim'),body=$('sheetBody');
 function open(html){body.innerHTML=html;sheet.scrollTop=0;sheet.classList.add('on');scrim.classList.add('on')}
 function close(){sheet.classList.remove('on');scrim.classList.remove('on')}
 scrim.onclick=close;
+// Swipe the sheet down to close it (from the handle, or anywhere when it's scrolled to the top).
+let dragY=null,dragD=0;
+sheet.addEventListener('touchstart',e=>{if(e.touches.length!==1)return;if(sheet.scrollTop>0&&!e.target.closest('.grab'))return;dragY=e.touches[0].clientY;dragD=0;sheet.style.transition='none'},{passive:true});
+sheet.addEventListener('touchmove',e=>{if(dragY==null)return;dragD=Math.max(0,e.touches[0].clientY-dragY);if(dragD>0){sheet.style.transform=`translate(-50%,${dragD}px)`;e.preventDefault()}},{passive:false});
+sheet.addEventListener('touchend',()=>{if(dragY==null)return;sheet.style.transition='';sheet.style.transform='';if(dragD>70)close();dragY=null;dragD=0});
+document.querySelector('.grab').onclick=close;
 function openGame(id){const g=SM.game(id),d=g.daily&&(H[dayAt(0)]||[]).indexOf(id)>=0;
   let btns;
   if(g.store)btns=(g.appStore?`<a class="big-btn store-btn" href="${g.appStore}" data-tap="${g.id}-app"${TGT}>GET THE FREE APP</a>`:`<div class="big-btn off">APP STORE: COMING SOON</div>`)+`<a class="big-btn o" href="${g.url}" data-tap="${g.id}"${TGT}>PLAY ON THE WEB</a>`;
@@ -187,7 +193,7 @@ const SHEETS={
     <div class="stats"><div><b>${st.cur}</b><span>STREAK</span></div><div><b>${st.best}</b><span>BEST STREAK</span></div><div><b>${st.total}</b><span>DAYS PLAYED</span></div></div>
     <h3>BY GAME</h3><div class="list">${DAILY.map(g=>`<div class="li">${esc(g.name)}<em>${per(g.id)} ${per(g.id)===1?'day':'days'} finished</em></div>`).join('')}<div class="li">All ${N} in one day<em>${all} ${all===1?'day':'days'}</em></div></div>
     <div class="small">Each game has its own detailed stats in its menu. Counted on this device only.</div>`},
-  plus:()=>`<h2 class="t">smAisle Plus</h2><p>Coming soon: one purchase that unlocks extras in every smAisle game.</p><ul class="plus" style="margin-top:10px"><li>Full Archive for every daily game</li><li>Fresh random games after today's</li><li>Every new game as it's added</li></ul><div class="big-btn off">COMING SOON</div><div class="small">Nothing to buy yet. Every game is free to play.</div>`,
+  plus:()=>`<h2 class="t">smAisle Plus</h2><p>Coming soon: one purchase that unlocks extras in every smAisle game.</p><ul class="plus" style="margin-top:10px"><li>Full Archive for every daily game</li><li>Fresh random games after today's</li><li>Every new game as it's added</li><li>Fun surprises and bonus extras in every game</li></ul><div class="big-btn off">COMING SOON</div><div class="small">Nothing to buy yet. Every game is free to play.</div>`,
   help:()=>`<h2 class="t">How to Play</h2><p><b>Today's Games</b> are the daily ones. Each has a new game every day at midnight, the same for everyone. Tap one to play it.</p><p><b>Done checks</b> fill in by themselves when you finish a game on this device.</p><p><b>Your streak</b> grows each day you finish at least one daily game. The bar on the Today card fills as you finish all ${N}.</p><p><b>More games by smAisle</b>, below Today's Games, are always-on games you can play any time.</p><p><b>Archive and Stats</b> in the dock cover every daily game.</p><div class="small" style="margin-top:18px">${VER}</div>`
 };
 document.addEventListener('click',e=>{
