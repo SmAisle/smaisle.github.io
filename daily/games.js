@@ -43,15 +43,20 @@
   var OWN={
     d15:function(day){ return !!get('cb_day2_'+day); },
     gr:function(day){ return !!get('rw_day_'+day); },
+    // Classic (abc-) or Deal 'Em (abch-): either one finished counts.
     abc:function(day){
-      var h=json('abc-hist'); if(h&&h[day]&&String(h[day].r||'').length>=5) return true;
-      var k=json('abc-day8'); return !!k&&k.date===day&&(k.hands||[]).filter(function(x){return x&&x.done;}).length>=5;
+      return ['abc-','abch-'].some(function(p){
+        var h=json(p+'hist'); if(h&&h[day]&&String(h[day].r||'').length>=5) return true;
+        var k=json(p+'day8'); return !!k&&k.date===day&&(k.hands||[]).filter(function(x){return x&&x.done;}).length>=5;
+      });
     }
   };
+  // Other ids a game may write to smaisle_done that count as the same game (A, B, C, Deal 'Em).
+  var ALSO={abc:'abch'};
   var STARTED={
     d15:function(day){ return !!get('cb_prog_'+day); },
     gr:function(day){ return !!get('rw_prog_'+day); },
-    abc:function(day){ var k=json('abc-day8'); return !!k&&k.date===day&&(k.hands||[]).some(function(x){return x&&x.done;}); }
+    abc:function(day){ return ['abc-','abch-'].some(function(p){ var k=json(p+'day8'); return !!k&&k.date===day&&(k.hands||[]).some(function(x){return x&&x.done;}); }); }
   };
 
   window.SMAISLE={
@@ -59,7 +64,7 @@
     game:function(id){ for(var i=0;i<GAMES.length;i++) if(GAMES[i].id===id) return GAMES[i]; return null; },
     isDone:function(id,day){
       day=day||dayKey(); var s=shared()[day];
-      if(s&&s.indexOf(id)>=0) return true;
+      if(s&&(s.indexOf(id)>=0||(ALSO[id]&&s.indexOf(ALSO[id])>=0))) return true;
       try{ return OWN[id]?OWN[id](day):false; }catch(e){ return false; }
     },
     isStarted:function(id,day){ day=day||dayKey(); try{ return STARTED[id]?STARTED[id](day):false; }catch(e){ return false; } },
