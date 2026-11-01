@@ -33,7 +33,7 @@ html{touch-action:manipulation}
 </head>
 <body>
 <header>
-  <h1>sm<em>Ai</em>sle stats <span class="muted" style="font-size:.75rem;font-weight:400">v1.13 · Nov 1</span></h1>
+  <h1>sm<em>Ai</em>sle stats <span class="muted" style="font-size:.75rem;font-weight:400">v1.14 · Nov 1</span></h1>
   <div class="row"><span id="who" class="muted"></span><button id="signin" class="primary" hidden>Sign in with Google</button><button id="signout" hidden>Sign out</button></div>
 </header>
 <main>
@@ -114,10 +114,14 @@ async function loadCodes(){
 async function loadByCode(codeRows){
   try{
     const ds=(await db.collection("inv_devices").limit(10000).get()).docs.map(d=>d.data()), by={};
-    const when=d=>d?new Date(d+"T12:00").toLocaleDateString(undefined,{month:"short",day:"numeric"}):"";
-    ds.forEach(d=>{ const c=d.code||"unknown", x=by[c]||(by[c]={dev:0,last:"",g:{}}); x.dev++; if((d.last||"")>x.last) x.last=d.last||"";
-      Object.entries(d.o||{}).forEach(([k,n])=>{ const y=x.g[k]||(x.g[k]={dev:0,n:0,last:""}); y.dev++; y.n+=+n||0; const l=(d.d||{})[k]||""; if(l>y.last) y.last=l; }); });
-    const rows=Object.entries(by).sort((a,b)=>b[1].last.localeCompare(a[1].last));
+    // Each "last" is {ms, time}: time is true when the exact time was saved (tm per game, t for the device's latest open).
+    const at=(ms,time)=>({ms,time}), day=d=>d?at(new Date(d+"T12:00").getTime(),false):at(0,false);
+    const when=l=>l&&l.ms?new Date(l.ms).toLocaleString(undefined,l.time?{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}:{month:"short",day:"numeric"}):"";
+    ds.forEach(d=>{ const c=d.code||"unknown", x=by[c]||(by[c]={dev:0,last:at(0,false),g:{}}); x.dev++;
+      const dl=+d.t?at(+d.t,true):day(d.last); if(dl.ms>x.last.ms) x.last=dl;
+      Object.entries(d.o||{}).forEach(([k,n])=>{ const y=x.g[k]||(x.g[k]={dev:0,n:0,last:at(0,false)}); y.dev++; y.n+=+n||0;
+        const tm=+((d.tm||{})[k]), l=tm?at(tm,true):day((d.d||{})[k]); if(l.ms>y.last.ms) y.last=l; }); });
+    const rows=Object.entries(by).sort((a,b)=>b[1].last.ms-a[1].last.ms);
     $("#bycode").innerHTML=rows.length?`<tr class="muted"><td>Code</td><td>For</td><td>Games opened</td><td>Last seen</td></tr>`+rows.map(([c,x])=>`<tr><td><b>${esc(c)}</b></td><td class="muted">${esc((codeRows[c]||{}).note||"")}</td><td>${Object.entries(x.g).sort((a,b)=>b[1].n-a[1].n).map(([k,y])=>`${esc(gameName(k))} <span class="muted">(${y.n}× · ${y.dev} ${y.dev===1?"device":"devices"} · ${when(y.last)})</span>`).join("<br>")}</td><td>${when(x.last)}</td></tr>`).join(""):`<tr><td class="muted">No check-ins yet. They start the next time someone opens a testing game.</td></tr>`;
   }catch(e){ $("#bycode").innerHTML=`<tr><td class="muted">Couldn't load: ${esc(e.message)}</td></tr>`; }
 }
