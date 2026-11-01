@@ -83,16 +83,18 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
 .moreBtn{width:100%;display:flex;align-items:center;gap:12px;background:transparent;color:var(--ink);border:2px solid var(--ink);border-radius:14px;padding:12px 14px;text-align:left}
 .moreBtn .mini{display:flex;flex:none}.moreBtn .mini img{width:34px;height:34px;border-radius:9px;border:2px solid var(--paper);margin-left:-10px}.moreBtn .mini img:first-child{margin-left:0}
 .moreBtn .n{font:800 15px 'Libre Franklin'}.moreBtn .s{font:500 12px 'Libre Franklin';color:var(--ink2);margin-top:2px}.moreBtn .tx{flex:1}.moreBtn .arr{font-size:28px;opacity:.7}
-.shelf{position:fixed;inset:0;z-index:9;background:radial-gradient(circle at 20% 0%,#2a2f55 0,#14161f 55%);color:#fff;overflow:auto;padding:calc(14px + env(safe-area-inset-top)) 18px 40px;transform:translateY(100%);transition:transform .3s ease;visibility:hidden}
+.shelf{position:fixed;inset:0;z-index:9;background:var(--paper);background-image:radial-gradient(#e3dcc7 1px,transparent 1px);background-size:6px 6px;color:var(--ink);overflow:auto;padding:calc(14px + env(safe-area-inset-top)) 18px 40px;transform:translateY(100%);transition:transform .3s ease;visibility:hidden}
 .shelf.on{transform:none;visibility:visible}
 .shelf>*{max-width:440px;margin-left:auto;margin-right:auto}
-.back{color:#8fb8ff;font:700 15px 'Libre Franklin';padding:6px 0}
-.shelf-h{font:900 34px 'Libre Franklin';letter-spacing:-.02em;margin-top:10px}.shelf-h span{display:block;font:600 14px 'Libre Franklin';opacity:.6;letter-spacing:0}
-.sec2{font:800 11px 'Libre Franklin';letter-spacing:.12em;opacity:.6;margin:22px 2px 12px}
-.shelf .grid{margin-top:0}.shelf .nm{color:#fff}.shelf .soon .nm{color:#8b90a8}.shelf .soon .ico{border-color:#4a4f6a}
-.shelf .ico{border-color:rgba(255,255,255,.15);box-shadow:0 4px 12px rgba(0,0,0,.4)}
-.shelf .as{border-color:#14161f}
-.shelf .ver{color:#8b90a8;margin-top:34px}
+.shelf-h{margin-top:10px;border-top:4px double var(--ink);border-bottom:4px double var(--ink);padding:8px 0 6px;text-align:center}
+.shelf-h b{display:block;font:900 38px/1.05 'Playfair Display';letter-spacing:-.01em}
+.shelf-h span{display:block;font:700 13px 'Libre Franklin';color:var(--ink2);margin-top:4px}
+.shelf .as{border-color:var(--paper)}
+.shelf .sec{margin-top:22px;margin-bottom:12px}
+.shelf .grid{margin-top:0}
+.shelf .ico{border:2px solid var(--ink);box-shadow:2px 2px 0 rgba(0,0,0,.12)}
+.shelf .ver{margin-top:34px}
+.back{color:var(--ink);font:800 13px 'Libre Franklin';padding:6px 0}
 </style></head><body>
 <div class="wrap">
  <a class="home" href="https://smaisle.app/">‹ smAisle Home</a>
@@ -112,15 +114,15 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
  <button class="app" data-sheet="help"><div class="dk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 9a3 3 0 1 1 4 2.8c-.7.3-1 .9-1 1.6V14"/><circle cx="12" cy="18" r=".6" fill="currentColor"/></svg></div><div class="nm">How to Play</div></button>
 </nav>
 <div class="shelf" id="shelf"><div><button id="closeShelf" class="back">‹ smAisle Daily</button></div>
- <div class="shelf-h">More games<span>by smAisle</span></div>
- <div class="grid" id="more" style="margin-top:26px"></div>
+ <div class="shelf-h"><b>More Games</b><span>by smAisle</span></div>
+ <div id="more"></div>
  <div class="ver" id="ver2"></div>
 </div>
 <div class="scrim" id="scrim"></div>
 <div class="sheet" id="sheet"><div class="grab"></div><div id="sheetBody"></div></div>
 <script src="games.js"></script>
 <script>
-const VERSION='1.12',VDATE='Nov 1',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
+const VERSION='1.13',VDATE='Nov 1',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
 const $=id=>document.getElementById(id);
 const SM=window.SMAISLE,GAMES=SM.games,DAILY=GAMES.filter(g=>g.daily),N=DAILY.length;
 // On smaisle.app (or smaisle.github.io) games open in this tab (and share its storage). Anywhere else (the Claude link) they open in a new tab.
@@ -157,7 +159,9 @@ function render(){
   $('daily').innerHTML=DAILY.map(g=>{const d=done.indexOf(g.id)>=0,s=!d&&SM.isStarted(g.id,today);
     return `<button class="r" data-g="${g.id}">${pic(g)}<div class="tx"><div class="n">${esc(g.name)}</div><div class="s">${esc(g.sub)}</div></div><span class="b ${d?'done':s?'go':''}">${d?'✓ DONE':s?'KEEP GOING':'PLAY'}</span></button>`}).join('');
   $('mini').innerHTML=['sd','sb','br'].map(id=>`<img src="${SM.game(id).icon}" alt="">`).join('');
-  $('more').innerHTML=GAMES.filter(g=>!g.daily).map(tile).join('')+`<div class="app soon"><div class="ico"></div><div class="nm">Coming<br>soon</div></div>`;
+  const store=GAMES.filter(g=>!g.daily&&g.store),web=GAMES.filter(g=>!g.daily&&!g.store);
+  $('more').innerHTML=`<div class="sec">ON THE APP STORE</div><div class="grid">${store.map(tile).join('')}</div>`
+    +`<div class="sec">PLAY ON THE WEB</div><div class="grid">${web.map(tile).join('')}<div class="app soon"><div class="ico"></div><div class="nm">Coming<br>soon</div></div></div>`;
   $('ver').textContent=$('ver2').textContent=VER;
 }
 function tick(){const now=new Date(),mid=new Date(now);mid.setHours(24,0,0,0);const m=Math.max(0,Math.ceil((mid-now)/60000));$('next').textContent=`New games in ${Math.floor(m/60)}h ${m%60}m`;
@@ -197,7 +201,7 @@ const SHEETS={
     <div class="stats"><div><b>${st.cur}</b><span>STREAK</span></div><div><b>${st.best}</b><span>BEST STREAK</span></div><div><b>${st.total}</b><span>DAYS PLAYED</span></div></div>
     <h3>BY GAME</h3><div class="list">${DAILY.map(g=>`<div class="li">${esc(g.name)}<em>${per(g.id)} ${per(g.id)===1?'day':'days'} finished</em></div>`).join('')}<div class="li">All ${N} in one day<em>${all} ${all===1?'day':'days'}</em></div></div>
     <div class="small">Each game has its own detailed stats in its menu. Counted on this device only.</div>`},
-  plus:()=>`<h2 class="t">smAisle Plus</h2><p>Coming soon: one purchase that unlocks extras in every smAisle game.</p><ul class="plus" style="margin-top:10px"><li>Full Archive for every daily game</li><li>Fresh random games after today's</li><li>Every new game as it's added</li><li>Fun surprises and bonus extras in every game</li></ul><div class="big-btn off">COMING SOON</div><div class="small">Nothing to buy yet. Every game is free to play.</div>`,
+  plus:()=>`<h2 class="t">smAisle Daily Plus</h2><p>Coming soon: one purchase that unlocks extras in the daily games: ${DAILY.map(g=>esc(g.name)).join(', ').replace(/, ([^,]*)$/,' and $1')}.</p><ul class="plus" style="margin-top:10px"><li>Full Archive for every daily game</li><li>Fresh random games after today's</li><li>New daily games as they're added</li><li>Bonus extras in each daily game</li></ul><div class="big-btn off">COMING SOON</div><div class="small">Nothing to buy yet. Every game is free to play.</div>`,
   help:()=>`<h2 class="t">How to Play</h2><p><b>Today's Games</b> are the daily ones. Each has a new game every day at midnight, the same for everyone. Tap one to play it.</p><p><b>Done checks</b> fill in by themselves when you finish a game on this device.</p><p><b>Your streak</b> grows each day you finish at least one daily game. The bar on the Today card fills as you finish all ${N}.</p><p><b>More games by smAisle</b>, below Today's Games, are always-on games you can play any time.</p><p><b>Archive and Stats</b> in the dock cover every daily game.</p><div class="small" style="margin-top:18px">${VER}</div>`
 };
 document.addEventListener('click',e=>{
