@@ -4,6 +4,8 @@
 // Remembered per browser in smaisle_inv, shared by every game on this site. A soft lock only.
 (function(){
   var me=document.currentScript, GAME=me.getAttribute('data-game'), NAME=me.getAttribute('data-name')||'This game';
+  // Each game's icon on its invite screen (same icons as smAisle Daily and smaisle.app).
+  var ICON={daily15:'daily-15',abcdeal:'abc-deal',gramble:'gramble',shuffleblast:'shuffle-blast',sdblast:'straight-down'}[GAME];
   if(!/github\.io$/.test(location.hostname)) return;
   var KEY='smaisle_inv', DOC='https://firestore.googleapis.com/v1/projects/aislerun-88e79/databases/(default)/documents/invite_codes/';
   var API='AIzaSyAlbSCTpAiK-1tojkyWrY3QuJsSzILHSfs';
@@ -26,11 +28,11 @@
   if(!document.querySelector('meta[name=viewport]')){ var vm=document.createElement('meta'); vm.name='viewport'; vm.content='width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no'; document.head.appendChild(vm); }
   var st=document.createElement('style');
   // Same cream newspaper look as The Daily 15's own invite screen and smAisle Daily, so every game's invite screen matches.
-  st.textContent='body>*:not(#smGate){display:none!important}#smGate{touch-action:manipulation;position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#f4efe3;color:#1a1a1a;font:17px/1.5 Georgia,serif;padding:24px;z-index:99999}#smGate form{max-width:360px;width:100%;text-align:center}#smGate h1{font-size:28px;margin:0 0 8px}#smGate input{width:100%;box-sizing:border-box;font:inherit;font-size:17px;letter-spacing:.08em;text-transform:uppercase;padding:10px 12px;border:2px solid #1a1a1a;border-radius:0;background:#fff;color:#1a1a1a;margin:12px 0 8px;-webkit-appearance:none}#smGate button{font:inherit;font-weight:bold;padding:10px 22px;border:2px solid #1a1a1a;border-radius:0;background:#1a1a1a;color:#f4efe3;cursor:pointer}#smGate p{margin:0}#smGate .bad{color:#b3261e;margin-top:10px}';
+  st.textContent='body>*:not(#smGate){display:none!important}#smGate{touch-action:manipulation;position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#f4efe3;color:#1a1a1a;font:17px/1.5 Georgia,serif;padding:24px;z-index:99999}#smGate form{max-width:360px;width:100%;text-align:center}#smGate h1{font-size:28px;margin:0 0 8px}#smGate input{width:100%;box-sizing:border-box;font:inherit;font-size:17px;letter-spacing:.08em;text-transform:uppercase;padding:10px 12px;border:2px solid #1a1a1a;border-radius:0;background:#fff;color:#1a1a1a;margin:12px 0 8px;-webkit-appearance:none}#smGate button{font:inherit;font-weight:bold;padding:10px 22px;border:2px solid #1a1a1a;border-radius:0;background:#1a1a1a;color:#f4efe3;cursor:pointer}#smGate p{margin:0}#smGate .bad{color:#b3261e;margin-top:10px}#smGate .gic{width:72px;height:72px;border-radius:17px;border:1px solid rgba(0,0,0,.15);display:block;margin:0 auto 12px}#smGate .gx{font-size:13px;color:#6b6457;margin-top:14px}#smGate .gm{position:fixed;left:0;right:0;bottom:calc(18px + env(safe-area-inset-bottom));text-align:center;font:bold 15px Georgia,serif}#smGate .gm span{font:800 11px -apple-system,sans-serif;background:#ffd43b;border:1.5px solid #1a1a1a;padding:1px 5px;margin-right:4px}';
   document.head.appendChild(st);
   function show(){
     var g=document.createElement('div'); g.id='smGate';
-    g.innerHTML='<form autocomplete="off"><h1></h1><p><span class="gn"></span> is in testing. Enter your invite code to play.</p><input aria-label="Invite code" placeholder="Invite code" autocapitalize="characters" spellcheck="false"><button type="submit">Play</button><p class="bad" hidden>That code didn\'t work. Check it and try again.</p></form>';
+    g.innerHTML='<form autocomplete="off">'+(ICON?'<img class="gic" alt="" src="https://smaisle.github.io/daily/icons/'+ICON+'.png">':'')+'<h1></h1><p><span class="gn"></span> is in testing. Enter your invite code to play.</p><input aria-label="Invite code" placeholder="Invite code" autocapitalize="characters" spellcheck="false"><button type="submit">Play</button><p class="bad" hidden>That code didn\'t work. Check it and try again.</p><p class="gx">Enter it once. This device remembers it for every smAisle game it unlocks.</p></form>'+(/^(daily15|abcdeal|gramble)$/.test(GAME)?'<div class="gm"><span>smAisle</span>Daily</div>':'<div class="gm"><span>smAisle</span></div>');
     g.querySelector('h1').textContent=NAME; g.querySelector('.gn').textContent=NAME;
     document.body.appendChild(g);
     var f=g.querySelector('form');
