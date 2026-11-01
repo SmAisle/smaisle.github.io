@@ -33,7 +33,7 @@ html{touch-action:manipulation}
 </head>
 <body>
 <header>
-  <h1>sm<em>Ai</em>sle stats <span class="muted" style="font-size:.75rem;font-weight:400">v1.15 · Nov 1</span></h1>
+  <h1>sm<em>Ai</em>sle stats <span class="muted" style="font-size:.75rem;font-weight:400">v1.16 · Nov 1</span></h1>
   <div class="row"><span id="who" class="muted"></span><button id="signin" class="primary" hidden>Sign in with Google</button><button id="signout" hidden>Sign out</button></div>
 </header>
 <main>
@@ -122,7 +122,7 @@ async function loadByCode(codeRows){
       Object.entries(d.o||{}).forEach(([k,n])=>{ const y=x.g[k]||(x.g[k]={dev:0,n:0,last:at(0,false)}); y.dev++; y.n+=+n||0;
         const tm=+((d.tm||{})[k]), l=tm?at(tm,true):day((d.d||{})[k]); if(l.ms>y.last.ms) y.last=l; }); });
     const rows=Object.entries(by).sort((a,b)=>b[1].last.ms-a[1].last.ms);
-    $("#bycode").innerHTML=rows.length?`<tr class="muted"><td>Code</td><td>For</td><td>Games opened</td><td>Last seen</td></tr>`+rows.map(([c,x])=>`<tr><td><b>${esc(c)}</b></td><td class="muted">${esc((codeRows[c]||{}).note||"")}</td><td>${Object.entries(x.g).sort((a,b)=>b[1].n-a[1].n).map(([k,y])=>`${esc(gameName(k))} <span class="muted">(${y.n}× · ${y.dev} ${y.dev===1?"device":"devices"} · ${when(y.last)})</span>`).join("<br>")}</td><td>${when(x.last)}</td></tr>`).join(""):`<tr><td class="muted">No check-ins yet. They start the next time someone opens a testing game.</td></tr>`;
+    $("#bycode").innerHTML=rows.length?`<tr class="muted"><td>For</td><td>Code</td><td>Games opened</td><td>Last seen</td></tr>`+rows.map(([c,x])=>`<tr><td>${esc((codeRows[c]||{}).note||"")}</td><td><b>${esc(c)}</b></td><td>${Object.entries(x.g).sort((a,b)=>b[1].n-a[1].n).map(([k,y])=>`${esc(gameName(k))} <span class="muted">(${y.n}× · ${y.dev} ${y.dev===1?"device":"devices"} · ${when(y.last)})</span>`).join("<br>")}</td><td>${when(x.last)}</td></tr>`).join(""):`<tr><td class="muted">No check-ins yet. They start the next time someone opens a testing game.</td></tr>`;
   }catch(e){ $("#bycode").innerHTML=`<tr><td class="muted">Couldn't load: ${esc(e.message)}</td></tr>`; }
 }
 $("#newcode").onsubmit=async e=>{
