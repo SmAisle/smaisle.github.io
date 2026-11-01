@@ -120,7 +120,7 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
 <div class="sheet" id="sheet"><div class="grab"></div><div id="sheetBody"></div></div>
 <script src="games.js"></script>
 <script>
-const VERSION='1.11',VDATE='Nov 1',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
+const VERSION='1.12',VDATE='Nov 1',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
 const $=id=>document.getElementById(id);
 const SM=window.SMAISLE,GAMES=SM.games,DAILY=GAMES.filter(g=>g.daily),N=DAILY.length;
 // On smaisle.app (or smaisle.github.io) games open in this tab (and share its storage). Anywhere else (the Claude link) they open in a new tab.
@@ -175,9 +175,12 @@ sheet.addEventListener('touchstart',e=>{if(e.touches.length!==1)return;if(sheet.
 sheet.addEventListener('touchmove',e=>{if(dragY==null)return;dragD=Math.max(0,e.touches[0].clientY-dragY);if(dragD>0){sheet.style.transform=`translate(-50%,${dragD}px)`;e.preventDefault()}},{passive:false});
 sheet.addEventListener('touchend',()=>{if(dragY==null)return;sheet.style.transition='';sheet.style.transform='';if(dragD>70)close();dragY=null;dragD=0});
 document.querySelector('.grab').onclick=close;
+// A game with fullUrl (Straight Down) opens its full version from the hub, carrying this device's invite code.
+function inviteCode(){try{const m=JSON.parse(localStorage.getItem('smaisle_codes')||'{}')||{};return localStorage.getItem('smaisle_code')||m.daily15||m.abcdeal||m.gramble||m.all||Object.values(m)[0]||''}catch(e){return ''}}
+function gameUrl(g){if(!g.fullUrl||!SITE)return g.url;const c=inviteCode();return g.fullUrl+(c?'?code='+encodeURIComponent(c):'')}
 function openGame(id){const g=SM.game(id),d=g.daily&&(H[dayAt(0)]||[]).indexOf(id)>=0;
   let btns;
-  if(g.store)btns=(g.appStore?`<a class="big-btn store-btn" href="${g.appStore}" data-tap="${g.id}-app"${TGT}>GET THE FREE APP</a>`:`<div class="big-btn off">APP STORE: COMING SOON</div>`)+`<a class="big-btn o" href="${g.url}" data-tap="${g.id}"${TGT}>PLAY ON THE WEB</a>`;
+  if(g.store)btns=(g.appStore?`<a class="big-btn store-btn" href="${g.appStore}" data-tap="${g.id}-app"${TGT}>GET THE FREE APP</a>`:`<div class="big-btn off">APP STORE: COMING SOON</div>`)+`<a class="big-btn o" href="${gameUrl(g)}" data-tap="${g.id}"${TGT}>PLAY ON THE WEB</a>`;
   else btns=`<a class="big-btn" href="${g.url}" data-tap="${g.id}"${TGT}>${g.daily?(d?'PLAY AGAIN':"PLAY TODAY'S GAME"):'PLAY ON THE WEB'}</a>`;
   open(`<div class="sh-head"><div class="pic">${pic(g)}</div><div><h2>${esc(g.name)}</h2><div class="tag">${esc(g.tag)}${g.daily?'':g.store?' · App Store':' · Play on the web'}</div></div></div>
   <p>${esc(g.desc)}</p>${btns}
