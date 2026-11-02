@@ -85,6 +85,11 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
 .list{margin-top:10px}.list .li{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 2px;border-bottom:1px solid var(--paper2);font:600 14px 'Libre Franklin'}
 .list .li em{font-style:normal;color:var(--fade);font-weight:500;font-size:13px;text-align:right}
 .dots{display:flex;gap:5px}.dots i{width:22px;height:22px;border-radius:6px;overflow:hidden;opacity:.22;filter:grayscale(1)}.dots i.on{opacity:1;filter:none}.dots img{width:100%;height:100%;display:block}
+.plan{display:block;width:100%;text-align:left;margin-top:10px;background:var(--card);color:var(--ink);border:2px solid var(--ink);border-radius:10px;padding:12px 14px;box-shadow:2px 2px 0 var(--shadow)}
+.plan b{display:block;font:900 18px 'Playfair Display'}.plan span{display:block;font:600 13.5px/1.35 'Libre Franklin';color:var(--ink2);margin-top:3px}.plan.best{background:var(--hi);color:var(--hi-ink)}.plan.best span{color:var(--hi-ink)}
+.fm{display:inline-block;font:800 11px 'Libre Franklin';letter-spacing:.08em;background:var(--hi);color:var(--hi-ink);border:2px solid var(--ink);border-radius:4px;padding:3px 7px;margin-bottom:6px}
+.pmsg{font:700 14px 'Libre Franklin';text-align:center;margin-top:12px}.legal{font:500 11.5px/1.45 'Libre Franklin';color:var(--fade);margin-top:12px;text-align:center}.legal a{color:var(--fade)}
+.linkbtn{background:none;border:0;color:var(--ink2);font:700 13px 'Libre Franklin';text-decoration:underline;margin:12px auto 0;display:block}
 .plus li{list-style:none;padding:8px 0;font:600 14.5px 'Libre Franklin';border-bottom:1px solid var(--paper2)}
 .plus li:before{content:"★ ";color:var(--star)}
 .as{position:absolute;bottom:-7px;left:50%;transform:translateX(-50%);background:#0a84ff;color:#fff;font:800 8.5px 'Libre Franklin';letter-spacing:.04em;padding:2px 5px;border-radius:6px;white-space:nowrap;border:1.5px solid var(--paper)}
@@ -115,16 +120,20 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
 .plusBtn .n{font:900 17px 'Playfair Display'}.plusBtn .s{font:500 12px 'Libre Franklin';color:var(--ink2);margin-top:2px}.plusBtn .tx{flex:1}.plusBtn .arr{font-size:28px;opacity:.7}
 .pt{font:800 9.5px 'Libre Franklin';letter-spacing:.06em;background:var(--hi);color:var(--hi-ink);border:1.5px solid var(--ink);border-radius:4px;padding:1px 5px;vertical-align:3px;margin-left:4px}
 .pint{font:500 14px/1.45 'Libre Franklin';color:var(--ink2);margin:16px auto 12px;text-align:center}
+.offer{margin:12px 0 0;padding:12px 14px;border:2px solid var(--ink);border-radius:14px;background:var(--hi);color:var(--hi-ink);display:flex;align-items:center;gap:12px;width:100%;text-align:left;font:inherit;cursor:pointer}
+.offer b{display:block;font:900 17px 'Playfair Display'}.offer span{font:600 13px/1.35 'Libre Franklin'}.offer .arr{margin-left:auto;font-size:22px}
+.saved{font:700 12px 'Libre Franklin';color:var(--ink2);margin:4px 0 8px}
 #pshelf .r{text-decoration:none;color:var(--ink)}#pshelf .r .b.pv{background:none;color:var(--ink);border:2px solid var(--ink);padding:6px 9px}
 </style></head><body>
 <div class="wrap">
  <a class="home" href="https://smaisle.app/">‹ smAisle Home</a>
  <div class="bar"><div class="logo"><span class="sm">smAisle</span><span class="d">Daily</span></div><span class="date" id="date"></span></div>
- <div class="widget"><div class="t">TODAY</div><div class="big" id="streak"></div>
+ <div class="widget"><div class="t">TODAY</div><div class="big" id="streak"></div><div class="saved" id="saved" hidden></div>
   <div class="prog" id="prog"></div>
   <div class="row"><span id="played"></span><span id="next"></span></div></div>
  <div class="sec">TODAY'S GAMES</div>
  <div id="daily"></div>
+ <button class="offer" id="offer" hidden><div><b>Want more?</b><span>Plus games, Extra Editions and the full Archive are in Plus.</span></div><span class="arr">›</span></button>
  <button class="plusBtn" id="openPlus"><div class="mini" id="pmini"></div><div class="tx"><div class="n">Plus games <span class="pt">★ PLUS</span></div><div class="s" id="psub"></div></div><span class="arr">›</span></button>
  <div class="moreWrap"><button class="moreBtn" id="openShelf"><div class="mini" id="mini"></div><div class="tx"><div class="n">More games by smAisle</div><div class="s">Arcade, puzzle and strategy games</div></div><span class="arr">›</span></button></div>
  <div class="ver" id="ver"></div>
@@ -151,7 +160,7 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
 <div class="sheet" id="sheet"><div class="grab"></div><div id="sheetBody"></div></div>
 <script src="games.js"></script>
 <script>
-const VERSION='1.19',VDATE='Nov 2',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
+const VERSION='1.22',VDATE='Nov 2',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
 const $=id=>document.getElementById(id);
 const SM=window.SMAISLE,GAMES=SM.games,DAILY=GAMES.filter(g=>g.daily&&!g.plus),PLUSG=GAMES.filter(g=>g.plus),N=DAILY.length;
 // On smaisle.app (or smaisle.github.io) games open in this tab (and share its storage). Anywhere else (the Claude link) they open in a new tab.
@@ -168,11 +177,26 @@ const fmtDay=k=>{const [y,m,d]=k.split('-').map(Number);return new Date(y,m-1,d)
 function doneOn(day){const h=store.json('smd_hist',{}),seen=h[day]||[];return DAILY.filter(g=>seen.indexOf(g.id)>=0||SM.isDone(g.id,day)).map(g=>g.id)}
 function remember(){const h=store.json('smd_hist',{});for(let i=0;i<60;i++){const d=dayAt(i),l=doneOn(d);if(l.length)h[d]=l}
   const k=Object.keys(h).sort();while(k.length>400)delete h[k.shift()];store.put('smd_hist',h);return h}
+/* ---------- Plus perks ---------- */
+// Plus member: the app tells the hub (DG_APP.plus). On the website Plus is unlocked for everyone for now, so its perks apply there too.
+const member=()=>!window.SMD_APP||!!(window.DG_APP&&DG_APP.plus);
+// Founding Member: the app sets DG_APP.founding when the subscription's original purchase was before Feb 1, 2027 (ET).
+// Website visitors aren't members, so no badge there.
+const founder=()=>!!(window.SMD_APP&&window.DG_APP&&DG_APP.plus&&DG_APP.founding);
 function streaks(h){
-  let cur=0;for(let i=h[dayAt(0)]?0:1;;i++){if(h[dayAt(i)])cur++;else break}
-  const days=Object.keys(h).sort();let best=0,run=0,prev=null;
-  for(const d of days){const [y,m,dd]=d.split('-').map(Number);const t=new Date(y,m-1,dd).getTime();run=prev&&Math.round((t-prev)/864e5)===1?run+1:1;prev=t;best=Math.max(best,run)}
-  return {cur,best:Math.max(best,cur),total:days.length};
+  // Streak protection (Plus): one missed day is forgiven, at most once every 7 days. Forgiven days keep the streak alive but don't add to it.
+  // Today never breaks the streak: it's still in progress.
+  const protect=member(),days=Object.keys(h).sort(),saved=[];
+  const key=t=>SM.dayKey(new Date(t)),D=k=>{const [y,m,d]=k.split('-').map(Number);return new Date(y,m-1,d).getTime()};
+  let cur=0,best=0,last=null;
+  if(days.length){const today=dayAt(0);
+    for(let t=D(days[0]);key(t)<=today;t=new Date(new Date(t).setDate(new Date(t).getDate()+1)).getTime()){const k=key(t);
+      if(h[k]){cur++}
+      else if(k===today){}
+      else if(protect&&cur>0&&(last==null||Math.round((t-last)/864e5)>=7)){last=t;saved.push(k)}
+      else{cur=0;saved.length=0}
+      best=Math.max(best,cur)}}
+  return {cur,best,total:days.length,saved};  // saved: forgiven days in the current streak
 }
 
 /* ---------- Main screen ---------- */
@@ -183,11 +207,13 @@ function render(){
   H=remember();const today=dayAt(0),done=H[today]||[],n=done.length,st=streaks(H);
   $('date').textContent=new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
   $('streak').textContent=st.cur?`🔥 ${st.cur}-day streak`:'Start a streak today';
+  const sv=st.cur&&st.saved.filter(k=>k>=dayAt(7)).pop();$('saved').hidden=!sv;if(sv)$('saved').textContent=`🛡 Plus saved your streak on ${fmtDay(sv)}`;
+  $('offer').hidden=!(n===N&&!member());
   $('prog').innerHTML=DAILY.map((g,i)=>`<span class="${i<n?'on':''}"></span>`).join('');
   $('played').textContent=n===N?`All ${N} daily games done!`:n===0?(st.cur?'Play today to keep it':'Finish a daily game to start'):`${n} of ${N} daily games done`;
   $('daily').innerHTML=DAILY.map(g=>{const d=done.indexOf(g.id)>=0,s=!d&&SM.isStarted(g.id,today);
     return `<button class="r" data-g="${g.id}">${pic(g)}<div class="tx"><div class="n">${esc(g.name)}</div><div class="s">${esc(g.sub)}</div></div><span class="b ${d?'done':s?'go':''}">${d?'✓ DONE':s?'KEEP GOING':'PLAY'}</span></button>`}).join('');
-  const owned=!window.SMD_APP||!!(window.DG_APP&&DG_APP.plus);  // the website plays the Plus games in full for now; the app gates them
+  const owned=member();  // the website plays the Plus games in full for now; the app gates them
   $('pmini').innerHTML=PLUSG.map(g=>`<img src="${g.icon}" alt="">`).join('');
   $('psub').textContent=PLUSG.map(g=>g.name).join(', ')+(owned?'':' · try a preview');
   $('pint').textContent=!window.SMD_APP?'More daily games, free to play in full on the website for now.':owned?'Your daily Plus games. Thanks for getting Plus!':'More daily games for Plus members. Everyone can play a free preview of each one.';
@@ -226,18 +252,46 @@ function openGame(id){const g=SM.game(id),d=g.daily&&(H[dayAt(0)]||[]).indexOf(i
   ${g.daily&&d?'<div class="small">✓ You finished today\'s game.</div>':''}
   ${g.daily&&!SITE?'<div class="small">Games open in a new tab here. On smaisle.app/daily your Done checks and streak fill in by themselves.</div>':''}`);
 }
+// smAisle Daily Plus. In the app it's a subscription (monthly or yearly) sold by the App Store; the app sends the
+// plans and prices with dgNative('store',{plus,plan,plans,msg}). Founding Member intro prices run through Jan 31; the
+// App Store decides who still gets them. On the website the Plus games are free for now, so no prices show here.
+let PLANS=[],PMSG='',PLAN='',PWAIT=true,PT=0;
+// Founding Member line on the Plus screen for members: from the app's DG_APP.founding (original purchase before Feb 1, 2027).
+const PERK=()=>`<ul class="plus" style="margin-top:10px"><li>${PLUSG.length} more daily games: ${PLUSG.map(g=>esc(g.name)).join(', ').replace(/, ([^,]*)$/,' and $1')}</li><li>Full Archive for every daily game</li><li>Fresh random games after today's</li><li>New daily games as they're added</li><li>Bonus extras in each daily game</li></ul>`;
+function planText(p){const per=p.plan==='yearly'?'year':'month';
+  if(!p.introPrice)return `${p.price} a ${per}`;
+  if(p.introMode==='upfront')return `${p.introPrice} for your first ${p.introPeriods>1?p.introPeriods+' '+per+'s':per}, then ${p.price} a ${per}`;
+  return `${p.introPrice} a ${per} for ${p.introPeriods} ${per}s, then ${p.price} a ${per}`}
+function plusSheet(){
+  if(!window.SMD_APP)return `<h2 class="t">smAisle Daily Plus</h2><p>The Plus games are free to play in full on the website for now. Enjoy!</p>${PERK()}<div class="small">In the smAisle Daily iPhone app, Plus is a subscription.</div>`;
+  const owned=!!(window.DG_APP&&DG_APP.plus),intro=PLANS.some(p=>p.introPrice);
+  if(owned)return `<h2 class="t">smAisle Daily Plus</h2>${founder()?'<div class="fm">FOUNDING MEMBER</div>':''}<p>${founder()?"You're a Founding Member. ":''}Thanks for supporting smAisle! Plus is on.</p>${PERK()}${PMSG?`<div class="pmsg">${esc(PMSG)}</div>`:''}<button class="big-btn o" data-pcmd="manage">MANAGE SUBSCRIPTION</button>`;
+  const btns=PLANS.length?PLANS.map(p=>`<button class="plan${p.plan==='yearly'?' best':''}" data-buy="${esc(p.id)}"><b>${p.plan==='yearly'?'Yearly':'Monthly'}</b><span>${esc(planText(p))}</span></button>`).join('')
+    :PWAIT?'<div class="big-btn off">LOADING PRICES…</div>':'<div class="pmsg">Can\'t reach the App Store right now. Check your connection and try again.</div><button class="big-btn o" data-pcmd="retry">TRY AGAIN</button>';
+  return `<h2 class="t">smAisle Daily Plus</h2>${intro?'<div class="fm">FOUNDING MEMBER PRICE · THROUGH JAN 31</div>':''}<p>${intro?'Join early and be a Founding Member. These prices are for new members who join by January 31.':'Support smAisle and get more every day.'}</p>${PERK()}${btns}${PMSG?`<div class="pmsg">${esc(PMSG)}</div>`:''}
+  <button class="linkbtn" data-pcmd="restore">Restore Purchases</button>
+  <div class="legal">Plus renews automatically at the regular price until you cancel. Cancel any time in Settings › your name › Subscriptions, at least 24 hours before it renews. Payment is charged to your Apple Account. <a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/">Terms of Use</a> · <a href="https://smaisle.app/privacy.html">Privacy Policy</a></div>`}
+function toNative(m){try{webkit.messageHandlers.dg.postMessage(m)}catch(e){}}
+// Ask the app for the plans and prices. If none come back in 8 seconds (offline, App Store down), offer Try again.
+function plusShown(){return sheet.classList.contains('on')&&body.querySelector('[data-pcmd]')}
+function askPrices(){PWAIT=true;toNative({cmd:'ready'});clearTimeout(PT);PT=setTimeout(()=>{PWAIT=false;if(!PLANS.length&&plusShown())body.innerHTML=plusSheet()},8000)}
+window.dgNative=(cmd,d)=>{if(cmd!=='store'||!window.DG_APP)return;d=d||{};DG_APP.plus=!!d.plus;PLANS=d.plans||PLANS;PLAN=d.plan||'';PMSG=d.msg||'';
+  render();if(sheet.classList.contains('on')&&body.querySelector('[data-pcmd]'))body.innerHTML=plusSheet()};
+document.addEventListener('click',e=>{const b=e.target.closest('[data-buy]');if(b){PMSG='';toNative({cmd:'buy',id:b.dataset.buy});return}
+  const c=e.target.closest('[data-pcmd]');if(c){PMSG='';if(c.dataset.pcmd==='retry'){askPrices();body.innerHTML=plusSheet();return}toNative({cmd:c.dataset.pcmd})}});
+if(window.SMD_APP)askPrices();
 const SHEETS={
   archive:()=>{let rows='';for(let i=1;i<=14;i++){const d=dayAt(i),l=H[d]||[];
       rows+=`<div class="li">${fmtDay(d)}<span class="dots">${DAILY.map(g=>`<i class="${l.indexOf(g.id)>=0?'on':''}" title="${esc(g.name)}"><img src="${g.icon}" alt=""></i>`).join('')}</span></div>`}
     return `<h2 class="t">Archive</h2><p>Which daily games you finished on each day. To play an earlier day, open the game and tap Archive in its menu.${DAILY.some(g=>!g.archive)?' '+DAILY.filter(g=>!g.archive).map(g=>esc(g.name)).join(' and ')+' has no Archive yet.':''}</p>
     <div class="list">${rows}</div><h3>OPEN A GAME'S ARCHIVE</h3>${DAILY.filter(g=>g.archive).map(g=>`<a class="big-btn o" href="${g.url}" data-tap="${g.id}-arch"${TGT}>${esc(g.name)}</a>`).join('')}`},
   stats:()=>{const st=streaks(H),days=Object.keys(H),per=id=>days.filter(d=>H[d].indexOf(id)>=0).length,all=days.filter(d=>H[d].length>=N).length;
-    return `<h2 class="t">Stats</h2><p>One streak across all your daily games. A day counts when you finish at least one of them.</p>
+    return `<h2 class="t">Stats</h2>${founder()?'<div class="fm">★ FOUNDING MEMBER</div>':''}<p>One streak across all your daily games. A day counts when you finish at least one of them.${member()?' With Plus, one missed day a week won\'t break your streak.':''}</p>
     <div class="stats"><div><b>${st.cur}</b><span>STREAK</span></div><div><b>${st.best}</b><span>BEST STREAK</span></div><div><b>${st.total}</b><span>DAYS PLAYED</span></div></div>
     <h3>BY GAME</h3><div class="list">${DAILY.map(g=>`<div class="li">${esc(g.name)}<em>${per(g.id)} ${per(g.id)===1?'day':'days'} finished</em></div>`).join('')}<div class="li">All ${N} in one day<em>${all} ${all===1?'day':'days'}</em></div></div>
     <div class="small">Each game has its own detailed stats in its menu. Counted on this device only.</div>`},
-  plus:()=>`<h2 class="t">smAisle Daily Plus</h2><p>Coming soon: one purchase for smAisle Daily.</p><ul class="plus" style="margin-top:10px"><li>${PLUSG.length} more daily games: ${PLUSG.map(g=>esc(g.name)).join(', ').replace(/, ([^,]*)$/,' and $1')}</li><li>Full Archive for every daily game</li><li>Fresh random games after today's</li><li>New daily games as they're added</li><li>Bonus extras in each daily game</li></ul><div class="big-btn off">COMING SOON</div><div class="small">Nothing to buy yet. Every game is free to play.</div>`,
-  help:()=>`<h2 class="t">How to Play</h2><p><b>Today's Games</b> are the daily ones. Each has a new game every day at midnight, the same for everyone. Tap one to play it.</p><p><b>Done checks</b> fill in by themselves when you finish a game on this device.</p><p><b>Your streak</b> grows each day you finish at least one daily game. The bar on the Today card fills as you finish all ${N}.</p><p><b>More games by smAisle</b>, below Today's Games, are always-on games you can play any time.</p><p><b>Archive and Stats</b> in the dock cover every daily game.</p><h3>SETTINGS</h3><div style="font:800 14px 'Libre Franklin';margin-top:10px">Dark mode</div><div class="mode" id="modeRow">${[['off','Off'],['on','On'],['auto','Match phone']].map(([k,l])=>`<button data-mode="${k}" class="${smMode()===k?'on':''}">${l}</button>`).join('')}</div><div class="small" style="text-align:left">On uses Navy. Match phone switches with your phone.</div><div class="small" style="margin-top:18px">${VER}</div>`
+  plus:()=>{if(window.SMD_APP&&!PLANS.length&&!PWAIT)askPrices();return plusSheet()},
+  help:()=>`<h2 class="t">How to Play</h2><p><b>Today's Games</b> are the daily ones. Each has a new game every day at midnight, the same for everyone. Tap one to play it.</p><p><b>Done checks</b> fill in by themselves when you finish a game on this device.</p><p><b>Your streak</b> grows each day you finish at least one daily game. With Plus, one missed day a week won't break it. The bar on the Today card fills as you finish all ${N}.</p><p><b>More games by smAisle</b>, below Today's Games, are always-on games you can play any time.</p><p><b>Archive and Stats</b> in the dock cover every daily game.</p><h3>SETTINGS</h3><div style="font:800 14px 'Libre Franklin';margin-top:10px">Dark mode</div><div class="mode" id="modeRow">${[['off','Off'],['on','On'],['auto','Match phone']].map(([k,l])=>`<button data-mode="${k}" class="${smMode()===k?'on':''}">${l}</button>`).join('')}</div><div class="small" style="text-align:left">On uses Navy. Match phone switches with your phone.</div><div class="small" style="margin-top:18px">${VER}</div>`
 };
 document.addEventListener('click',e=>{
   const md=e.target.closest('#modeRow [data-mode]');if(md){smMode(md.dataset.mode);document.querySelectorAll('#modeRow button').forEach(x=>x.classList.toggle('on',x===md));tap('mode-'+md.dataset.mode);return}
@@ -245,13 +299,15 @@ document.addEventListener('click',e=>{
   const g=e.target.closest('[data-g]');if(g)return openGame(g.dataset.g);
   if(e.target.closest('#openPlus'))return $('pshelf').classList.add('on');
   if(e.target.closest('#closePlus'))return $('pshelf').classList.remove('on');
+  if(e.target.closest('#offer')){tap('offer');return open(SHEETS.plus())}
   if(e.target.closest('#getPlus')){$('pshelf').classList.remove('on');return open(SHEETS.plus())}
   if(e.target.closest('#openShelf'))return $('shelf').classList.add('on');
   if(e.target.closest('#closeShelf'))return $('shelf').classList.remove('on');
   const s=e.target.closest('[data-sheet]');if(s)open(SHEETS[s.dataset.sheet]());
 });
 // Coming back to this tab from a game: refresh the Done checks.
-addEventListener('pageshow',()=>{close();render()});
+// (Only when the page comes back from the browser's cache: on a fresh load, #plus has just opened the Plus screen.)
+addEventListener('pageshow',e=>{if(e.persisted)close();render()});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)render()});
 
 /* ---------- No zoom on phones: no double-tap or pinch zoom ---------- */
