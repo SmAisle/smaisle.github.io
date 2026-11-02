@@ -9,6 +9,11 @@
   // Each game's icon on its invite screen (same icons as smAisle Daily and smaisle.app).
   var ICON={daily:'smaisle-daily',daily15:'daily-15',abcdeal:'abc-deal',gramble:'gramble',shuffleblast:'shuffle-blast',sdblast:'straight-down'}[GAME];
   if(!/github\.io$|smaisle\.app$/.test(location.hostname)) return;
+  // FAMILY&FRIENDS was retired on Nov 2, 2026 (Jeff). Devices let in by it (or by The Daily 15's old shared unlock) have no
+  // personal code saved, so their unlocks are cleared and they see this invite screen again.
+  try{ var cs=JSON.parse(localStorage.getItem('smaisle_codes')||'{}')||{};
+    if(!localStorage.getItem('smaisle_code')&&!Object.keys(cs).length){ ['smaisle_inv','dg_invite','d15_unlocked'].forEach(function(k){ localStorage.removeItem(k); }); }
+  }catch(e){}
   var KEY='smaisle_inv', DOC='https://firestore.googleapis.com/v1/projects/aislerun-88e79/databases/(default)/documents/invite_codes/';
   var API='AIzaSyAlbSCTpAiK-1tojkyWrY3QuJsSzILHSfs';
   function list(){ try{ return JSON.parse(localStorage.getItem(KEY)||'[]'); }catch(e){ return []; } }
@@ -27,7 +32,7 @@
   // Which code this device used (for the "By code" table on stats.html). smaisle.app's Invite only page
   // keeps smaisle_codes = {game: code}; this screen keeps the last code typed here in smaisle_code.
   function codeFor(){ var c=''; try{ c=(JSON.parse(localStorage.getItem('smaisle_codes')||'{}')||{})[GAME]||localStorage.getItem('smaisle_code')||''; }catch(e){}
-    if(!c){ try{ if(localStorage.getItem('d15_unlocked')==='1'||localStorage.getItem('dg_invite')==='1') c='FAMILY&FRIENDS'; }catch(e){} } return c||'unknown'; }
+    return c||'unknown'; }
   // Anonymous check-in per device: its code and which testing games it opened (inv_devices). Website only.
   function seen(){ try{
     var pad=function(n){return (n<10?'0':'')+n}, d=new Date(), day=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
