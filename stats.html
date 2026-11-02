@@ -33,7 +33,7 @@ html{touch-action:manipulation}
 </head>
 <body>
 <header>
-  <h1>sm<em>Ai</em>sle stats <span class="muted" style="font-size:.75rem;font-weight:400">v1.17 · Nov 2</span></h1>
+  <h1>sm<em>Ai</em>sle stats <span class="muted" style="font-size:.75rem;font-weight:400">v1.18 · Nov 2</span></h1>
   <div class="row"><span id="who" class="muted"></span><button id="signin" class="primary" hidden>Sign in with Google</button><button id="signout" hidden>Sign out</button></div>
 </header>
 <main>
@@ -96,7 +96,8 @@ const auth=firebase.auth(), db=firebase.firestore();
 // Invite-only games that take a per-game code on smaisle.app (keys match data-game there).
 const INVITE_GAMES=[["daily15","The Daily 15"],["shuffleblast","Shuffle Blast"],["abcdeal","A, B, C, Deal"],["gramble","Gramble"],["sdblast","Straight Down (full)"],["all","Every game"]];
 // game is one key, "all", or several keys joined by commas.
-const gameName=k=>String(k||"").split(",").map(x=>x==="daily"?"smAisle Daily":(INVITE_GAMES.find(g=>g[0]===x)||[x,x])[1]).join(", ");
+const PLUS_BY_CODE=[["jexicon","jx_devices"],["capitalship","cs_devices"],["blipword","bw_devices"]], PLUS_NAMES={jexicon:"Jexicon",capitalship:"Capital Ship",blipword:"Blipword"};
+const gameName=k=>String(k||"").split(",").map(x=>x==="daily"?"smAisle Daily":PLUS_NAMES[x]?PLUS_NAMES[x]:(INVITE_GAMES.find(g=>g[0]===x)||[x,x])[1]).join(", ");
 $("#cgame").innerHTML=INVITE_GAMES.map(([k,n])=>`<label><input type="checkbox" value="${k}"> ${esc(n)}</label>`).join("");
 $("#cgame").onchange=()=>{ const all=$("#cgame input[value=all]").checked; $("#cgame").querySelectorAll("input:not([value=all])").forEach(i=>{ i.disabled=all; if(all) i.checked=false; }); };
 let editing=null, codeRows={};
@@ -117,6 +118,10 @@ async function loadCodes(){
 async function loadByCode(codeRows){
   try{
     const ds=(await db.collection("inv_devices").limit(10000).get()).docs.map(d=>d.data()), by={};
+    // Plus games open from smAisle Daily, not the invite screen, so they send their own check-ins with the device's code.
+    // Only check-ins that carry a code are counted here (older ones don't have one).
+    for(const [k,coll] of PLUS_BY_CODE){ try{ (await db.collection(coll).limit(10000).get()).docs.forEach(x=>{ const d=x.data(); if(!d.code) return;
+      const t=+d.t||0, n=+d.opens||+d.plays||1; ds.push({code:d.code,last:d.last||"",t,o:{[k]:n},d:{[k]:d.last||""},tm:t?{[k]:t}:{}}); }); }catch(e){} }
     // Each "last" is {ms, time}: time is true when the exact time was saved (tm per game, t for the device's latest open).
     const at=(ms,time)=>({ms,time}), day=d=>d?at(new Date(d+"T12:00").getTime(),false):at(0,false);
     const when=l=>l&&l.ms?new Date(l.ms).toLocaleString(undefined,l.time?{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}:{month:"short",day:"numeric"}):"";
