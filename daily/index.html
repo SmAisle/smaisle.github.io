@@ -110,6 +110,12 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
 .mode{display:flex;border:2px solid var(--ink);border-radius:8px;overflow:hidden;margin-top:8px}
 .mode button{flex:1;padding:10px 4px;font:800 12px 'Libre Franklin';letter-spacing:.06em;text-transform:uppercase;color:var(--ink);background:var(--card)}
 .mode button+button{border-left:2px solid var(--ink)}.mode button.on{background:var(--btn);color:var(--btn-ink)}
+.plusBtn{width:100%;display:flex;align-items:center;gap:12px;margin-top:6px;background:var(--card);color:var(--ink);border:2px solid var(--ink);border-radius:12px;padding:10px 12px;text-align:left;box-shadow:2px 2px 0 var(--shadow)}
+.plusBtn .mini{display:flex;flex:none}.plusBtn .mini img{width:34px;height:34px;border-radius:9px;border:2px solid var(--card);margin-left:-10px}.plusBtn .mini img:first-child{margin-left:0}
+.plusBtn .n{font:900 17px 'Playfair Display'}.plusBtn .s{font:500 12px 'Libre Franklin';color:var(--ink2);margin-top:2px}.plusBtn .tx{flex:1}.plusBtn .arr{font-size:28px;opacity:.7}
+.pt{font:800 9.5px 'Libre Franklin';letter-spacing:.06em;background:var(--hi);color:var(--hi-ink);border:1.5px solid var(--ink);border-radius:4px;padding:1px 5px;vertical-align:3px;margin-left:4px}
+.pint{font:500 14px/1.45 'Libre Franklin';color:var(--ink2);margin:16px 2px 12px}
+#pshelf .r{text-decoration:none;color:var(--ink)}#pshelf .r .b.pv{background:none;color:var(--ink);border:2px solid var(--ink);padding:6px 9px}
 </style></head><body>
 <div class="wrap">
  <a class="home" href="https://smaisle.app/">‹ smAisle Home</a>
@@ -119,6 +125,7 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
   <div class="row"><span id="played"></span><span id="next"></span></div></div>
  <div class="sec">TODAY'S GAMES</div>
  <div id="daily"></div>
+ <button class="plusBtn" id="openPlus"><div class="mini" id="pmini"></div><div class="tx"><div class="n">Plus games <span class="pt">★ PLUS</span></div><div class="s" id="psub"></div></div><span class="arr">›</span></button>
  <div class="moreWrap"><button class="moreBtn" id="openShelf"><div class="mini" id="mini"></div><div class="tx"><div class="n">More games by smAisle</div><div class="s">Arcade, puzzle and strategy games</div></div><span class="arr">›</span></button></div>
  <div class="ver" id="ver"></div>
 </div>
@@ -128,6 +135,13 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
  <button class="app" data-sheet="plus"><div class="dk y"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.9 6 6.6.8-4.9 4.6 1.3 6.6L12 17.3 6.1 20.5l1.3-6.6L2.5 9.3l6.6-.8z"/></svg></div><div class="nm">Plus</div></button>
  <button class="app" data-sheet="help"><div class="dk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 9a3 3 0 1 1 4 2.8c-.7.3-1 .9-1 1.6V14"/><circle cx="12" cy="18" r=".6" fill="currentColor"/></svg></div><div class="nm">How to Play</div></button>
 </nav>
+<div class="shelf" id="pshelf"><div><button id="closePlus" class="back">‹ smAisle Daily</button></div>
+ <div class="shelf-h"><b>Plus Games</b><span>with smAisle Daily Plus</span></div>
+ <p class="pint" id="pint"></p>
+ <div id="plist"></div>
+ <button class="big-btn" id="getPlus" style="background:var(--hi);color:var(--hi-ink);border:2px solid var(--ink)">GET SMAISLE DAILY PLUS</button>
+ <div class="small">Plus also unlocks the full Archive and extras in every daily game.</div>
+</div>
 <div class="shelf" id="shelf"><div><button id="closeShelf" class="back">‹ smAisle Daily</button></div>
  <div class="shelf-h"><b>More Games</b><span>by smAisle</span></div>
  <div id="more"></div>
@@ -137,9 +151,9 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
 <div class="sheet" id="sheet"><div class="grab"></div><div id="sheetBody"></div></div>
 <script src="games.js"></script>
 <script>
-const VERSION='1.14',VDATE='Nov 2',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
+const VERSION='1.15',VDATE='Nov 2',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
 const $=id=>document.getElementById(id);
-const SM=window.SMAISLE,GAMES=SM.games,DAILY=GAMES.filter(g=>g.daily),N=DAILY.length;
+const SM=window.SMAISLE,GAMES=SM.games,DAILY=GAMES.filter(g=>g.daily&&!g.plus),PLUSG=GAMES.filter(g=>g.plus),N=DAILY.length;
 // On smaisle.app (or smaisle.github.io) games open in this tab (and share its storage). Anywhere else (the Claude link) they open in a new tab.
 const SITE=/github\.io$|smaisle\.app$/.test(location.hostname);
 const TGT=SITE?'':' target="_blank" rel="noopener"';
@@ -173,6 +187,12 @@ function render(){
   $('played').textContent=n===N?`All ${N} daily games done!`:n===0?(st.cur?'Play today to keep it':'Finish a daily game to start'):`${n} of ${N} daily games done`;
   $('daily').innerHTML=DAILY.map(g=>{const d=done.indexOf(g.id)>=0,s=!d&&SM.isStarted(g.id,today);
     return `<button class="r" data-g="${g.id}">${pic(g)}<div class="tx"><div class="n">${esc(g.name)}</div><div class="s">${esc(g.sub)}</div></div><span class="b ${d?'done':s?'go':''}">${d?'✓ DONE':s?'KEEP GOING':'PLAY'}</span></button>`}).join('');
+  const owned=!!(window.DG_APP&&DG_APP.plus);
+  $('pmini').innerHTML=PLUSG.map(g=>`<img src="${g.icon}" alt="">`).join('');
+  $('psub').textContent=PLUSG.map(g=>g.name).join(', ')+(owned?'':' · try a preview');
+  $('pint').textContent=owned?'Your daily Plus games. Thanks for getting Plus!':'More daily games for Plus members. Everyone can play a free preview of each one.';
+  $('plist').innerHTML=PLUSG.map(g=>{const d=done.indexOf(g.id)>=0;return `<a class="r" href="${g.url}${owned?'':'?preview=1'}" data-tap="${g.id}${owned?'':'-pv'}">${pic(g)}<div class="tx"><div class="n">${esc(g.name)}</div><div class="s">${esc(g.sub)}</div></div><span class="b ${owned?(d?'done':''):'pv'}">${owned?(d?'✓ DONE':'PLAY'):'PREVIEW'}</span></a>`}).join('');
+  $('getPlus').hidden=owned;
   $('mini').innerHTML=['sd','sb','br'].map(id=>`<img src="${SM.game(id).icon}" alt="">`).join('');
   const store=GAMES.filter(g=>!g.daily&&g.store),web=GAMES.filter(g=>!g.daily&&!g.store);
   $('more').innerHTML=`<div class="sec">ON THE APP STORE</div><div class="grid">${store.map(tile).join('')}</div>`
@@ -216,13 +236,16 @@ const SHEETS={
     <div class="stats"><div><b>${st.cur}</b><span>STREAK</span></div><div><b>${st.best}</b><span>BEST STREAK</span></div><div><b>${st.total}</b><span>DAYS PLAYED</span></div></div>
     <h3>BY GAME</h3><div class="list">${DAILY.map(g=>`<div class="li">${esc(g.name)}<em>${per(g.id)} ${per(g.id)===1?'day':'days'} finished</em></div>`).join('')}<div class="li">All ${N} in one day<em>${all} ${all===1?'day':'days'}</em></div></div>
     <div class="small">Each game has its own detailed stats in its menu. Counted on this device only.</div>`},
-  plus:()=>`<h2 class="t">smAisle Daily Plus</h2><p>Coming soon: one purchase that unlocks extras in the daily games: ${DAILY.map(g=>esc(g.name)).join(', ').replace(/, ([^,]*)$/,' and $1')}.</p><ul class="plus" style="margin-top:10px"><li>Full Archive for every daily game</li><li>Fresh random games after today's</li><li>New daily games as they're added</li><li>Bonus extras in each daily game</li></ul><div class="big-btn off">COMING SOON</div><div class="small">Nothing to buy yet. Every game is free to play.</div>`,
+  plus:()=>`<h2 class="t">smAisle Daily Plus</h2><p>Coming soon: one purchase for smAisle Daily.</p><ul class="plus" style="margin-top:10px"><li>${PLUSG.length} more daily games: ${PLUSG.map(g=>esc(g.name)).join(', ').replace(/, ([^,]*)$/,' and $1')}</li><li>Full Archive for every daily game</li><li>Fresh random games after today's</li><li>New daily games as they're added</li><li>Bonus extras in each daily game</li></ul><div class="big-btn off">COMING SOON</div><div class="small">Nothing to buy yet. Every game is free to play.</div>`,
   help:()=>`<h2 class="t">How to Play</h2><p><b>Today's Games</b> are the daily ones. Each has a new game every day at midnight, the same for everyone. Tap one to play it.</p><p><b>Done checks</b> fill in by themselves when you finish a game on this device.</p><p><b>Your streak</b> grows each day you finish at least one daily game. The bar on the Today card fills as you finish all ${N}.</p><p><b>More games by smAisle</b>, below Today's Games, are always-on games you can play any time.</p><p><b>Archive and Stats</b> in the dock cover every daily game.</p><h3>SETTINGS</h3><div style="font:800 14px 'Libre Franklin';margin-top:10px">Dark mode</div><div class="mode" id="modeRow">${[['off','Off'],['on','On'],['auto','Match phone']].map(([k,l])=>`<button data-mode="${k}" class="${smMode()===k?'on':''}">${l}</button>`).join('')}</div><div class="small" style="text-align:left">On uses Navy. Match phone switches with your phone.</div><div class="small" style="margin-top:18px">${VER}</div>`
 };
 document.addEventListener('click',e=>{
   const md=e.target.closest('#modeRow [data-mode]');if(md){smMode(md.dataset.mode);document.querySelectorAll('#modeRow button').forEach(x=>x.classList.toggle('on',x===md));tap('mode-'+md.dataset.mode);return}
   const a=e.target.closest('[data-tap]');if(a){tap(a.dataset.tap);return}
   const g=e.target.closest('[data-g]');if(g)return openGame(g.dataset.g);
+  if(e.target.closest('#openPlus'))return $('pshelf').classList.add('on');
+  if(e.target.closest('#closePlus'))return $('pshelf').classList.remove('on');
+  if(e.target.closest('#getPlus')){$('pshelf').classList.remove('on');return open(SHEETS.plus())}
   if(e.target.closest('#openShelf'))return $('shelf').classList.add('on');
   if(e.target.closest('#closeShelf'))return $('shelf').classList.remove('on');
   const s=e.target.closest('[data-sheet]');if(s)open(SHEETS[s.dataset.sheet]());

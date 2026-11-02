@@ -18,6 +18,13 @@
      desc:"A daily word game played with letter cards. Beat the dealer's word across five hands, in two modes: Classic (5-card poker) and Deal 'Em (Texas hold 'em style).",url:BASE+'abcdeal/'},
     {id:'gr',name:'Gramble',daily:true,icon:ICONS+'gramble.png',sub:'Find 10 words with 50 coins',tag:'Daily card game',
      desc:'A daily word card game. Hold and hit to clear 10 words with 50 coins. Then bank it, or keep going.',url:BASE+'gramble/'},
+    // Plus games: daily games for smAisle Daily Plus members. Everyone can play a free preview (?preview=1).
+    {id:'jx',name:'Jexicon',daily:true,plus:true,icon:ICONS+'jexicon.png',sub:'Spell the word from its definition',tag:'Plus daily game',
+     desc:'Five definitions on a daily theme. Spell each word one letter at a time. One wrong letter ends the card.',url:BASE+'Jexicon/'},
+    {id:'cs',name:'Capital Ship',daily:true,plus:true,icon:ICONS+'capital-ship.png',sub:'Find 5 hidden words, battleship style',tag:'Plus daily game',
+     desc:'Five hidden words on an 8x8 board. Call letters, use sonar and sink every word.',url:BASE+'CapitalShip/'},
+    {id:'bw',name:'Blinkword',daily:true,plus:true,icon:ICONS+'blinkword.png',sub:'A word flashes. Pick its meaning.',tag:'Plus daily game',
+     desc:'Ten words a day, each flashing faster than the last. Pick the right definition.',url:BASE+'Blinkword/'},
     // Apps on the App Store (appStore is filled in once each app is live)
     {id:'sd',name:'Straight Down',store:true,appStore:'',icon:ICONS+'straight-down.png',tag:'Arcade',sub:'Falling-card poker game',
      desc:'Cards fall one at a time. Line them up in a row or column to make poker hands. An invite code unlocks the full version, with levels, a daily challenge, bombs and wild cards.',url:BASE+'StraightDown/',
