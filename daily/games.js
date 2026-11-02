@@ -21,8 +21,8 @@
     // Plus games: daily games for smAisle Daily Plus members. Everyone can play a free preview (?preview=1).
     {id:'jx',name:'Jexicon',daily:true,plus:true,icon:ICONS+'jexicon.png',sub:'Spell the word from its definition',tag:'Plus daily game',
      desc:'Five definitions on a daily theme. Spell each word one letter at a time. One wrong letter ends the card.',url:BASE+'Jexicon/'},
-    {id:'cs',name:'Capital Ship',daily:true,plus:true,icon:ICONS+'capital-ship.png',sub:'Find 5 hidden words, battleship style',tag:'Plus daily game',
-     desc:'Five hidden words on an 8x8 board. Call letters, use sonar and sink every word.',url:BASE+'CapitalShip/'},
+    {id:'cs',name:'Capital Ship',daily:true,plus:true,icon:ICONS+'capital-ship.png',sub:'Find and capture 5 hidden words',tag:'Plus daily game',
+     desc:'Five hidden words on an 8x8 board. Call letters, use sonar and capture every word.',url:BASE+'CapitalShip/'},
     {id:'bw',name:'Blipword',daily:true,plus:true,icon:ICONS+'blipword.png',sub:'A word flashes. Pick its meaning.',tag:'Plus daily game',
      desc:'Ten words a day, each flashing faster than the last. Pick the right definition.',url:BASE+'Blipword/'},
     // Apps on the App Store (appStore is filled in once each app is live)
