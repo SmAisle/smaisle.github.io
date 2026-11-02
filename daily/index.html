@@ -1,4 +1,10 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<script>/* smAisle look: Dark mode Off (default) / On / Match phone, shared by every smAisle game on this site. Set before drawing, so no flash. */
+(function(){var q=matchMedia('(prefers-color-scheme: dark)');function pick(){var m='off';try{m=localStorage.getItem('smaisle-dark')||'off'}catch(e){}return m}
+window.smMode=function(set){if(set){try{localStorage.setItem('smaisle-dark',set)}catch(e){}}var m=pick(),navy=m==='on'||(m==='auto'&&q.matches),h=document.documentElement;
+if(navy)h.setAttribute('data-mode','navy');else h.removeAttribute('data-mode');var t=document.querySelector('meta[name=theme-color]');if(t)t.content=navy?'#121b2e':'#f4efe1';
+try{webkit.messageHandlers.dg.postMessage({cmd:'mode',navy:navy})}catch(e){}return m};
+smMode();q.addEventListener&&q.addEventListener('change',function(){smMode()});addEventListener('storage',function(e){if(e.key==='smaisle-dark')smMode()})})();</script>
 <script src="https://smaisle.app/gate.js" data-game="daily" data-any="daily15,abcdeal,gramble" data-name="smAisle Daily"></script>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>smAisle Daily</title>
@@ -12,9 +18,13 @@
 <link rel="manifest" href="manifest.json">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Libre+Franklin:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--paper:#f4efe1;--paper2:#ebe4d0;--ink:#1a1814;--ink2:#4a453b;--fade:#8c8574;--card:#fffdf6;--hi:#ffd43b;--ok:#2e7d32}
+:root{--paper:#f4efe1;--paper2:#ebe4d0;--ink:#1a1814;--ink2:#4a453b;--fade:#8c8574;--card:#fffdf6;--hi:#ffe27a;--hi-ink:#1a1814;--ok:#2e7d32;
+  --dot:#e3dcc7;--btn:#1a1814;--btn-ink:#f4efe1;--shadow:rgba(0,0,0,.12);--dock:rgba(244,239,225,.92);--dockline:rgba(26,24,20,.18);--star:#c99a00}
+/* Navy dark mode: the shared smAisle look standard (Dark mode Off / On / Match phone, saved as smaisle-dark). */
+html[data-mode=navy]{--paper:#121b2e;--paper2:#0d1424;--ink:#efe6cc;--ink2:#c9b98f;--fade:#8792ab;--card:#1c2a44;--hi:#ffe27a;--hi-ink:#121b2e;--ok:#7bc47f;
+  --dot:rgba(255,255,255,.06);--btn:#c9a961;--btn-ink:#121b2e;--shadow:#05080f;--dock:rgba(28,42,68,.94);--dockline:#3a4a6b;--star:#c9a961;color-scheme:dark}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{touch-action:manipulation;background:var(--paper);background-image:radial-gradient(#e3dcc7 1px,transparent 1px);background-size:6px 6px;color:var(--ink);font-family:'Libre Franklin',sans-serif;min-height:100%;-webkit-text-size-adjust:100%}
+html,body{touch-action:manipulation;background:var(--paper);background-image:radial-gradient(var(--dot) 1px,transparent 1px);background-size:6px 6px;color:var(--ink);font-family:'Libre Franklin',sans-serif;min-height:100%;-webkit-text-size-adjust:100%}
 button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touch-action:manipulation;text-decoration:none}
 .wrap{max-width:440px;margin:0 auto;padding:calc(16px + env(safe-area-inset-top)) 18px 130px}
 .home{display:inline-block;font:800 12px 'Libre Franklin';color:var(--ink2);padding:2px 0 8px}
@@ -23,14 +33,14 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
 .logo .sm{font:800 13px 'Libre Franklin';background:var(--hi);border:1.5px solid var(--ink);padding:1px 6px}
 .logo .d{font:900 30px 'Playfair Display'}
 .date{font:700 11px 'Libre Franklin';letter-spacing:.06em;color:var(--ink2);text-transform:uppercase}
-.widget{margin-top:12px;background:var(--card);border:2px solid var(--ink);border-radius:18px;padding:12px 14px;box-shadow:3px 3px 0 rgba(0,0,0,.12)}
+.widget{margin-top:12px;background:var(--card);border:2px solid var(--ink);border-radius:18px;padding:12px 14px;box-shadow:3px 3px 0 var(--shadow)}
 .widget .t{font:800 11px 'Libre Franklin';letter-spacing:.1em;color:var(--ink2)}
 .widget .big{font:900 22px 'Playfair Display';margin:3px 0 8px}
 .prog{display:flex;gap:6px}.prog span{flex:1;height:8px;border-radius:4px;background:var(--paper2);border:1px solid var(--ink);transition:background .3s}.prog span.on{background:var(--hi)}
 .widget .row{display:flex;justify-content:space-between;font:600 12px 'Libre Franklin';margin-top:7px;color:var(--ink2)}
 .sec{font:800 11px 'Libre Franklin';letter-spacing:.12em;color:var(--ink2);margin:16px 2px 8px;display:flex;align-items:center;gap:8px}.sec:after{content:"";flex:1;border-top:1.5px solid var(--ink2)}
-.r{width:100%;text-align:left;display:flex;align-items:center;gap:11px;background:var(--card);border:2px solid var(--ink);border-radius:12px;padding:8px 10px;margin-bottom:9px;box-shadow:2px 2px 0 rgba(0,0,0,.1)}
-.r:active{transform:translate(1px,1px);box-shadow:1px 1px 0 rgba(0,0,0,.1)}
+.r{width:100%;text-align:left;display:flex;align-items:center;gap:11px;background:var(--card);border:2px solid var(--ink);border-radius:12px;padding:8px 10px;margin-bottom:9px;box-shadow:2px 2px 0 var(--shadow)}
+.r:active{transform:translate(1px,1px);box-shadow:1px 1px 0 var(--shadow)}
 .r img,.r .phi{width:48px;height:48px;border-radius:11px;border:1px solid rgba(0,0,0,.2);flex:none}
 .r .tx{flex:1;min-width:0}.r .n{font:900 17px/1.1 'Playfair Display'}.r .s{font:500 12px 'Libre Franklin';color:var(--ink2);margin-top:2px}
 .r .b{font:800 11px 'Libre Franklin';letter-spacing:.06em;background:var(--ink);color:var(--card);padding:8px 11px;border-radius:6px;white-space:nowrap}
@@ -45,7 +55,7 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
 .nm{font:600 11px/1.15 'Libre Franklin';text-align:center}
 .soon .ico{border:2px dashed var(--fade);background:transparent;box-shadow:none}.soon .nm{color:var(--fade)}
 .phi{display:flex;align-items:center;justify-content:center;font:900 26px 'Playfair Display'}
-.dock{position:fixed;bottom:calc(12px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:min(420px,calc(100% - 24px));height:88px;border-radius:28px;background:rgba(244,239,225,.92);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1.5px solid rgba(26,24,20,.18);display:flex;justify-content:space-around;align-items:center;box-shadow:0 4px 16px rgba(0,0,0,.12);z-index:5}
+.dock{position:fixed;bottom:calc(12px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:min(420px,calc(100% - 24px));height:88px;border-radius:28px;background:var(--dock);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1.5px solid var(--dockline);display:flex;justify-content:space-around;align-items:center;box-shadow:0 4px 16px rgba(0,0,0,.12);z-index:5}
 .dock .app{width:70px}.dock .nm{font-size:10.5px}
 .dk{width:52px;height:52px;border-radius:14px;background:var(--ink);color:var(--card);display:flex;align-items:center;justify-content:center}
 .dk svg{width:26px;height:26px}
@@ -76,14 +86,14 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
 .list .li em{font-style:normal;color:var(--fade);font-weight:500;font-size:13px;text-align:right}
 .dots{display:flex;gap:5px}.dots i{width:22px;height:22px;border-radius:6px;overflow:hidden;opacity:.22;filter:grayscale(1)}.dots i.on{opacity:1;filter:none}.dots img{width:100%;height:100%;display:block}
 .plus li{list-style:none;padding:8px 0;font:600 14.5px 'Libre Franklin';border-bottom:1px solid var(--paper2)}
-.plus li:before{content:"★ ";color:#c99a00}
+.plus li:before{content:"★ ";color:var(--star)}
 .as{position:absolute;bottom:-7px;left:50%;transform:translateX(-50%);background:#0a84ff;color:#fff;font:800 8.5px 'Libre Franklin';letter-spacing:.04em;padding:2px 5px;border-radius:6px;white-space:nowrap;border:1.5px solid var(--paper)}
 .store-btn{background:#0a84ff;color:#fff}
 .moreWrap{margin-top:44px;padding-top:18px;border-top:4px double var(--ink)}
 .moreBtn{width:100%;display:flex;align-items:center;gap:12px;background:transparent;color:var(--ink);border:2px solid var(--ink);border-radius:14px;padding:12px 14px;text-align:left}
 .moreBtn .mini{display:flex;flex:none}.moreBtn .mini img{width:34px;height:34px;border-radius:9px;border:2px solid var(--paper);margin-left:-10px}.moreBtn .mini img:first-child{margin-left:0}
 .moreBtn .n{font:800 15px 'Libre Franklin'}.moreBtn .s{font:500 12px 'Libre Franklin';color:var(--ink2);margin-top:2px}.moreBtn .tx{flex:1}.moreBtn .arr{font-size:28px;opacity:.7}
-.shelf{position:fixed;inset:0;z-index:9;background:var(--paper);background-image:radial-gradient(#e3dcc7 1px,transparent 1px);background-size:6px 6px;color:var(--ink);overflow:auto;padding:calc(14px + env(safe-area-inset-top)) 18px 40px;transform:translateY(100%);transition:transform .3s ease;visibility:hidden}
+.shelf{position:fixed;inset:0;z-index:9;background:var(--paper);background-image:radial-gradient(var(--dot) 1px,transparent 1px);background-size:6px 6px;color:var(--ink);overflow:auto;padding:calc(14px + env(safe-area-inset-top)) 18px 40px;transform:translateY(100%);transition:transform .3s ease;visibility:hidden}
 .shelf.on{transform:none;visibility:visible}
 .shelf>*{max-width:440px;margin-left:auto;margin-right:auto}
 .shelf-h{margin-top:10px;border-top:4px double var(--ink);border-bottom:4px double var(--ink);padding:8px 0 6px;text-align:center}
@@ -92,9 +102,14 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
 .shelf .as{border-color:var(--paper)}
 .shelf .sec{margin-top:22px;margin-bottom:12px}
 .shelf .grid{margin-top:0}
-.shelf .ico{border:2px solid var(--ink);box-shadow:2px 2px 0 rgba(0,0,0,.12)}
+.shelf .ico{border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shadow)}
 .shelf .ver{margin-top:34px}
-.back{color:var(--ink);font:800 13px 'Libre Franklin';padding:7px 14px;background:#fbe38a;border:2px solid var(--ink);border-radius:8px}
+.back{color:var(--hi-ink);font:800 13px 'Libre Franklin';padding:7px 14px;background:var(--hi);border:2px solid var(--ink);border-radius:8px}
+.r .b:not(.done):not(.go),.big-btn:not(.o):not(.off):not(.store-btn),.dk:not(.y){background:var(--btn);color:var(--btn-ink)}
+.logo .sm,.dk.y,.r .b.go{color:var(--hi-ink)}
+.mode{display:flex;border:2px solid var(--ink);border-radius:8px;overflow:hidden;margin-top:8px}
+.mode button{flex:1;padding:10px 4px;font:800 12px 'Libre Franklin';letter-spacing:.06em;text-transform:uppercase;color:var(--ink);background:var(--card)}
+.mode button+button{border-left:2px solid var(--ink)}.mode button.on{background:var(--btn);color:var(--btn-ink)}
 </style></head><body>
 <div class="wrap">
  <a class="home" href="https://smaisle.app/">‹ smAisle Home</a>
@@ -122,7 +137,7 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
 <div class="sheet" id="sheet"><div class="grab"></div><div id="sheetBody"></div></div>
 <script src="games.js"></script>
 <script>
-const VERSION='1.13',VDATE='Nov 1',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
+const VERSION='1.14',VDATE='Nov 2',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
 const $=id=>document.getElementById(id);
 const SM=window.SMAISLE,GAMES=SM.games,DAILY=GAMES.filter(g=>g.daily),N=DAILY.length;
 // On smaisle.app (or smaisle.github.io) games open in this tab (and share its storage). Anywhere else (the Claude link) they open in a new tab.
@@ -202,9 +217,10 @@ const SHEETS={
     <h3>BY GAME</h3><div class="list">${DAILY.map(g=>`<div class="li">${esc(g.name)}<em>${per(g.id)} ${per(g.id)===1?'day':'days'} finished</em></div>`).join('')}<div class="li">All ${N} in one day<em>${all} ${all===1?'day':'days'}</em></div></div>
     <div class="small">Each game has its own detailed stats in its menu. Counted on this device only.</div>`},
   plus:()=>`<h2 class="t">smAisle Daily Plus</h2><p>Coming soon: one purchase that unlocks extras in the daily games: ${DAILY.map(g=>esc(g.name)).join(', ').replace(/, ([^,]*)$/,' and $1')}.</p><ul class="plus" style="margin-top:10px"><li>Full Archive for every daily game</li><li>Fresh random games after today's</li><li>New daily games as they're added</li><li>Bonus extras in each daily game</li></ul><div class="big-btn off">COMING SOON</div><div class="small">Nothing to buy yet. Every game is free to play.</div>`,
-  help:()=>`<h2 class="t">How to Play</h2><p><b>Today's Games</b> are the daily ones. Each has a new game every day at midnight, the same for everyone. Tap one to play it.</p><p><b>Done checks</b> fill in by themselves when you finish a game on this device.</p><p><b>Your streak</b> grows each day you finish at least one daily game. The bar on the Today card fills as you finish all ${N}.</p><p><b>More games by smAisle</b>, below Today's Games, are always-on games you can play any time.</p><p><b>Archive and Stats</b> in the dock cover every daily game.</p><div class="small" style="margin-top:18px">${VER}</div>`
+  help:()=>`<h2 class="t">How to Play</h2><p><b>Today's Games</b> are the daily ones. Each has a new game every day at midnight, the same for everyone. Tap one to play it.</p><p><b>Done checks</b> fill in by themselves when you finish a game on this device.</p><p><b>Your streak</b> grows each day you finish at least one daily game. The bar on the Today card fills as you finish all ${N}.</p><p><b>More games by smAisle</b>, below Today's Games, are always-on games you can play any time.</p><p><b>Archive and Stats</b> in the dock cover every daily game.</p><h3>SETTINGS</h3><div style="font:800 14px 'Libre Franklin';margin-top:10px">Dark mode</div><div class="mode" id="modeRow">${[['off','Off'],['on','On'],['auto','Match phone']].map(([k,l])=>`<button data-mode="${k}" class="${smMode()===k?'on':''}">${l}</button>`).join('')}</div><div class="small" style="text-align:left">On uses Navy. Match phone switches with your phone.</div><div class="small" style="margin-top:18px">${VER}</div>`
 };
 document.addEventListener('click',e=>{
+  const md=e.target.closest('#modeRow [data-mode]');if(md){smMode(md.dataset.mode);document.querySelectorAll('#modeRow button').forEach(x=>x.classList.toggle('on',x===md));tap('mode-'+md.dataset.mode);return}
   const a=e.target.closest('[data-tap]');if(a){tap(a.dataset.tap);return}
   const g=e.target.closest('[data-g]');if(g)return openGame(g.dataset.g);
   if(e.target.closest('#openShelf'))return $('shelf').classList.add('on');
