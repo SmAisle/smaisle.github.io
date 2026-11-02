@@ -103,3 +103,16 @@ h2.slab{font-size:13px;font-weight:800;letter-spacing:.12em;color:var(--muted);m
 @media (prefers-color-scheme:dark){.lrow .ok{color:#7be38a}}
 .lrow .lk{color:var(--muted);font-weight:800;font-size:14px}
 .lrow .gunlock{margin-top:10px}
+
+/* Work with us */
+.kicker{font-size:13px;font-weight:800;letter-spacing:.12em;color:var(--link);margin:0 0 6px}
+.wcards{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.wcards .note{margin:0}
+.steps{padding-left:22px;font-size:17px}
+.own{margin:24px 0 8px;border:2px solid var(--cyan);border-radius:16px;padding:18px;text-align:center;max-width:520px}
+.own b{display:block;font-size:24px;font-weight:900}.own span{color:var(--muted);font-size:15px}
+.workbox h2,.wcta h2{margin:0 0 6px;font-size:22px}
+.workbox .meta,.wcta .meta{margin:0 0 14px}
+.btn.ghost{background:transparent;border:2px solid var(--link);color:var(--link)}
+@media (prefers-color-scheme:dark){.btn.ghost{background:transparent;color:var(--cyan);border-color:var(--cyan)}}
+.workbox{margin-top:32px}
