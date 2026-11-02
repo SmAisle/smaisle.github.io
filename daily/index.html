@@ -257,4 +257,6 @@ function checkIn(kind){
 function tap(k){checkIn(k)}
 
 render();tick();setInterval(tick,30000);checkIn('open');
+// #plus (from a Plus game preview's "Get smAisle Daily Plus") opens the Plus screen.
+function hashPlus(){if(location.hash==='#plus'){open(SHEETS.plus());history.replaceState(null,'',location.pathname+location.search)}}hashPlus();addEventListener('hashchange',hashPlus);
 </script></body></html>
