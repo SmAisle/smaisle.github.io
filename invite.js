@@ -2,13 +2,17 @@
 // kept in Firestore (invite_codes/{CODE} -> {game}) and made on the stats page. A code's game can be one key, several joined by commas, or 'all'.
 // This only hides links: anyone with a game's URL can still play it.
 var Invite=(function(){
-  var FAMILY=['FAMILY&FRIENDS','FAMILYANDFRIENDS','FAMILY+FRIENDS'], KEY='d15_unlocked', GKEY='smaisle_games', CKEY='smaisle_codes';
+  // FAMILY&FRIENDS was retired on Nov 2, 2026 (Jeff): it no longer works, and devices that only had it are locked again.
+  var KEY='d15_unlocked', GKEY='smaisle_games', CKEY='smaisle_codes';
   var DOC='https://firestore.googleapis.com/v1/projects/aislerun-88e79/databases/(default)/documents/invite_codes/';
   var API='AIzaSyAlbSCTpAiK-1tojkyWrY3QuJsSzILHSfs';
   var URLS={daily15:'/DailyGrid/',shuffleblast:'/ShuffleBlast/',abcdeal:'/abcdeal/',gramble:'/gramble/',sdblast:'/StraightDown/full.html'};
   function get(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
   function set(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
   var last='';
+  // A device unlocked only by FAMILY&FRIENDS has the unlock flag but no personal code: lock it again.
+  (function(){ var c={}; try{ c=JSON.parse(get(CKEY)||'{}')||{}; }catch(e){}
+    if(get(KEY)==='1'&&!Object.keys(c).length&&!get('smaisle_code')){ try{ localStorage.removeItem(KEY); }catch(e){} } })();
   // Counts one use of the code on the stats page (Firestore invite_uses). Fire and forget.
   function logUse(c,where){ try{ fetch(DOC.replace('invite_codes/','invite_uses')+'?key='+API,{method:'POST',keepalive:true,headers:{'Content-Type':'application/json'},body:JSON.stringify({fields:{code:{stringValue:c},where:{stringValue:where},t:{integerValue:String(Date.now())}}})}).catch(function(){}); }catch(e){} }
 
@@ -26,7 +30,6 @@ var Invite=(function(){
     // Resolves to 'family', 'all' (every game now unlocked), 'some' (several unlocked), a game key, or null.
     check:function(raw){
       var code=String(raw||'').replace(/\s+/g,'').toUpperCase(); last=code;
-      if(FAMILY.indexOf(code)>=0){ set(KEY,'1'); return Promise.resolve('family'); }
       if(!/^[A-Z0-9]{3,20}$/.test(code)) return Promise.resolve(null);
       return fetch(DOC+code+'?key='+API).then(function(r){ return r.ok?r.json():null; })
         .then(function(d){
