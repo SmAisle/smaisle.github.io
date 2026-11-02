@@ -114,7 +114,7 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
 .plusBtn .mini{display:flex;flex:none}.plusBtn .mini img{width:34px;height:34px;border-radius:9px;border:2px solid var(--card);margin-left:-10px}.plusBtn .mini img:first-child{margin-left:0}
 .plusBtn .n{font:900 17px 'Playfair Display'}.plusBtn .s{font:500 12px 'Libre Franklin';color:var(--ink2);margin-top:2px}.plusBtn .tx{flex:1}.plusBtn .arr{font-size:28px;opacity:.7}
 .pt{font:800 9.5px 'Libre Franklin';letter-spacing:.06em;background:var(--hi);color:var(--hi-ink);border:1.5px solid var(--ink);border-radius:4px;padding:1px 5px;vertical-align:3px;margin-left:4px}
-.pint{font:500 14px/1.45 'Libre Franklin';color:var(--ink2);margin:16px 2px 12px}
+.pint{font:500 14px/1.45 'Libre Franklin';color:var(--ink2);margin:16px auto 12px;text-align:center}
 #pshelf .r{text-decoration:none;color:var(--ink)}#pshelf .r .b.pv{background:none;color:var(--ink);border:2px solid var(--ink);padding:6px 9px}
 </style></head><body>
 <div class="wrap">
@@ -151,7 +151,7 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
 <div class="sheet" id="sheet"><div class="grab"></div><div id="sheetBody"></div></div>
 <script src="games.js"></script>
 <script>
-const VERSION='1.17',VDATE='Nov 2',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
+const VERSION='1.18',VDATE='Nov 2',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
 const $=id=>document.getElementById(id);
 const SM=window.SMAISLE,GAMES=SM.games,DAILY=GAMES.filter(g=>g.daily&&!g.plus),PLUSG=GAMES.filter(g=>g.plus),N=DAILY.length;
 // On smaisle.app (or smaisle.github.io) games open in this tab (and share its storage). Anywhere else (the Claude link) they open in a new tab.
