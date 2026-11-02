@@ -140,7 +140,7 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
  <p class="pint" id="pint"></p>
  <div id="plist"></div>
  <button class="big-btn" id="getPlus" style="background:var(--hi);color:var(--hi-ink);border:2px solid var(--ink)">GET SMAISLE DAILY PLUS</button>
- <div class="small">Plus also unlocks the full Archive and extras in every daily game.</div>
+ <div class="small" id="pfoot">Plus also unlocks the full Archive and extras in every daily game.</div>
 </div>
 <div class="shelf" id="shelf"><div><button id="closeShelf" class="back">‹ smAisle Daily</button></div>
  <div class="shelf-h"><b>More Games</b><span>by smAisle</span></div>
@@ -190,9 +190,9 @@ function render(){
   const owned=!window.SMD_APP||!!(window.DG_APP&&DG_APP.plus);  // the website plays the Plus games in full for now; the app gates them
   $('pmini').innerHTML=PLUSG.map(g=>`<img src="${g.icon}" alt="">`).join('');
   $('psub').textContent=PLUSG.map(g=>g.name).join(', ')+(owned?'':' · try a preview');
-  $('pint').textContent=owned?'Your daily Plus games. Thanks for getting Plus!':'More daily games for Plus members. Everyone can play a free preview of each one.';
+  $('pint').textContent=!window.SMD_APP?'More daily games, free to play in full on the website for now.':owned?'Your daily Plus games. Thanks for getting Plus!':'More daily games for Plus members. Everyone can play a free preview of each one.';
   $('plist').innerHTML=PLUSG.map(g=>{const d=done.indexOf(g.id)>=0;return `<a class="r" href="${g.url}${owned?'':'?preview=1'}" data-tap="${g.id}${owned?'':'-pv'}">${pic(g)}<div class="tx"><div class="n">${esc(g.name)}</div><div class="s">${esc(g.sub)}</div></div><span class="b ${owned?(d?'done':''):'pv'}">${owned?(d?'✓ DONE':'PLAY'):'PREVIEW'}</span></a>`}).join('');
-  $('getPlus').hidden=owned;
+  $('getPlus').style.display=$('pfoot').style.display=owned?'none':'';
   $('mini').innerHTML=['sd','sb','br'].map(id=>`<img src="${SM.game(id).icon}" alt="">`).join('');
   const store=GAMES.filter(g=>!g.daily&&g.store),web=GAMES.filter(g=>!g.daily&&!g.store);
   $('more').innerHTML=`<div class="sec">ON THE APP STORE</div><div class="grid">${store.map(tile).join('')}</div>`
