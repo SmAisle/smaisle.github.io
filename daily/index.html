@@ -156,7 +156,7 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
 <div class="sheet" id="sheet"><div class="grab"></div><div id="sheetBody"></div></div>
 <script src="games.js"></script>
 <script>
-const VERSION='1.20',VDATE='Nov 2',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
+const VERSION='1.21',VDATE='Nov 2',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
 const $=id=>document.getElementById(id);
 const SM=window.SMAISLE,GAMES=SM.games,DAILY=GAMES.filter(g=>g.daily&&!g.plus),PLUSG=GAMES.filter(g=>g.plus),N=DAILY.length;
 // On smaisle.app (or smaisle.github.io) games open in this tab (and share its storage). Anywhere else (the Claude link) they open in a new tab.
@@ -234,7 +234,7 @@ function openGame(id){const g=SM.game(id),d=g.daily&&(H[dayAt(0)]||[]).indexOf(i
 // smAisle Daily Plus. In the app it's a subscription (monthly or yearly) sold by the App Store; the app sends the
 // plans and prices with dgNative('store',{plus,plan,plans,msg}). Founding Member intro prices run through Jan 31; the
 // App Store decides who still gets them. On the website the Plus games are free for now, so no prices show here.
-let PLANS=[],PMSG='',PLAN='';
+let PLANS=[],PMSG='',PLAN='',PWAIT=true,PT=0;
 const FOUNDING=Date.now()<Date.parse('2027-02-01T05:00:00Z');
 const PERK=()=>`<ul class="plus" style="margin-top:10px"><li>${PLUSG.length} more daily games: ${PLUSG.map(g=>esc(g.name)).join(', ').replace(/, ([^,]*)$/,' and $1')}</li><li>Full Archive for every daily game</li><li>Fresh random games after today's</li><li>New daily games as they're added</li><li>Bonus extras in each daily game</li></ul>`;
 function planText(p){const per=p.plan==='yearly'?'year':'month';
@@ -246,16 +246,19 @@ function plusSheet(){
   const owned=!!(window.DG_APP&&DG_APP.plus),intro=PLANS.some(p=>p.introPrice);
   if(owned)return `<h2 class="t">smAisle Daily Plus</h2>${FOUNDING?'<div class="fm">FOUNDING MEMBER</div>':''}<p>${FOUNDING?"You're a Founding Member. ":''}Thanks for supporting smAisle! Plus is on.</p>${PERK()}${PMSG?`<div class="pmsg">${esc(PMSG)}</div>`:''}<button class="big-btn o" data-pcmd="manage">MANAGE SUBSCRIPTION</button>`;
   const btns=PLANS.length?PLANS.map(p=>`<button class="plan${p.plan==='yearly'?' best':''}" data-buy="${esc(p.id)}"><b>${p.plan==='yearly'?'Yearly':'Monthly'}</b><span>${esc(planText(p))}</span></button>`).join('')
-    :'<div class="big-btn off">LOADING PRICES…</div>';
+    :PWAIT?'<div class="big-btn off">LOADING PRICES…</div>':'<div class="pmsg">Can\'t reach the App Store right now. Check your connection and try again.</div><button class="big-btn o" data-pcmd="retry">TRY AGAIN</button>';
   return `<h2 class="t">smAisle Daily Plus</h2>${intro?'<div class="fm">FOUNDING MEMBER PRICE · THROUGH JAN 31</div>':''}<p>${intro?'Join early and be a Founding Member. These prices are for new members who join by January 31.':'Support smAisle and get more every day.'}</p>${PERK()}${btns}${PMSG?`<div class="pmsg">${esc(PMSG)}</div>`:''}
   <button class="linkbtn" data-pcmd="restore">Restore Purchases</button>
   <div class="legal">Plus renews automatically at the regular price until you cancel. Cancel any time in Settings › your name › Subscriptions, at least 24 hours before it renews. Payment is charged to your Apple Account. <a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/">Terms of Use</a> · <a href="https://smaisle.app/privacy.html">Privacy Policy</a></div>`}
 function toNative(m){try{webkit.messageHandlers.dg.postMessage(m)}catch(e){}}
+// Ask the app for the plans and prices. If none come back in 8 seconds (offline, App Store down), offer Try again.
+function plusShown(){return sheet.classList.contains('on')&&body.querySelector('[data-pcmd]')}
+function askPrices(){PWAIT=true;toNative({cmd:'ready'});clearTimeout(PT);PT=setTimeout(()=>{PWAIT=false;if(!PLANS.length&&plusShown())body.innerHTML=plusSheet()},8000)}
 window.dgNative=(cmd,d)=>{if(cmd!=='store'||!window.DG_APP)return;d=d||{};DG_APP.plus=!!d.plus;PLANS=d.plans||PLANS;PLAN=d.plan||'';PMSG=d.msg||'';
   render();if(sheet.classList.contains('on')&&body.querySelector('[data-pcmd]'))body.innerHTML=plusSheet()};
 document.addEventListener('click',e=>{const b=e.target.closest('[data-buy]');if(b){PMSG='';toNative({cmd:'buy',id:b.dataset.buy});return}
-  const c=e.target.closest('[data-pcmd]');if(c){PMSG='';toNative({cmd:c.dataset.pcmd})}});
-if(window.SMD_APP)toNative({cmd:'ready'});
+  const c=e.target.closest('[data-pcmd]');if(c){PMSG='';if(c.dataset.pcmd==='retry'){askPrices();body.innerHTML=plusSheet();return}toNative({cmd:c.dataset.pcmd})}});
+if(window.SMD_APP)askPrices();
 const SHEETS={
   archive:()=>{let rows='';for(let i=1;i<=14;i++){const d=dayAt(i),l=H[d]||[];
       rows+=`<div class="li">${fmtDay(d)}<span class="dots">${DAILY.map(g=>`<i class="${l.indexOf(g.id)>=0?'on':''}" title="${esc(g.name)}"><img src="${g.icon}" alt=""></i>`).join('')}</span></div>`}
@@ -266,7 +269,7 @@ const SHEETS={
     <div class="stats"><div><b>${st.cur}</b><span>STREAK</span></div><div><b>${st.best}</b><span>BEST STREAK</span></div><div><b>${st.total}</b><span>DAYS PLAYED</span></div></div>
     <h3>BY GAME</h3><div class="list">${DAILY.map(g=>`<div class="li">${esc(g.name)}<em>${per(g.id)} ${per(g.id)===1?'day':'days'} finished</em></div>`).join('')}<div class="li">All ${N} in one day<em>${all} ${all===1?'day':'days'}</em></div></div>
     <div class="small">Each game has its own detailed stats in its menu. Counted on this device only.</div>`},
-  plus:()=>plusSheet(),
+  plus:()=>{if(window.SMD_APP&&!PLANS.length&&!PWAIT)askPrices();return plusSheet()},
   help:()=>`<h2 class="t">How to Play</h2><p><b>Today's Games</b> are the daily ones. Each has a new game every day at midnight, the same for everyone. Tap one to play it.</p><p><b>Done checks</b> fill in by themselves when you finish a game on this device.</p><p><b>Your streak</b> grows each day you finish at least one daily game. The bar on the Today card fills as you finish all ${N}.</p><p><b>More games by smAisle</b>, below Today's Games, are always-on games you can play any time.</p><p><b>Archive and Stats</b> in the dock cover every daily game.</p><h3>SETTINGS</h3><div style="font:800 14px 'Libre Franklin';margin-top:10px">Dark mode</div><div class="mode" id="modeRow">${[['off','Off'],['on','On'],['auto','Match phone']].map(([k,l])=>`<button data-mode="${k}" class="${smMode()===k?'on':''}">${l}</button>`).join('')}</div><div class="small" style="text-align:left">On uses Navy. Match phone switches with your phone.</div><div class="small" style="margin-top:18px">${VER}</div>`
 };
 document.addEventListener('click',e=>{
@@ -281,7 +284,8 @@ document.addEventListener('click',e=>{
   const s=e.target.closest('[data-sheet]');if(s)open(SHEETS[s.dataset.sheet]());
 });
 // Coming back to this tab from a game: refresh the Done checks.
-addEventListener('pageshow',()=>{close();render()});
+// (Only when the page comes back from the browser's cache: on a fresh load, #plus has just opened the Plus screen.)
+addEventListener('pageshow',e=>{if(e.persisted)close();render()});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)render()});
 
 /* ---------- No zoom on phones: no double-tap or pinch zoom ---------- */
