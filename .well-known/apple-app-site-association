@@ -1,0 +1,88 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": [
+          "97MKPRW8YT.com.smaisle.daily15"
+        ],
+        "components": [
+          {
+            "/": "/*/owner.html",
+            "exclude": true
+          },
+          {
+            "/": "/*/stats.html",
+            "exclude": true
+          },
+          {
+            "/": "/daily",
+            "comment": "smAisle Daily home screen"
+          },
+          {
+            "/": "/daily/"
+          },
+          {
+            "/": "/daily/index.html"
+          },
+          {
+            "/": "/DailyGrid",
+            "comment": "The Daily 15"
+          },
+          {
+            "/": "/DailyGrid/"
+          },
+          {
+            "/": "/DailyGrid/index.html"
+          },
+          {
+            "/": "/abcdeal",
+            "comment": "A, B, C, Deal"
+          },
+          {
+            "/": "/abcdeal/"
+          },
+          {
+            "/": "/abcdeal/index.html"
+          },
+          {
+            "/": "/gramble",
+            "comment": "Gramble"
+          },
+          {
+            "/": "/gramble/"
+          },
+          {
+            "/": "/gramble/index.html"
+          },
+          {
+            "/": "/Jexicon"
+          },
+          {
+            "/": "/Jexicon/"
+          },
+          {
+            "/": "/Jexicon/index.html"
+          },
+          {
+            "/": "/CapitalShip"
+          },
+          {
+            "/": "/CapitalShip/"
+          },
+          {
+            "/": "/CapitalShip/index.html"
+          },
+          {
+            "/": "/Blipword"
+          },
+          {
+            "/": "/Blipword/"
+          },
+          {
+            "/": "/Blipword/index.html"
+          }
+        ]
+      }
+    ]
+  }
+}
