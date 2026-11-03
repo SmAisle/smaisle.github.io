@@ -152,7 +152,7 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
 <div class="sheet" id="sheet"><div class="grab"></div><div id="sheetBody"></div></div>
 <script src="games.js"></script>
 <script>
-const VERSION='1.30',VDATE='Nov 3',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
+const VERSION='1.31',VDATE='Nov 3',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
 const $=id=>document.getElementById(id);
 const SM=window.SMAISLE,GAMES=SM.games,DAILY=GAMES.filter(g=>g.daily&&!g.plus),PLUSG=GAMES.filter(g=>g.plus),N=DAILY.length;
 // On smaisle.app (or smaisle.github.io) games open in this tab (and share its storage). Anywhere else (the Claude link) they open in a new tab.
@@ -329,7 +329,7 @@ function checkIn(kind){
 }
 function tap(k){checkIn(k)}
 
-if(!store.get('smd-hello','')&&!store.get('smd-usage','')){$('hello').hidden=false;$('helloGo').onclick=()=>{$('hello').hidden=true}}store.set('smd-hello','1');
+if(!store.get('smd-hello','')&&!store.get('smaisle_done','')){$('hello').hidden=false;$('helloGo').onclick=()=>{$('hello').hidden=true;store.set('smd-hello','1')}}
 render();tick();setInterval(tick,30000);checkIn('open');
 // #plus (from a Plus game preview's "Get smAisle Daily Plus") opens the Plus screen.
 function hashPlus(){if(location.hash==='#plus'){open(SHEETS.plus());history.replaceState(null,'',location.pathname+location.search)}}hashPlus();addEventListener('hashchange',hashPlus);
