@@ -152,7 +152,7 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
 <div class="sheet" id="sheet"><div class="grab"></div><div id="sheetBody"></div></div>
 <script src="games.js"></script>
 <script>
-const VERSION='1.29',VDATE='Nov 3',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
+const VERSION='1.30',VDATE='Nov 3',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
 const $=id=>document.getElementById(id);
 const SM=window.SMAISLE,GAMES=SM.games,DAILY=GAMES.filter(g=>g.daily&&!g.plus),PLUSG=GAMES.filter(g=>g.plus),N=DAILY.length;
 // On smaisle.app (or smaisle.github.io) games open in this tab (and share its storage). Anywhere else (the Claude link) they open in a new tab.
@@ -252,7 +252,7 @@ function openGame(id){const g=SM.game(id),d=g.daily&&(H[dayAt(0)]||[]).indexOf(i
 // App Store decides who still gets them. On the website the Plus games are free for now, so no prices show here.
 let PLANS=[],PMSG='',PLAN='',PWAIT=true,PT=0;
 // Founding Member line on the Plus screen for members: from the app's DG_APP.founding (original purchase before Feb 1, 2027).
-const PERK=()=>`<ul class="plus" style="margin-top:10px"><li>${PLUSG.length} more daily games: ${PLUSG.map(g=>esc(g.name)).join(', ').replace(/, ([^,]*)$/,' and $1')}</li><li>Full Archive for every daily game</li><li>Fresh random games after today's</li><li>New daily games as they're added</li><li>Bonus extras in each daily game</li></ul>`;
+const PERK=()=>`<ul class="plus" style="margin-top:10px"><li>${PLUSG.length} more daily games: ${PLUSG.map(g=>esc(g.name)).join(', ').replace(/, ([^,]*)$/,' and $1')}</li><li>Full Archive for every daily game</li><li>Fresh random games after today's</li><li>New daily games as they're added</li><li>First in line: early access to new games and stores, which may change as we fine-tune them</li><li>Bonus extras in each daily game</li></ul>`;
 function planText(p){const per=p.plan==='yearly'?'year':'month';
   if(!p.introPrice)return `${p.price} a ${per}`;
   if(p.introMode==='upfront')return `${p.introPrice} for your first ${p.introPeriods>1?p.introPeriods+' '+per+'s':per}, then ${p.price} a ${per}`;
