@@ -19,25 +19,26 @@ smMode();q.addEventListener&&q.addEventListener('change',function(){smMode()});a
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Libre+Franklin:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{--paper:#f4efe1;--paper2:#ebe4d0;--ink:#1a1814;--ink2:#4a453b;--fade:#8c8574;--card:#fffdf6;--hi:#ffe27a;--hi-ink:#1a1814;--ok:#2e7d32;
-  --dot:#e3dcc7;--btn:#1a1814;--btn-ink:#f4efe1;--shadow:rgba(0,0,0,.12);--dock:rgba(244,239,225,.92);--dockline:rgba(26,24,20,.18);--star:#c99a00}
+  --dot:#e3dcc7;--btn:#1a1814;--btn-ink:#f4efe1;--shadow:rgba(0,0,0,.12);--star:#c99a00}
 /* Navy dark mode: the shared smAisle look standard (Dark mode Off / On / Match phone, saved as smaisle-dark). */
 html[data-mode=navy]{--paper:#121b2e;--paper2:#0d1424;--ink:#efe6cc;--ink2:#c9b98f;--fade:#8792ab;--card:#1c2a44;--hi:#ffe27a;--hi-ink:#121b2e;--ok:#7bc47f;
-  --dot:rgba(255,255,255,.06);--btn:#c9a961;--btn-ink:#121b2e;--shadow:#05080f;--dock:rgba(28,42,68,.94);--dockline:#3a4a6b;--star:#c9a961;color-scheme:dark}
+  --dot:rgba(255,255,255,.06);--btn:#c9a961;--btn-ink:#121b2e;--shadow:#05080f;--star:#c9a961;color-scheme:dark}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{touch-action:manipulation;background:var(--paper);background-image:radial-gradient(var(--dot) 1px,transparent 1px);background-size:6px 6px;color:var(--ink);font-family:'Libre Franklin',sans-serif;min-height:100%;-webkit-text-size-adjust:100%}
 button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touch-action:manipulation;text-decoration:none}
-.wrap{max-width:440px;margin:0 auto;padding:calc(16px + env(safe-area-inset-top)) 18px 130px}
-.home{display:inline-block;font:800 12px 'Libre Franklin';color:var(--ink2);padding:2px 0 8px}
-.bar{display:flex;align-items:center;justify-content:space-between}
+.wrap{max-width:440px;min-height:100vh;min-height:100dvh;margin:0 auto;padding:calc(12px + env(safe-area-inset-top)) 18px 0;display:flex;flex-direction:column}
+.home{font:600 11px 'Libre Franklin';color:var(--fade);text-decoration:underline}
+.bar{display:flex;align-items:baseline;justify-content:space-between;border-bottom:4px double var(--ink);padding-bottom:6px}
 .logo{display:flex;align-items:baseline;gap:7px}
-.logo .sm{font:800 13px 'Libre Franklin';background:var(--hi);border:1.5px solid var(--ink);padding:1px 6px}
-.logo .d{font:900 30px 'Playfair Display'}
+.logo .sm{font:800 13px 'Libre Franklin';background:var(--hi);border:2px solid var(--ink);padding:0 5px}
+.logo .d{font:900 28px/1 'Playfair Display'}
 .date{font:700 11px 'Libre Franklin';letter-spacing:.06em;color:var(--ink2);text-transform:uppercase}
-.widget{margin-top:12px;background:var(--card);border:2px solid var(--ink);border-radius:18px;padding:12px 14px;box-shadow:3px 3px 0 var(--shadow)}
-.widget .t{font:800 11px 'Libre Franklin';letter-spacing:.1em;color:var(--ink2)}
-.widget .big{font:900 22px 'Playfair Display';margin:3px 0 8px}
-.prog{display:flex;gap:6px}.prog span{flex:1;height:8px;border-radius:4px;background:var(--paper2);border:1px solid var(--ink);transition:background .3s}.prog span.on{background:var(--hi)}
-.widget .row{display:flex;justify-content:space-between;font:600 12px 'Libre Franklin';margin-top:7px;color:var(--ink2)}
+.today{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0 8px}
+.today b{font:800 14px 'Libre Franklin';white-space:nowrap}
+.today span{font:700 12px 'Libre Franklin';color:var(--ink2);white-space:nowrap}
+.prog{display:flex;gap:5px}.prog span{flex:1;height:5px;border-radius:3px;border:1px solid var(--ink);transition:background .3s}.prog span.on{background:var(--hi)}
+.saved{font:600 11.5px 'Libre Franklin';color:var(--ink2);margin-top:7px}
+.lbl{font:800 11px 'Libre Franklin';letter-spacing:.1em;color:var(--ink2);margin:14px 1px 6px}
 .sec{font:800 11px 'Libre Franklin';letter-spacing:.12em;color:var(--ink2);margin:16px 2px 8px;display:flex;align-items:center;gap:8px}.sec:after{content:"";flex:1;border-top:1.5px solid var(--ink2)}
 .r{width:100%;text-align:left;display:flex;align-items:center;gap:11px;background:var(--card);border:2px solid var(--ink);border-radius:12px;padding:8px 10px;margin-bottom:9px;box-shadow:2px 2px 0 var(--shadow)}
 .r:active{transform:translate(1px,1px);box-shadow:1px 1px 0 var(--shadow)}
@@ -55,11 +56,16 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
 .nm{font:600 11px/1.15 'Libre Franklin';text-align:center}
 .soon .ico{border:2px dashed var(--fade);background:transparent;box-shadow:none}.soon .nm{color:var(--fade)}
 .phi{display:flex;align-items:center;justify-content:center;font:900 26px 'Playfair Display'}
-.dock{position:fixed;bottom:calc(12px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:min(420px,calc(100% - 24px));height:88px;border-radius:28px;background:var(--dock);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1.5px solid var(--dockline);display:flex;justify-content:space-around;align-items:center;box-shadow:0 4px 16px rgba(0,0,0,.12);z-index:5}
-.dock .app{width:70px}.dock .nm{font-size:10.5px}
-.dk{width:52px;height:52px;border-radius:14px;background:var(--ink);color:var(--card);display:flex;align-items:center;justify-content:center}
-.dk svg{width:26px;height:26px}
-.dk.y{background:var(--hi);color:var(--ink);border:2px solid var(--ink)}
+.pause{width:44px;border-top:1.5px solid var(--ink2);margin:14px auto 13px}
+.pc{width:100%;display:flex;align-items:center;gap:9px;margin-bottom:9px;background:var(--card);color:var(--ink);border:2px solid var(--ink);border-radius:12px;padding:8px 10px;text-align:left;box-shadow:2px 2px 0 var(--shadow)}
+.pc:active{transform:translate(1px,1px);box-shadow:1px 1px 0 var(--shadow)}
+.pc .mini{display:flex;flex:none}.pc .mini img{width:32px;height:32px;border-radius:7px;border:1.5px solid var(--card);margin-left:-12px}.pc .mini img:first-child{margin-left:0}
+.pc .tx{flex:1;min-width:0}.pc .n{font:900 17px/1.1 'Playfair Display'}.pc .s{font:500 12px/1.25 'Libre Franklin';color:var(--ink2);margin-top:2px}.pc .arr{flex:none;font:800 18px 'Libre Franklin'}
+.bottom{position:sticky;bottom:0;z-index:5;margin:auto -18px 0;padding:10px 18px calc(6px + env(safe-area-inset-bottom));background:var(--paper)}
+.links{display:flex;justify-content:space-between;border-top:1.5px solid var(--ink)}
+.links button{font:800 13px 'Libre Franklin';letter-spacing:.02em;padding:11px 2px 7px;white-space:nowrap}
+.foot{display:flex;justify-content:center;align-items:baseline;gap:12px;min-height:16px}
+.foot .ver{margin:0}
 .ver{text-align:center;font:600 11px 'Libre Franklin';color:var(--fade);margin-top:18px}
 /* sheet */
 .scrim{position:fixed;inset:0;z-index:11;background:rgba(26,24,20,.45);opacity:0;pointer-events:none;transition:opacity .2s}
@@ -94,10 +100,6 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
 .plus li:before{content:"★ ";color:var(--star)}
 .as{position:absolute;bottom:-7px;left:50%;transform:translateX(-50%);background:#0a84ff;color:#fff;font:800 8.5px 'Libre Franklin';letter-spacing:.04em;padding:2px 5px;border-radius:6px;white-space:nowrap;border:1.5px solid var(--paper)}
 .store-btn{background:#0a84ff;color:#fff}
-.moreWrap{margin-top:44px;padding-top:18px;border-top:4px double var(--ink)}
-.moreBtn{width:100%;display:flex;align-items:center;gap:12px;background:transparent;color:var(--ink);border:2px solid var(--ink);border-radius:14px;padding:12px 14px;text-align:left}
-.moreBtn .mini{display:flex;flex:none}.moreBtn .mini img{width:34px;height:34px;border-radius:9px;border:2px solid var(--paper);margin-left:-10px}.moreBtn .mini img:first-child{margin-left:0}
-.moreBtn .n{font:800 15px 'Libre Franklin'}.moreBtn .s{font:500 12px 'Libre Franklin';color:var(--ink2);margin-top:2px}.moreBtn .tx{flex:1}.moreBtn .arr{font-size:28px;opacity:.7}
 .shelf{position:fixed;inset:0;z-index:9;background:var(--paper);background-image:radial-gradient(var(--dot) 1px,transparent 1px);background-size:6px 6px;color:var(--ink);overflow:auto;padding:calc(14px + env(safe-area-inset-top)) 18px 40px;transform:translateY(100%);transition:transform .3s ease;visibility:hidden}
 .shelf.on{transform:none;visibility:visible}
 .shelf>*{max-width:440px;margin-left:auto;margin-right:auto}
@@ -110,40 +112,29 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
 .shelf .ico{border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shadow)}
 .shelf .ver{margin-top:34px}
 .back{color:var(--hi-ink);font:800 13px 'Libre Franklin';padding:7px 14px;background:var(--hi);border:2px solid var(--ink);border-radius:8px}
-.r .b:not(.done):not(.go),.big-btn:not(.o):not(.off):not(.store-btn),.dk:not(.y){background:var(--btn);color:var(--btn-ink)}
-.logo .sm,.dk.y,.r .b.go{color:var(--hi-ink)}
+.r .b:not(.done):not(.go),.big-btn:not(.o):not(.off):not(.store-btn){background:var(--btn);color:var(--btn-ink)}
+.logo .sm,.r .b.go{color:var(--hi-ink)}
 .mode{display:flex;border:2px solid var(--ink);border-radius:8px;overflow:hidden;margin-top:8px}
 .mode button{flex:1;padding:10px 4px;font:800 12px 'Libre Franklin';letter-spacing:.06em;text-transform:uppercase;color:var(--ink);background:var(--card)}
 .mode button+button{border-left:2px solid var(--ink)}.mode button.on{background:var(--btn);color:var(--btn-ink)}
-.plusBtn{width:100%;display:flex;align-items:center;gap:12px;margin-top:6px;background:var(--card);color:var(--ink);border:2px solid var(--ink);border-radius:12px;padding:10px 12px;text-align:left;box-shadow:2px 2px 0 var(--shadow)}
-.plusBtn .mini{display:flex;flex:none}.plusBtn .mini img{width:34px;height:34px;border-radius:9px;border:2px solid var(--card);margin-left:-10px}.plusBtn .mini img:first-child{margin-left:0}
-.plusBtn .n{font:900 17px 'Playfair Display'}.plusBtn .s{font:500 12px 'Libre Franklin';color:var(--ink2);margin-top:2px}.plusBtn .tx{flex:1}.plusBtn .arr{font-size:28px;opacity:.7}
-.pt{font:800 9.5px 'Libre Franklin';letter-spacing:.06em;background:var(--hi);color:var(--hi-ink);border:1.5px solid var(--ink);border-radius:4px;padding:1px 5px;vertical-align:3px;margin-left:4px}
 .pint{font:500 14px/1.45 'Libre Franklin';color:var(--ink2);margin:16px auto 12px;text-align:center}
-.offer{margin:12px 0 0;padding:12px 14px;border:2px solid var(--ink);border-radius:14px;background:var(--hi);color:var(--hi-ink);display:flex;align-items:center;gap:12px;width:100%;text-align:left;font:inherit;cursor:pointer}
-.offer b{display:block;font:900 17px 'Playfair Display'}.offer span{font:600 13px/1.35 'Libre Franklin'}.offer .arr{margin-left:auto;font-size:22px}
-.saved{font:700 12px 'Libre Franklin';color:var(--ink2);margin:4px 0 8px}
 #pshelf .r{text-decoration:none;color:var(--ink)}#pshelf .r .b.pv{background:none;color:var(--ink);border:2px solid var(--ink);padding:6px 9px}
 </style></head><body>
 <div class="wrap">
- <a class="home" href="https://smaisle.app/">‹ smAisle Home</a>
  <div class="bar"><div class="logo"><span class="sm">smAisle</span><span class="d">Daily</span></div><span class="date" id="date"></span></div>
- <div class="widget"><div class="t">TODAY</div><div class="big" id="streak"></div><div class="saved" id="saved" hidden></div>
-  <div class="prog" id="prog"></div>
-  <div class="row"><span id="played"></span><span id="next"></span></div></div>
- <div class="sec">TODAY'S GAMES</div>
+ <div class="today"><b id="streak"></b><span><span id="played"></span> · <span id="next"></span></span></div>
+ <div class="prog" id="prog"></div>
+ <div class="saved" id="saved" hidden></div>
+ <div class="lbl">TODAY'S GAMES</div>
  <div id="daily"></div>
- <button class="offer" id="offer" hidden><div><b>Want more?</b><span>Plus games, Extra Editions and the full Archive are in Plus.</span></div><span class="arr">›</span></button>
- <button class="plusBtn" id="openPlus"><div class="mini" id="pmini"></div><div class="tx"><div class="n">Plus games <span class="pt">★ PLUS</span></div><div class="s" id="psub"></div></div><span class="arr">›</span></button>
- <div class="moreWrap"><button class="moreBtn" id="openShelf"><div class="mini" id="mini"></div><div class="tx"><div class="n">More games by smAisle</div><div class="s">Arcade, puzzle and strategy games</div></div><span class="arr">›</span></button></div>
- <div class="ver" id="ver"></div>
+ <div class="pause"></div>
+ <button class="pc" id="openPlus"><div class="mini" id="pmini"></div><div class="tx"><div class="n" id="pname"></div><div class="s" id="psub"></div></div><span class="arr">›</span></button>
+ <button class="pc" id="openShelf"><div class="mini" id="mini"></div><div class="tx"><div class="n">More games</div><div class="s">Arcade, puzzle and strategy games</div></div><span class="arr">›</span></button>
+ <div class="bottom">
+  <nav class="links"><button data-sheet="archive">Archive</button><button data-sheet="stats">Stats</button><button data-sheet="plus">Plus</button><button data-sheet="help">How to Play</button></nav>
+  <div class="foot"><a class="home" href="https://smaisle.app/">smAisle Home</a><div class="ver" id="ver"></div></div>
+ </div>
 </div>
-<nav class="dock">
- <button class="app" data-sheet="archive"><div class="dk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="5" rx="1"/><path d="M5 9v10h14V9M10 13h4"/></svg></div><div class="nm">Archive</div></button>
- <button class="app" data-sheet="stats"><div class="dk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 20V12M12 20V5M18 20v-6"/></svg></div><div class="nm">Stats</div></button>
- <button class="app" data-sheet="plus"><div class="dk y"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.9 6 6.6.8-4.9 4.6 1.3 6.6L12 17.3 6.1 20.5l1.3-6.6L2.5 9.3l6.6-.8z"/></svg></div><div class="nm">Plus</div></button>
- <button class="app" data-sheet="help"><div class="dk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 9a3 3 0 1 1 4 2.8c-.7.3-1 .9-1 1.6V14"/><circle cx="12" cy="18" r=".6" fill="currentColor"/></svg></div><div class="nm">How to Play</div></button>
-</nav>
 <div class="shelf" id="pshelf"><div><button id="closePlus" class="back">‹ smAisle Daily</button></div>
  <div class="shelf-h"><b>Plus Games</b><span>with smAisle Daily Plus</span></div>
  <p class="pint" id="pint"></p>
@@ -160,7 +151,7 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
 <div class="sheet" id="sheet"><div class="grab"></div><div id="sheetBody"></div></div>
 <script src="games.js"></script>
 <script>
-const VERSION='1.24',VDATE='Nov 2',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
+const VERSION='1.25',VDATE='Nov 3',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
 const $=id=>document.getElementById(id);
 const SM=window.SMAISLE,GAMES=SM.games,DAILY=GAMES.filter(g=>g.daily&&!g.plus),PLUSG=GAMES.filter(g=>g.plus),N=DAILY.length;
 // On smaisle.app (or smaisle.github.io) games open in this tab (and share its storage). Anywhere else (the Claude link) they open in a new tab.
@@ -207,25 +198,28 @@ function render(){
   H=remember();const today=dayAt(0),done=H[today]||[],n=done.length,st=streaks(H);
   $('date').textContent=new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
   $('streak').textContent=st.cur?`🔥 ${st.cur}-day streak`:'Start a streak today';
-  const sv=st.cur&&st.saved.filter(k=>k>=dayAt(7)).pop();$('saved').hidden=!sv;if(sv)$('saved').textContent=`🛡 Plus saved your streak on ${fmtDay(sv)}`;
-  $('offer').hidden=!(n===N&&!member());
+  // The day Plus forgave is always a missed day, so the player first sees the save the next day. It shows on that day only.
+  const sv=st.cur&&st.saved.indexOf(dayAt(1))>=0;$('saved').hidden=!sv;if(sv)$('saved').textContent='🛡 Plus saved your streak';
   $('prog').innerHTML=DAILY.map((g,i)=>`<span class="${i<n?'on':''}"></span>`).join('');
-  $('played').textContent=n===N?`All ${N} daily games done!`:n===0?(st.cur?'Play today to keep it':'Finish a daily game to start'):`${n} of ${N} daily games done`;
+  $('played').textContent=`${n} of ${N} done`;
   $('daily').innerHTML=DAILY.map(g=>{const d=done.indexOf(g.id)>=0,s=!d&&SM.isStarted(g.id,today);
     return `<button class="r" data-g="${g.id}">${pic(g)}<div class="tx"><div class="n">${esc(g.name)}</div><div class="s">${esc(g.sub)}</div></div><span class="b ${d?'done':s?'go':''}">${d?'✓ DONE':s?'KEEP GOING':'PLAY'}</span></button>`}).join('');
   const owned=member();  // the website plays the Plus games in full for now; the app gates them
   $('pmini').innerHTML=PLUSG.map(g=>`<img src="${g.icon}" alt="">`).join('');
-  $('psub').textContent=PLUSG.map(g=>g.name).join(', ')+(owned?'':' · try a preview');
+  // A real Plus member (app only: website visitors aren't members) sees their games; everyone else sees the invitation.
+  const isPlus=!!(window.SMD_APP&&window.DG_APP&&DG_APP.plus),cnt=['Zero','One','Two','Three','Four','Five','Six','Seven','Eight'][PLUSG.length]||PLUSG.length;
+  $('pname').textContent=isPlus?'Your Plus games':'There’s more in smAisle';
+  $('psub').textContent=isPlus?PLUSG.map(g=>g.name).join(', '):`${cnt} more games with Plus`;
   $('pint').textContent=!window.SMD_APP?'More daily games, free to play in full on the website for now.':owned?'Your daily Plus games. Thanks for getting Plus!':'More daily games for Plus members. Everyone can play a free preview of each one.';
   $('plist').innerHTML=PLUSG.map(g=>{const d=done.indexOf(g.id)>=0;return `<a class="r" href="${g.url}${owned?'':'?preview=1'}" data-tap="${g.id}${owned?'':'-pv'}">${pic(g)}<div class="tx"><div class="n">${esc(g.name)}</div><div class="s">${esc(g.sub)}</div></div><span class="b ${owned?(d?'done':''):'pv'}">${owned?(d?'✓ DONE':'PLAY'):'PREVIEW'}</span></a>`}).join('');
   $('getPlus').style.display=$('pfoot').style.display=owned?'none':'';
-  $('mini').innerHTML=['sd','sb','br'].map(id=>`<img src="${SM.game(id).icon}" alt="">`).join('');
+  $('mini').innerHTML=GAMES.filter(g=>!g.daily).slice(0,4).map(g=>`<img src="${g.icon}" alt="">`).join('');
   const store=GAMES.filter(g=>!g.daily&&g.store),web=GAMES.filter(g=>!g.daily&&!g.store);
   $('more').innerHTML=`<div class="sec">ON THE APP STORE</div><div class="grid">${store.map(tile).join('')}</div>`
     +`<div class="sec">PLAY ON THE WEB</div><div class="grid">${web.map(tile).join('')}<div class="app soon"><div class="ico"></div><div class="nm">Coming<br>soon</div></div></div>`;
   $('ver').textContent=$('ver2').textContent=VER;
 }
-function tick(){const now=new Date(),mid=new Date(now);mid.setHours(24,0,0,0);const m=Math.max(0,Math.ceil((mid-now)/60000));$('next').textContent=`New games in ${Math.floor(m/60)}h ${m%60}m`;
+function tick(){const now=new Date(),mid=new Date(now);mid.setHours(24,0,0,0);const m=Math.max(0,Math.ceil((mid-now)/60000));$('next').textContent=`${Math.floor(m/60)}h ${m%60}m`;
   if(dayAt(0)!==lastDay){lastDay=dayAt(0);render()}}
 let lastDay=dayAt(0);
 
@@ -291,7 +285,7 @@ const SHEETS={
     <h3>BY GAME</h3><div class="list">${DAILY.map(g=>`<div class="li">${esc(g.name)}<em>${per(g.id)} ${per(g.id)===1?'day':'days'} finished</em></div>`).join('')}<div class="li">All ${N} in one day<em>${all} ${all===1?'day':'days'}</em></div></div>
     <div class="small">Each game has its own detailed stats in its menu. Counted on this device only.</div>`},
   plus:()=>{if(window.SMD_APP&&!PLANS.length&&!PWAIT)askPrices();return plusSheet()},
-  help:()=>`<h2 class="t">How to Play</h2><p><b>Today's Games</b> are the daily ones. Each has a new game every day at midnight, the same for everyone. Tap one to play it.</p><p><b>Done checks</b> fill in by themselves when you finish a game on this device.</p><p><b>Your streak</b> grows each day you finish at least one daily game. With Plus, one missed day a week won't break it. The bar on the Today card fills as you finish all ${N}.</p><p><b>More games by smAisle</b>, below Today's Games, are always-on games you can play any time.</p><p><b>Archive and Stats</b> in the dock cover every daily game.</p><h3>SETTINGS</h3><div style="font:800 14px 'Libre Franklin';margin-top:10px">Dark mode</div><div class="mode" id="modeRow">${[['off','Off'],['on','On'],['auto','Match phone']].map(([k,l])=>`<button data-mode="${k}" class="${smMode()===k?'on':''}">${l}</button>`).join('')}</div><div class="small" style="text-align:left">On uses Navy. Match phone switches with your phone.</div><div class="small" style="margin-top:18px">${VER}</div>`
+  help:()=>`<h2 class="t">How to Play</h2><p><b>Today's Games</b> are the daily ones. Each has a new game every day at midnight, the same for everyone. Tap one to play it.</p><p><b>Done checks</b> fill in by themselves when you finish a game on this device.</p><p><b>Your streak</b> grows each day you finish at least one daily game. With Plus, one missed day a week won't break it. The bars at the top fill as you finish all ${N}. The time beside them counts down to the next games.</p><p><b>More games</b>, below Today's Games, are always-on games you can play any time.</p><p><b>Archive and Stats</b> at the bottom of the screen cover every daily game.</p><h3>SETTINGS</h3><div style="font:800 14px 'Libre Franklin';margin-top:10px">Dark mode</div><div class="mode" id="modeRow">${[['off','Off'],['on','On'],['auto','Match phone']].map(([k,l])=>`<button data-mode="${k}" class="${smMode()===k?'on':''}">${l}</button>`).join('')}</div><div class="small" style="text-align:left">On uses Navy. Match phone switches with your phone.</div><div class="small" style="margin-top:18px">${VER}</div>`
 };
 document.addEventListener('click',e=>{
   const md=e.target.closest('#modeRow [data-mode]');if(md){smMode(md.dataset.mode);document.querySelectorAll('#modeRow button').forEach(x=>x.classList.toggle('on',x===md));tap('mode-'+md.dataset.mode);return}
@@ -299,7 +293,6 @@ document.addEventListener('click',e=>{
   const g=e.target.closest('[data-g]');if(g)return openGame(g.dataset.g);
   if(e.target.closest('#openPlus'))return $('pshelf').classList.add('on');
   if(e.target.closest('#closePlus'))return $('pshelf').classList.remove('on');
-  if(e.target.closest('#offer')){tap('offer');return open(SHEETS.plus())}
   if(e.target.closest('#getPlus')){$('pshelf').classList.remove('on');return open(SHEETS.plus())}
   if(e.target.closest('#openShelf'))return $('shelf').classList.add('on');
   if(e.target.closest('#closeShelf'))return $('shelf').classList.remove('on');
