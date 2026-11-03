@@ -151,7 +151,7 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
 <div class="sheet" id="sheet"><div class="grab"></div><div id="sheetBody"></div></div>
 <script src="games.js"></script>
 <script>
-const VERSION='1.26',VDATE='Nov 3',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
+const VERSION='1.27',VDATE='Nov 3',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
 const $=id=>document.getElementById(id);
 const SM=window.SMAISLE,GAMES=SM.games,DAILY=GAMES.filter(g=>g.daily&&!g.plus),PLUSG=GAMES.filter(g=>g.plus),N=DAILY.length;
 // On smaisle.app (or smaisle.github.io) games open in this tab (and share its storage). Anywhere else (the Claude link) they open in a new tab.
@@ -209,7 +209,7 @@ function render(){
   // A real Plus member (app only: website visitors aren't members) sees their games; everyone else sees the invitation.
   const isPlus=!!(window.SMD_APP&&window.DG_APP&&DG_APP.plus),cnt=['Zero','One','Two','Three','Four','Five','Six','Seven','Eight'][PLUSG.length]||PLUSG.length;
   $('pname').textContent=isPlus?'Your Plus games':'There’s more in smAisle';
-  $('psub').textContent=isPlus?PLUSG.map(g=>g.name).join(', '):`${cnt} more games with Plus`;
+  $('psub').textContent=isPlus?PLUSG.map(g=>g.name).join(', '):'Lots more games with Plus';
   $('pint').textContent=!window.SMD_APP?'More daily games, free to play in full on the website for now.':owned?'Your daily Plus games. Thanks for getting Plus!':'More daily games for Plus members. Everyone can play a free preview of each one.';
   $('plist').innerHTML=PLUSG.map(g=>{const d=done.indexOf(g.id)>=0;return `<a class="r" href="${g.url}${owned?'':'?preview=1'}" data-tap="${g.id}${owned?'':'-pv'}">${pic(g)}<div class="tx"><div class="n">${esc(g.name)}</div><div class="s">${esc(g.sub)}</div></div><span class="b ${owned?(d?'done':''):'pv'}">${owned?(d?'✓ DONE':'PLAY'):'PREVIEW'}</span></a>`}).join('');
   $('getPlus').style.display=$('pfoot').style.display=owned?'none':'';
