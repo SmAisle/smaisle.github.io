@@ -129,7 +129,7 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
  <div id="daily"></div>
  <div class="pause"></div>
  <button class="pc" id="openPlus"><div class="mini" id="pmini"></div><div class="tx"><div class="n" id="pname"></div><div class="s" id="psub"></div></div><span class="arr">›</span></button>
- <button class="pc" id="openShelf"><div class="mini" id="mini"></div><div class="tx"><div class="n">More games</div><div class="s">Arcade, puzzle and strategy games</div></div><span class="arr">›</span></button>
+ <button class="pc" id="openShelf" style="display:none"><div class="mini" id="mini"></div><div class="tx"><div class="n">More games</div><div class="s">Arcade, puzzle and strategy games</div></div><span class="arr">›</span></button>
  <div class="bottom">
   <nav class="links"><button data-sheet="archive">Archive</button><button data-sheet="stats">Stats</button><button data-sheet="plus">Plus</button><button data-sheet="help">How to Play</button></nav>
   <div class="foot"><a class="home" href="https://smaisle.app/">smAisle Home</a><div class="ver" id="ver"></div></div>
@@ -151,7 +151,7 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
 <div class="sheet" id="sheet"><div class="grab"></div><div id="sheetBody"></div></div>
 <script src="games.js"></script>
 <script>
-const VERSION='1.25',VDATE='Nov 3',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
+const VERSION='1.26',VDATE='Nov 3',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
 const $=id=>document.getElementById(id);
 const SM=window.SMAISLE,GAMES=SM.games,DAILY=GAMES.filter(g=>g.daily&&!g.plus),PLUSG=GAMES.filter(g=>g.plus),N=DAILY.length;
 // On smaisle.app (or smaisle.github.io) games open in this tab (and share its storage). Anywhere else (the Claude link) they open in a new tab.
