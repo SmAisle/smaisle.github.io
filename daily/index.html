@@ -70,7 +70,7 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
 /* sheet */
 .scrim{position:fixed;inset:0;z-index:11;background:rgba(26,24,20,.45);opacity:0;pointer-events:none;transition:opacity .2s}
 .scrim.on{opacity:1;pointer-events:auto}
-.sheet{position:fixed;left:50%;bottom:0;transform:translate(-50%,105%);width:min(460px,100%);max-height:86vh;overflow:auto;background:var(--paper);border:2px solid var(--ink);border-bottom:0;border-radius:22px 22px 0 0;padding:10px 20px calc(28px + env(safe-area-inset-bottom));transition:transform .25s ease;z-index:12}
+#hello{position:fixed;inset:0;z-index:60;background:rgba(26,24,20,.55);display:flex;align-items:center;justify-content:center;padding:22px}#hello[hidden]{display:none}.hc{width:100%;max-width:340px;background:var(--paper);color:var(--ink);border:3px double var(--ink);box-shadow:5px 5px 0 rgba(0,0,0,.3);padding:20px 16px;text-align:center;display:grid;gap:10px;justify-items:center}.hc .tg{font:800 13px 'Libre Franklin';background:#ffe27a;color:#1a1814;border:2px solid #1a1814;padding:0 6px}.hc h2{font:900 30px/1.1 'Playfair Display';margin:0}.hc p{margin:0;font:500 14px 'Libre Franklin'}.hc button{width:100%;padding:12px;border:2px solid #1a1814;border-radius:3px;background:#1a1814;color:#f4efe1;font:800 13px 'Libre Franklin';letter-spacing:.08em;text-transform:uppercase}html[data-mode=navy] .hc button{background:#c9a961;color:#121b2e;border-color:#c9a961}.sheet{position:fixed;left:50%;bottom:0;transform:translate(-50%,105%);width:min(460px,100%);max-height:86vh;overflow:auto;background:var(--paper);border:2px solid var(--ink);border-bottom:0;border-radius:22px 22px 0 0;padding:10px 20px calc(28px + env(safe-area-inset-bottom));transition:transform .25s ease;z-index:12}
 .sheet.on{transform:translate(-50%,0)}
 .grab{width:40px;height:5px;border-radius:3px;background:var(--fade);margin:0 auto 12px;opacity:.6;cursor:pointer;box-sizing:content-box;padding:8px 30px;background-clip:content-box;margin-top:-8px}
 .sh-head{display:flex;gap:14px;align-items:center}
@@ -148,10 +148,11 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
  <div class="ver" id="ver2"></div>
 </div>
 <div class="scrim" id="scrim"></div>
+<div id="hello" hidden><div class="hc"><span class="tg">smAisle</span><h2>Say it like &ldquo;smile.&rdquo;</h2><p>New puzzles every day, in one place.</p><button id="helloGo">Let&rsquo;s play</button></div></div>
 <div class="sheet" id="sheet"><div class="grab"></div><div id="sheetBody"></div></div>
 <script src="games.js"></script>
 <script>
-const VERSION='1.27',VDATE='Nov 3',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
+const VERSION='1.28',VDATE='Nov 3',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
 const $=id=>document.getElementById(id);
 const SM=window.SMAISLE,GAMES=SM.games,DAILY=GAMES.filter(g=>g.daily&&!g.plus),PLUSG=GAMES.filter(g=>g.plus),N=DAILY.length;
 // On smaisle.app (or smaisle.github.io) games open in this tab (and share its storage). Anywhere else (the Claude link) they open in a new tab.
@@ -328,6 +329,7 @@ function checkIn(kind){
 }
 function tap(k){checkIn(k)}
 
+if(!store.get('smd-hello','')&&!store.get('smd-usage','')){$('hello').hidden=false;$('helloGo').onclick=()=>{$('hello').hidden=true}}store.set('smd-hello','1');
 render();tick();setInterval(tick,30000);checkIn('open');
 // #plus (from a Plus game preview's "Get smAisle Daily Plus") opens the Plus screen.
 function hashPlus(){if(location.hash==='#plus'){open(SHEETS.plus());history.replaceState(null,'',location.pathname+location.search)}}hashPlus();addEventListener('hashchange',hashPlus);
