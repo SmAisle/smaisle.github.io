@@ -30,7 +30,7 @@
     {id:'bw',name:'Blipword',daily:true,plus:true,icon:ICONS+'blipword.png',sub:'A word flashes. Pick its meaning.',tag:'Plus daily game',
      desc:'Ten words a day, each flashing faster than the last. Pick the right definition.',url:BASE+'Blipword/'},
     {id:'rg',name:'smAisle Run',daily:true,plus:true,icon:ICONS+'smaisle-run.png?v=2',sub:'Remember the list. Route your cart.',tag:'Plus daily game',
-     desc:'Study 8 items, then route your cart through the aisles and get them all in order. You get three carts.',url:BASE+'AisleRunGame/'},
+     desc:'Study 8 items, then route your cart through the aisles in order. Three rounds, less time to study each round, and two carts a round.',url:BASE+'AisleRunGame/'},
     // Apps on the App Store (appStore is filled in once each app is live)
     {id:'sd',name:'Straight Down',store:true,appStore:'',icon:ICONS+'straight-down.png',tag:'Arcade',sub:'Falling-card poker game',
      desc:'Cards fall one at a time. Line them up in a row or column to make poker hands. An invite code unlocks the full version, with levels, a daily challenge, bombs and wild cards.',url:BASE+'StraightDown/',

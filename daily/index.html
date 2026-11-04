@@ -150,9 +150,9 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
 <div class="scrim" id="scrim"></div>
 <div id="hello" hidden><div class="hc"><span class="tg">smAisle</span><h2>Say it like &ldquo;smile.&rdquo;</h2><p>New puzzles every day, in one place.</p><button id="helloGo">Let&rsquo;s play</button></div></div>
 <div class="sheet" id="sheet"><div class="grab"></div><div id="sheetBody"></div></div>
-<script src="games.js?v=1.34"></script>
+<script src="games.js?v=1.35"></script>
 <script>
-const VERSION='1.34',VDATE='Nov 3',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
+const VERSION='1.35',VDATE='Nov 3',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
 const $=id=>document.getElementById(id);
 const SM=window.SMAISLE,GAMES=SM.games,DAILY=GAMES.filter(g=>g.daily&&!g.plus),PLUSG=GAMES.filter(g=>g.plus).sort((a,b)=>a.name.localeCompare(b.name)),N=DAILY.length;
 // On smaisle.app (or smaisle.github.io) games open in this tab (and share its storage). Anywhere else (the Claude link) they open in a new tab.
