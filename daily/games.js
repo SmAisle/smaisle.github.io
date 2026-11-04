@@ -23,6 +23,8 @@
      desc:'Spell words through seven rows of letters. Each word starts where the last one ended, and reaching the top or bottom sets you free.',url:BASE+'Ledder/word/'},
     {id:'tr',name:'CalcRU-Late',daily:true,plus:true,icon:ICONS+'calcrulate.png',sub:'Set the lever. Arrive on the dot.',tag:'Plus daily game',
      desc:'Five trains a day. Work out the speed or the time you leave, set the lever, and arrive exactly on time.',url:BASE+'Trackulate/timegame/'},
+    {id:'mm',name:'GeoCARphy',daily:true,plus:true,archive:true,icon:ICONS+'geocarphy.png',sub:'One road trip a day. Know your map.',tag:'Plus daily game',
+     desc:'Pick your roads across the real US map, answer questions in every city, and reach the last stop before your money, gas or time runs out.',url:BASE+'GeoCARphy/'},
     {id:'gr',name:'Gramble',daily:true,plus:true,icon:ICONS+'gramble.png',sub:'Find 10 words with 50 coins',tag:'Plus daily game',
      desc:'A daily word card game. Hold and hit to clear 10 words with 50 coins. Then bank it, or keep going.',url:BASE+'gramble/'},
     {id:'jx',name:'Jexicon',daily:true,plus:true,icon:ICONS+'jexicon.png',sub:'Spell the word from its definition',tag:'Plus daily game',
