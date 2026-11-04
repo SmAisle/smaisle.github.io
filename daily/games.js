@@ -21,6 +21,8 @@
     // Plus games: daily games for smAisle Daily Plus members. Everyone can play a free preview (?preview=1).
     {id:'ld',name:'Ledder',daily:true,plus:true,icon:ICONS+'ledder.png',sub:'Climb the letters. Earn 3 stars.',tag:'Plus daily game',
      desc:'Spell words through seven rows of letters. Each word starts where the last one ended, and reaching the top or bottom sets you free.',url:BASE+'Ledder/word/'},
+    {id:'tr',name:'CalcRU-Late',daily:true,plus:true,icon:ICONS+'calcrulate.png',sub:'Set the lever. Arrive on the dot.',tag:'Plus daily game',
+     desc:'Five trains a day. Work out the speed or the time you leave, set the lever, and arrive exactly on time.',url:BASE+'Trackulate/timegame/'},
     {id:'gr',name:'Gramble',daily:true,plus:true,icon:ICONS+'gramble.png',sub:'Find 10 words with 50 coins',tag:'Plus daily game',
      desc:'A daily word card game. Hold and hit to clear 10 words with 50 coins. Then bank it, or keep going.',url:BASE+'gramble/'},
     {id:'jx',name:'Jexicon',daily:true,plus:true,icon:ICONS+'jexicon.png',sub:'Spell the word from its definition',tag:'Plus daily game',
