@@ -131,7 +131,7 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
  <button class="pc" id="openPlus"><div class="mini" id="pmini"></div><div class="tx"><div class="n" id="pname"></div><div class="s" id="psub"></div></div><span class="arr">›</span></button>
  <button class="pc" id="openShelf" style="display:none"><div class="mini" id="mini"></div><div class="tx"><div class="n">More games</div><div class="s">Arcade, puzzle and strategy games</div></div><span class="arr">›</span></button>
  <div class="bottom">
-  <nav class="links"><button data-sheet="archive">Archive</button><button data-sheet="stats">Stats</button><button data-sheet="plus">Plus</button><button data-sheet="help">How to Play</button></nav>
+  <nav class="links"><button data-sheet="archive">Archive</button><button data-sheet="stats">Stats</button><button data-sheet="plus">Plus</button><button data-sheet="help">How to Play</button><button data-sheet="settings">Settings</button></nav>
   <div class="foot"><a class="home" href="https://smaisle.app/">smAisle Home</a><div class="ver" id="ver"></div></div>
  </div>
 </div>
@@ -150,9 +150,9 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
 <div class="scrim" id="scrim"></div>
 <div id="hello" hidden><div class="hc"><span class="tg">smAisle</span><h2>Say it like &ldquo;smile.&rdquo;</h2><p>New puzzles every day, in one place.</p><button id="helloGo">Let&rsquo;s play</button></div></div>
 <div class="sheet" id="sheet"><div class="grab"></div><div id="sheetBody"></div></div>
-<script src="games.js?v=1.36"></script>
+<script src="games.js?v=1.37"></script>
 <script>
-const VERSION='1.36',VDATE='Nov 4',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
+const VERSION='1.37',VDATE='Nov 4',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
 const $=id=>document.getElementById(id);
 const SM=window.SMAISLE,GAMES=SM.games,DAILY=GAMES.filter(g=>g.daily&&!g.plus),PLUSG=GAMES.filter(g=>g.plus).sort((a,b)=>a.name.localeCompare(b.name)),N=DAILY.length;
 // On smaisle.app (or smaisle.github.io) games open in this tab (and share its storage). Anywhere else (the Claude link) they open in a new tab.
@@ -286,9 +286,11 @@ const SHEETS={
     <h3>BY GAME</h3><div class="list">${DAILY.map(g=>`<div class="li">${esc(g.name)}<em>${per(g.id)} ${per(g.id)===1?'day':'days'} finished</em></div>`).join('')}<div class="li">All ${N} in one day<em>${all} ${all===1?'day':'days'}</em></div></div>
     <div class="small">Each game has its own detailed stats in its menu. Counted on this device only.</div>`},
   plus:()=>{if(window.SMD_APP&&!PLANS.length&&!PWAIT)askPrices();return plusSheet()},
-  help:()=>`<h2 class="t">How to Play</h2><p><b>Today's Games</b> are the daily ones. Each has a new game every day at midnight, the same for everyone. Tap one to play it.</p><p><b>Done checks</b> fill in by themselves when you finish a game on this device.</p><p><b>Your streak</b> grows each day you finish at least one daily game. With Plus, one missed day a week won't break it. The bars at the top fill as you finish all ${N}. The time beside them counts down to the next games.</p><p><b>More games</b>, below Today's Games, are always-on games you can play any time.</p><p><b>Archive and Stats</b> at the bottom of the screen cover every daily game.</p><h3>SETTINGS</h3><div style="font:800 14px 'Libre Franklin';margin-top:10px">Dark mode</div><div class="mode" id="modeRow">${[['off','Off'],['on','On'],['auto','Match phone']].map(([k,l])=>`<button data-mode="${k}" class="${smMode()===k?'on':''}">${l}</button>`).join('')}</div><div class="small" style="text-align:left">On uses Navy. Match phone switches with your phone.</div><div class="small" style="margin-top:18px">${VER}</div>`
+  help:()=>`<h2 class="t">How to Play</h2><p><b>Today's Games</b> are the daily ones. Each has a new game every day at midnight, the same for everyone. Tap one to play it.</p><p><b>Done checks</b> fill in by themselves when you finish a game on this device.</p><p><b>Your streak</b> grows each day you finish at least one daily game. With Plus, one missed day a week won't break it. The bars at the top fill as you finish all ${N}. The time beside them counts down to the next games.</p><p><b>More games</b>, below Today's Games, are always-on games you can play any time.</p><p><b>Archive and Stats</b> at the bottom of the screen cover every daily game.</p><div class="small" style="margin-top:18px">${VER}</div>`,
+  settings:()=>`<h2 class="t">Settings</h2><p>These apply to every daily game.</p><div style="font:800 14px 'Libre Franklin';margin-top:10px">Sound</div><div class="mode" id="sndRow">${[['on','On'],['off','Off']].map(([k,l])=>`<button data-snd="${k}" class="${(function(){try{return localStorage.getItem('smaisle-sound')||'on'}catch(e){return 'on'}})()===k?'on':''}">${l}</button>`).join('')}</div><div style="font:800 14px 'Libre Franklin';margin-top:10px">Dark mode</div><div class="mode" id="modeRow">${[['off','Off'],['on','On'],['auto','Match phone']].map(([k,l])=>`<button data-mode="${k}" class="${smMode()===k?'on':''}">${l}</button>`).join('')}</div><div class="small" style="text-align:left">On uses Navy. Match phone switches with your phone.</div><div class="small" style="margin-top:18px">${VER}</div>`
 };
 document.addEventListener('click',e=>{
+  const sn=e.target.closest('#sndRow [data-snd]');if(sn){try{localStorage.setItem('smaisle-sound',sn.dataset.snd)}catch(_){}document.querySelectorAll('#sndRow button').forEach(x=>x.classList.toggle('on',x===sn));tap('sound-'+sn.dataset.snd);return}
   const md=e.target.closest('#modeRow [data-mode]');if(md){smMode(md.dataset.mode);document.querySelectorAll('#modeRow button').forEach(x=>x.classList.toggle('on',x===md));tap('mode-'+md.dataset.mode);return}
   const a=e.target.closest('[data-tap]');if(a){tap(a.dataset.tap);return}
   const g=e.target.closest('[data-g]');if(g)return openGame(g.dataset.g);
