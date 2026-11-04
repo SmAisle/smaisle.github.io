@@ -16,7 +16,7 @@
      desc:'Cross 15 words onto a newspaper-style grid. A new puzzle every day, the same for everyone, with stars and streaks.',url:BASE+'DailyGrid/'},
     {id:'abc',name:'A, B, C, Deal',daily:true,archive:true,icon:ICONS+'abc-deal.png',sub:"Beat the dealer's word · 2 modes",tag:'Daily card game',
      desc:"A daily word game played with letter cards. Beat the dealer's word across five hands, in two modes: Classic (5-card poker) and Deal 'Em (Texas hold 'em style).",url:BASE+'abcdeal/'},
-    {id:'tk',name:'Trackulate',daily:true,icon:ICONS+'trackulate.png',sub:'Route the train. Hit the exact count.',tag:'Daily number game',
+    {id:'tk',name:'TRACKulate',daily:true,icon:ICONS+'trackulate.png',sub:'Route the train. Hit the exact count.',tag:'Daily number game',
      desc:'Pick a route through the stops, picking up and dropping off passengers. The crossing only opens for the exact count, and you get three trains.',url:BASE+'Trackulate/'},
     // Plus games: daily games for smAisle Daily Plus members. Everyone can play a free preview (?preview=1).
     {id:'ld',name:'Ledder',daily:true,plus:true,icon:ICONS+'ledder.png',sub:'Climb the letters. Earn 3 stars.',tag:'Plus daily game',
