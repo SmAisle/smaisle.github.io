@@ -119,7 +119,7 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
 .mode button+button{border-left:2px solid var(--ink)}.mode button.on{background:var(--btn);color:var(--btn-ink)}
 .pint{font:500 14px/1.45 'Libre Franklin';color:var(--ink2);margin:16px auto 12px;text-align:center}
 .pjump{position:sticky;top:calc(env(safe-area-inset-top) - 14px);z-index:3;display:flex;gap:7px;padding:8px 0;margin-bottom:4px;background:var(--paper)}.pjump button{flex:1 1 0;min-height:42px;padding:0 6px;background:var(--card);color:var(--ink);border:2px solid var(--ink);border-radius:6px;box-shadow:2px 2px 0 var(--shadow);font:800 13px 'Libre Franklin';cursor:pointer}.pjump button.on{background:var(--ink);color:var(--paper)}
-.pcat{margin-bottom:8px}.pcat:last-child{min-height:calc(100vh - 80px)}.pcat h3{margin:10px 0 7px;font:800 12px 'Libre Franklin';letter-spacing:.1em;text-transform:uppercase;color:var(--ink2)}
+.pcat{margin-bottom:8px;transition:opacity .15s}.pcat.dim{opacity:.28}.pcat:last-child{min-height:calc(100vh - 80px)}.pcat h3{margin:10px 0 7px;font:800 12px 'Libre Franklin';letter-spacing:.1em;text-transform:uppercase;color:var(--ink2)}
 #pshelf .r{text-decoration:none;color:var(--ink)}#pshelf .r .b.pv{background:none;color:var(--ink);border:2px solid var(--ink);padding:6px 9px}
 </style></head><body>
 <div class="wrap">
@@ -153,9 +153,9 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
 <div class="scrim" id="scrim"></div>
 <div id="hello" hidden><div class="hc"><span class="tg">smAisle</span><h2>Say it like &ldquo;smile.&rdquo;</h2><p>New puzzles every day, in one place.</p><button id="helloGo">Let&rsquo;s play</button></div></div>
 <div class="sheet" id="sheet"><div class="grab"></div><div id="sheetBody"></div></div>
-<script src="games.js?v=1.47"></script>
+<script src="games.js?v=1.48"></script>
 <script>
-const VERSION='1.47',VDATE='Nov 5',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
+const VERSION='1.48',VDATE='Nov 5',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
 const $=id=>document.getElementById(id);
 const SM=window.SMAISLE,GAMES=SM.games,DAILY=GAMES.filter(g=>g.daily&&!g.plus),PLUSG=GAMES.filter(g=>g.plus).sort((a,b)=>a.name.localeCompare(b.name)),N=DAILY.length;
 // On smaisle.app (or smaisle.github.io) games open in this tab (and share its storage). Anywhere else (the Claude link) they open in a new tab.
@@ -339,5 +339,5 @@ if(!store.get('smd-hello','')&&!store.get('smaisle_done','')){$('hello').hidden=
 render();tick();setInterval(tick,30000);checkIn('open');
 // #plus (from a Plus game preview's "Get smAisle Daily Plus") opens the Plus screen.
 function hashPlus(){if(location.hash==='#plus'){open(SHEETS.plus());history.replaceState(null,'',location.pathname+location.search)}}hashPlus();addEventListener('hashchange',hashPlus);
-document.querySelectorAll('#pjump button').forEach(b=>{b.onclick=()=>{document.querySelectorAll('#pjump button').forEach(x=>x.classList.toggle('on',x===b));const s=document.getElementById('pc-'+b.dataset.c),p=$('pshelf'),j=$('pjump');if(s)p.scrollTop=s.getBoundingClientRect().top-p.getBoundingClientRect().top+p.scrollTop-j.offsetHeight-6}});
+document.querySelectorAll('#pjump button').forEach(b=>{b.onclick=()=>{const off=b.classList.contains('on'),p=$('pshelf'),j=$('pjump'),s=$('pc-'+b.dataset.c);document.querySelectorAll('#pjump button').forEach(x=>x.classList.toggle('on',x===b&&!off));document.querySelectorAll('.pcat').forEach(c=>c.classList.toggle('dim',!off&&c!==s));p.scrollTop=off?0:s.getBoundingClientRect().top-p.getBoundingClientRect().top+p.scrollTop-j.offsetHeight-6}});
 </script></body></html>
