@@ -80,6 +80,7 @@ const GAMES=[
   ["Blipword","bw_devices","Blipword"],
   ["Trackulate","tk_devices","Trackulate"],
   ["smAisle Run","rg_devices","AisleRunGame"],
+  ["Miss Direction","md_devices","missdirection"],
   ["Aisle Run","devices","AisleRun-1"]
 ];
 const $=s=>document.querySelector(s), esc=t=>String(t??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -98,7 +99,7 @@ const auth=firebase.auth(), db=firebase.firestore();
 // Invite-only games that take a per-game code on smaisle.app (keys match data-game there).
 const INVITE_GAMES=[["daily15","The Daily 15"],["shuffleblast","Shuffle Blast"],["abcdeal","A, B, C, Deal"],["gramble","Gramble"],["sdblast","Straight Down (full)"],["all","Every game"]];
 // game is one key, "all", or several keys joined by commas.
-const PLUS_BY_CODE=[["jexicon","jx_devices"],["capitalship","cs_devices"],["blipword","bw_devices"],["trackulate","tk_devices"],["smaislerun","rg_devices"]], PLUS_NAMES={jexicon:"Jexicon",capitalship:"Capital Ship",blipword:"Blipword",trackulate:"Trackulate",smaislerun:"smAisle Run"};
+const PLUS_BY_CODE=[["jexicon","jx_devices"],["capitalship","cs_devices"],["blipword","bw_devices"],["trackulate","tk_devices"],["smaislerun","rg_devices"],["missdirection","md_devices"]], PLUS_NAMES={jexicon:"Jexicon",capitalship:"Capital Ship",blipword:"Blipword",trackulate:"Trackulate",smaislerun:"smAisle Run"};
 const gameName=k=>String(k||"").split(",").map(x=>x==="daily"?"smAisle Daily":PLUS_NAMES[x]?PLUS_NAMES[x]:(INVITE_GAMES.find(g=>g[0]===x)||[x,x])[1]).join(", ");
 $("#cgame").innerHTML=INVITE_GAMES.map(([k,n])=>`<label><input type="checkbox" value="${k}"> ${esc(n)}</label>`).join("");
 $("#cgame").onchange=()=>{ const all=$("#cgame input[value=all]").checked; $("#cgame").querySelectorAll("input:not([value=all])").forEach(i=>{ i.disabled=all; if(all) i.checked=false; }); };
