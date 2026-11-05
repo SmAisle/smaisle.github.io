@@ -118,6 +118,8 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
 .mode button{flex:1;padding:10px 4px;font:800 12px 'Libre Franklin';letter-spacing:.06em;text-transform:uppercase;color:var(--ink);background:var(--card)}
 .mode button+button{border-left:2px solid var(--ink)}.mode button.on{background:var(--btn);color:var(--btn-ink)}
 .pint{font:500 14px/1.45 'Libre Franklin';color:var(--ink2);margin:16px auto 12px;text-align:center}
+.pjump{position:sticky;top:calc(env(safe-area-inset-top) - 14px);z-index:3;display:flex;gap:7px;padding:8px 0;margin-bottom:4px;background:var(--paper)}.pjump button{flex:1 1 0;min-height:42px;padding:0 6px;background:var(--card);color:var(--ink);border:2px solid var(--ink);border-radius:6px;box-shadow:2px 2px 0 var(--shadow);font:800 13px 'Libre Franklin';cursor:pointer}.pjump button.on{background:var(--ink);color:var(--paper)}
+.pcat{scroll-margin-top:66px;margin-bottom:8px}.pcat h3{margin:10px 0 7px;font:800 12px 'Libre Franklin';letter-spacing:.1em;text-transform:uppercase;color:var(--ink2)}
 #pshelf .r{text-decoration:none;color:var(--ink)}#pshelf .r .b.pv{background:none;color:var(--ink);border:2px solid var(--ink);padding:6px 9px}
 </style></head><body>
 <div class="wrap">
@@ -138,6 +140,7 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
 <div class="shelf" id="pshelf"><div><button id="closePlus" class="back">‹ smAisle Daily</button></div>
  <div class="shelf-h"><b>Plus Games</b><span>with smAisle Daily Plus</span></div>
  <p class="pint" id="pint"></p>
+ <div class="pjump" id="pjump"><button data-c="word">Word</button><button data-c="num">Numbers</button><button data-c="brain">Memory</button></div>
  <div id="plist"></div>
  <button class="big-btn" id="getPlus" style="background:var(--hi);color:var(--hi-ink);border:2px solid var(--ink)">GET SMAISLE DAILY PLUS</button>
  <div class="small" id="pfoot">Plus also unlocks the full Archive and extras in every daily game.</div>
@@ -150,9 +153,9 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
 <div class="scrim" id="scrim"></div>
 <div id="hello" hidden><div class="hc"><span class="tg">smAisle</span><h2>Say it like &ldquo;smile.&rdquo;</h2><p>New puzzles every day, in one place.</p><button id="helloGo">Let&rsquo;s play</button></div></div>
 <div class="sheet" id="sheet"><div class="grab"></div><div id="sheetBody"></div></div>
-<script src="games.js?v=1.45"></script>
+<script src="games.js?v=1.46"></script>
 <script>
-const VERSION='1.45',VDATE='Nov 5',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
+const VERSION='1.46',VDATE='Nov 5',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
 const $=id=>document.getElementById(id);
 const SM=window.SMAISLE,GAMES=SM.games,DAILY=GAMES.filter(g=>g.daily&&!g.plus),PLUSG=GAMES.filter(g=>g.plus).sort((a,b)=>a.name.localeCompare(b.name)),N=DAILY.length;
 // On smaisle.app (or smaisle.github.io) games open in this tab (and share its storage). Anywhere else (the Claude link) they open in a new tab.
@@ -212,7 +215,8 @@ function render(){
   $('pname').textContent=isPlus?'Your Plus games':'There’s more in smAisle';
   $('psub').textContent=isPlus?PLUSG.map(g=>g.name).join(', '):'Lots more games with Plus';
   $('pint').textContent=!window.SMD_APP?'More daily games, free to play in full on the website for now.':owned?'Your daily Plus games. Thanks for getting Plus!':'More daily games for Plus members. Everyone can play a free preview of each one.';
-  $('plist').innerHTML=PLUSG.map(g=>{const d=done.indexOf(g.id)>=0;return `<a class="r" href="${g.url}${owned?'':'?preview=1'}" data-tap="${g.id}${owned?'':'-pv'}">${pic(g)}<div class="tx"><div class="n">${esc(g.name)}</div><div class="s">${esc(g.sub)}</div></div><span class="b ${owned?(d?'done':''):'pv'}">${owned?(d?'✓ DONE':'PLAY'):'PREVIEW'}</span></a>`}).join('');
+  const prow=g=>{const d=done.indexOf(g.id)>=0;return `<a class="r" href="${g.url}${owned?'':'?preview=1'}" data-tap="${g.id}${owned?'':'-pv'}">${pic(g)}<div class="tx"><div class="n">${esc(g.name)}</div><div class="s">${esc(g.sub)}</div></div><span class="b ${owned?(d?'done':''):'pv'}">${owned?(d?'✓ DONE':'PLAY'):'PREVIEW'}</span></a>`};
+  $('plist').innerHTML=[['word','Word'],['num','Numbers'],['brain','Memory']].map(([c,t])=>`<section class="pcat" id="pc-${c}"><h3>${t}</h3>${PLUSG.filter(g=>g.cat===c).map(prow).join('')}</section>`).join('');
   $('getPlus').style.display=$('pfoot').style.display=owned?'none':'';
   $('mini').innerHTML=GAMES.filter(g=>!g.daily).slice(0,4).map(g=>`<img src="${g.icon}" alt="">`).join('');
   const store=GAMES.filter(g=>!g.daily&&g.store),web=GAMES.filter(g=>!g.daily&&!g.store);
@@ -335,4 +339,5 @@ if(!store.get('smd-hello','')&&!store.get('smaisle_done','')){$('hello').hidden=
 render();tick();setInterval(tick,30000);checkIn('open');
 // #plus (from a Plus game preview's "Get smAisle Daily Plus") opens the Plus screen.
 function hashPlus(){if(location.hash==='#plus'){open(SHEETS.plus());history.replaceState(null,'',location.pathname+location.search)}}hashPlus();addEventListener('hashchange',hashPlus);
+document.querySelectorAll('#pjump button').forEach(b=>{b.onclick=()=>{document.querySelectorAll('#pjump button').forEach(x=>x.classList.toggle('on',x===b));const s=document.getElementById('pc-'+b.dataset.c);if(s)s.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'})}});
 </script></body></html>
