@@ -156,9 +156,9 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
 <div class="scrim" id="scrim"></div>
 <div id="hello" hidden><div class="hc"><span class="tg">smAisle</span><h2>Say it like &ldquo;smile.&rdquo;</h2><p>My family and I created these games together, and we&rsquo;re so excited to share them with you.</p><p>We hope to bring a <span class="tg intg">smAisle</span> to your day.</p><button id="helloGo">Let&rsquo;s play</button></div></div>
 <div class="sheet" id="sheet"><div class="grab"></div><div id="sheetBody"></div></div>
-<script src="games.js?v=1.51"></script>
+<script src="games.js?v=1.52"></script>
 <script>
-const VERSION='1.51',VDATE='Nov 6',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
+const VERSION='1.52',VDATE='Nov 6',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
 const $=id=>document.getElementById(id);
 const SM=window.SMAISLE,GAMES=SM.games,DAILY=GAMES.filter(g=>g.daily&&!g.plus),PLUSG=GAMES.filter(g=>g.plus).sort((a,b)=>a.name.localeCompare(b.name)),N=DAILY.length;
 // On smaisle.app (or smaisle.github.io) games open in this tab (and share its storage). Anywhere else (the Claude link) they open in a new tab.
@@ -245,7 +245,10 @@ document.querySelector('.grab').onclick=close;
 // A game with fullUrl (Straight Down) opens its full version from the hub, carrying this device's invite code.
 function inviteCode(){try{const m=JSON.parse(localStorage.getItem('smaisle_codes')||'{}')||{};return localStorage.getItem('smaisle_code')||m.daily15||m.abcdeal||m.gramble||m.all||Object.values(m)[0]||''}catch(e){return ''}}
 function gameUrl(g){if(!g.fullUrl||!SITE)return g.url;const c=inviteCode();return g.fullUrl+(c?'?code='+encodeURIComponent(c):'')}
+// The game's info card shows only the first time a daily game is tapped; after that the tap goes straight to the game (Jeff, Nov 6).
 function openGame(id){const g=SM.game(id),d=g.daily&&(H[dayAt(0)]||[]).indexOf(id)>=0;
+  if(g.daily&&!g.store&&store.get('smd_info_'+id,'')){tap(id);if(SITE)location.href=g.url;else window.open(g.url,'_blank','noopener');return}
+  if(g.daily&&!g.store)store.set('smd_info_'+id,'1');
   let btns;
   if(g.store)btns=(g.appStore?`<a class="big-btn store-btn" href="${g.appStore}" data-tap="${g.id}-app"${TGT}>GET THE FREE APP</a>`:`<div class="big-btn off">APP STORE: COMING SOON</div>`)+`<a class="big-btn o" href="${gameUrl(g)}" data-tap="${g.id}"${TGT}>PLAY ON THE WEB</a>`;
   else btns=`<a class="big-btn" href="${g.url}" data-tap="${g.id}"${TGT}>${g.daily?(d?'PLAY AGAIN':"PLAY TODAY'S GAME"):'PLAY ON THE WEB'}</a>`;
