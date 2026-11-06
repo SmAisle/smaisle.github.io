@@ -123,6 +123,7 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
 .pjump{display:flex;gap:7px;padding:8px 0;margin-bottom:4px;background:var(--paper)}.pjump button{flex:1 1 0;min-height:42px;padding:0 6px;background:var(--card);color:var(--ink);border:2px solid var(--ink);border-radius:6px;box-shadow:2px 2px 0 var(--shadow);font:800 13px 'Libre Franklin';cursor:pointer}.pjump button.on{background:var(--ink);color:var(--paper)}
 .pcat{margin-bottom:8px;transition:opacity .15s}.pcat.dim{opacity:.28}.pcat h3{margin:10px 0 7px;font:800 12px 'Libre Franklin';letter-spacing:.1em;text-transform:uppercase;color:var(--ink2)}
 #pshelf .r{text-decoration:none;color:var(--ink)}#pshelf .r .b.pv{background:none;color:var(--ink);border:2px solid var(--ink);padding:6px 9px}
+#hello .intg{display:inline-block;font-size:.92em;padding:1px 6px;margin:0 1px;vertical-align:1px}
 </style></head><body>
 <div class="wrap">
  <div class="htop"><div class="bar"><div class="logo"><span class="sm">smAisle</span><span class="d">Daily</span></div><span class="date" id="date"></span></div>
@@ -153,11 +154,11 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
  <div class="ver" id="ver2"></div>
 </div>
 <div class="scrim" id="scrim"></div>
-<div id="hello" hidden><div class="hc"><span class="tg">smAisle</span><h2>Say it like &ldquo;smile.&rdquo;</h2><p>New puzzles every day, in one place.</p><button id="helloGo">Let&rsquo;s play</button></div></div>
+<div id="hello" hidden><div class="hc"><span class="tg">smAisle</span><h2>Say it like &ldquo;smile.&rdquo;</h2><p>My family and I have been playing these games together for a while, and we&rsquo;re so excited to share them with you.</p><p>We hope to bring a <span class="tg intg">smAisle</span> to your day.</p><button id="helloGo">Let&rsquo;s play</button></div></div>
 <div class="sheet" id="sheet"><div class="grab"></div><div id="sheetBody"></div></div>
-<script src="games.js?v=1.50"></script>
+<script src="games.js?v=1.51"></script>
 <script>
-const VERSION='1.50',VDATE='Nov 6',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
+const VERSION='1.51',VDATE='Nov 6',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
 const $=id=>document.getElementById(id);
 const SM=window.SMAISLE,GAMES=SM.games,DAILY=GAMES.filter(g=>g.daily&&!g.plus),PLUSG=GAMES.filter(g=>g.plus).sort((a,b)=>a.name.localeCompare(b.name)),N=DAILY.length;
 // On smaisle.app (or smaisle.github.io) games open in this tab (and share its storage). Anywhere else (the Claude link) they open in a new tab.
