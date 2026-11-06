@@ -1,0 +1,349 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<script>/* smAisle look: Dark mode Off (default) / On / Match phone, shared by every smAisle game on this site. Set before drawing, so no flash. */
+(function(){var q=matchMedia('(prefers-color-scheme: dark)');function pick(){var m='off';try{m=localStorage.getItem('smaisle-dark')||'off'}catch(e){}return m}
+window.smMode=function(set){if(set){try{localStorage.setItem('smaisle-dark',set)}catch(e){}}var m=pick(),navy=m==='on'||(m==='auto'&&q.matches),h=document.documentElement;
+if(navy)h.setAttribute('data-mode','navy');else h.removeAttribute('data-mode');var t=document.querySelector('meta[name=theme-color]');if(t)t.content=navy?'#121b2e':'#f4efe1';
+try{webkit.messageHandlers.dg.postMessage({cmd:'mode',navy:navy})}catch(e){}return m};
+smMode();q.addEventListener&&q.addEventListener('change',function(){smMode()});addEventListener('storage',function(e){if(e.key==='smaisle-dark')smMode()})})();</script>
+<script src="https://smaisle.app/gate.js" data-game="daily" data-any="daily15,abcdeal,gramble" data-name="smAisle Daily"></script>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>smAisle Daily</title>
+<meta name="robots" content="noindex">
+<meta name="description" content="Today's daily games from smAisle: The Daily 15, A, B, C, Deal and Gramble.">
+<meta name="theme-color" content="#f4efe1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="smAisle Daily">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png">
+<link rel="manifest" href="manifest.json">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Libre+Franklin:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#f4efe1;--paper2:#ebe4d0;--ink:#1a1814;--ink2:#4a453b;--fade:#8c8574;--card:#fffdf6;--hi:#ffe27a;--hi-ink:#1a1814;--ok:#2e7d32;
+  --dot:#e3dcc7;--btn:#1a1814;--btn-ink:#f4efe1;--shadow:rgba(0,0,0,.12);--star:#c99a00}
+/* Navy dark mode: the shared smAisle look standard (Dark mode Off / On / Match phone, saved as smaisle-dark). */
+html[data-mode=navy]{--paper:#121b2e;--paper2:#0d1424;--ink:#efe6cc;--ink2:#c9b98f;--fade:#8792ab;--card:#1c2a44;--hi:#ffe27a;--hi-ink:#121b2e;--ok:#7bc47f;
+  --dot:rgba(255,255,255,.06);--btn:#c9a961;--btn-ink:#121b2e;--shadow:#05080f;--star:#c9a961;color-scheme:dark}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{touch-action:manipulation;background:var(--paper);background-image:radial-gradient(var(--dot) 1px,transparent 1px);background-size:6px 6px;color:var(--ink);font-family:'Libre Franklin',sans-serif;min-height:100%;-webkit-text-size-adjust:100%}
+button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touch-action:manipulation;text-decoration:none}
+.wrap{max-width:440px;min-height:100vh;min-height:100dvh;margin:0 auto;padding:calc(12px + env(safe-area-inset-top)) 18px 0;display:flex;flex-direction:column}
+.home{font:600 11px 'Libre Franklin';color:var(--fade);text-decoration:underline}
+.bar{display:flex;align-items:baseline;justify-content:space-between;border-bottom:4px double var(--ink);padding-bottom:6px}
+.logo{display:flex;align-items:baseline;gap:7px}
+.logo .sm{font:800 13px 'Libre Franklin';background:var(--hi);border:2px solid var(--ink);padding:0 5px}
+.logo .d{font:900 28px/1 'Playfair Display'}
+.date{font:700 11px 'Libre Franklin';letter-spacing:.06em;color:var(--ink2);text-transform:uppercase}
+.today{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0 8px}
+.today b{font:800 14px 'Libre Franklin';white-space:nowrap}
+.today span{font:700 12px 'Libre Franklin';color:var(--ink2);white-space:nowrap}
+.prog{display:flex;gap:5px}.prog span{flex:1;height:5px;border-radius:3px;border:1px solid var(--ink);transition:background .3s}.prog span.on{background:var(--hi)}
+.saved{font:600 11.5px 'Libre Franklin';color:var(--ink2);margin-top:7px}
+.lbl{font:800 11px 'Libre Franklin';letter-spacing:.1em;color:var(--ink2);margin:14px 1px 6px}
+.sec{font:800 11px 'Libre Franklin';letter-spacing:.12em;color:var(--ink2);margin:16px 2px 8px;display:flex;align-items:center;gap:8px}.sec:after{content:"";flex:1;border-top:1.5px solid var(--ink2)}
+.r{width:100%;text-align:left;display:flex;align-items:center;gap:11px;background:var(--card);border:2px solid var(--ink);border-radius:12px;padding:8px 10px;margin-bottom:9px;box-shadow:2px 2px 0 var(--shadow)}
+.r:active{transform:translate(1px,1px);box-shadow:1px 1px 0 var(--shadow)}
+.r img,.r .phi{width:48px;height:48px;border-radius:11px;border:1px solid rgba(0,0,0,.2);flex:none}
+.r .tx{flex:1;min-width:0}.r .n{font:900 17px/1.1 'Playfair Display'}.r .s{font:500 12px 'Libre Franklin';color:var(--ink2);margin-top:2px}
+.r .b{font:800 11px 'Libre Franklin';letter-spacing:.06em;background:var(--ink);color:var(--card);padding:8px 11px;border-radius:6px;white-space:nowrap}
+.r .b.done{background:none;color:var(--ok);border:2px solid var(--ok);padding:6px 9px}
+.r .b.go{background:var(--hi);color:var(--ink);border:2px solid var(--ink);padding:6px 9px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px 0;justify-items:center;margin-top:4px}
+.app{width:78px;display:flex;flex-direction:column;align-items:center;gap:6px}
+.app:active .ico{transform:scale(.94)}
+.ico{width:62px;height:62px;border-radius:15px;box-shadow:0 2px 6px rgba(0,0,0,.18);border:1px solid rgba(0,0,0,.15);background:var(--card);display:flex;align-items:center;justify-content:center;font:900 30px 'Playfair Display';transition:transform .1s;position:relative}
+.ico .in{width:100%;height:100%;border-radius:15px;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.ico img{width:100%;height:100%;display:block}
+.nm{font:600 11px/1.15 'Libre Franklin';text-align:center}
+.soon .ico{border:2px dashed var(--fade);background:transparent;box-shadow:none}.soon .nm{color:var(--fade)}
+.phi{display:flex;align-items:center;justify-content:center;font:900 26px 'Playfair Display'}
+.pause{width:44px;border-top:1.5px solid var(--ink2);margin:14px auto 13px}
+.pc{width:100%;display:flex;align-items:center;gap:9px;margin-bottom:9px;background:var(--card);color:var(--ink);border:2px solid var(--ink);border-radius:12px;padding:8px 10px;text-align:left;box-shadow:2px 2px 0 var(--shadow)}
+.pc:active{transform:translate(1px,1px);box-shadow:1px 1px 0 var(--shadow)}
+.pc .mini{display:flex;flex:none}.pc .mini img{width:32px;height:32px;border-radius:7px;border:1.5px solid var(--card);margin-left:-12px}.pc .mini img:first-child{margin-left:0}
+.pc .tx{flex:1;min-width:0}.pc .n{font:900 17px/1.1 'Playfair Display'}.pc .s{font:500 12px/1.25 'Libre Franklin';color:var(--ink2);margin-top:2px}.pc .arr{flex:none;font:800 18px 'Libre Franklin'}
+.bottom{position:sticky;bottom:0;z-index:5;margin:auto -18px 0;padding:10px 18px calc(6px + env(safe-area-inset-bottom));background:var(--paper)}
+.links{display:flex;justify-content:space-between;border-top:1.5px solid var(--ink)}
+.links button{font:800 13px 'Libre Franklin';letter-spacing:.02em;padding:11px 2px 7px;white-space:nowrap}
+.foot{display:flex;justify-content:center;align-items:baseline;gap:12px;min-height:16px}
+.foot .ver{margin:0}
+.ver{text-align:center;font:600 11px 'Libre Franklin';color:var(--fade);margin-top:18px}
+/* sheet */
+.scrim{position:fixed;inset:0;z-index:11;background:rgba(26,24,20,.45);opacity:0;pointer-events:none;transition:opacity .2s}
+.scrim.on{opacity:1;pointer-events:auto}
+#hello{position:fixed;inset:0;z-index:60;background:rgba(26,24,20,.55);display:flex;align-items:center;justify-content:center;padding:22px}#hello[hidden]{display:none}.hc{width:100%;max-width:340px;background:var(--paper);color:var(--ink);border:3px double var(--ink);box-shadow:5px 5px 0 rgba(0,0,0,.3);padding:20px 16px;text-align:center;display:grid;gap:10px;justify-items:center}.hc .tg{font:800 13px 'Libre Franklin';background:#ffe27a;color:#1a1814;border:2px solid #1a1814;padding:0 6px}.hc h2{font:900 30px/1.1 'Playfair Display';margin:0}.hc p{margin:0;font:500 14px 'Libre Franklin'}.hc button{width:100%;padding:12px;border:2px solid #1a1814;border-radius:3px;background:#1a1814;color:#f4efe1;font:800 13px 'Libre Franklin';letter-spacing:.08em;text-transform:uppercase}html[data-mode=navy] .hc button{background:#c9a961;color:#121b2e;border-color:#c9a961}.sheet{position:fixed;left:50%;bottom:0;transform:translate(-50%,105%);width:min(460px,100%);max-height:86vh;overflow:auto;background:var(--paper);border:2px solid var(--ink);border-bottom:0;border-radius:22px 22px 0 0;padding:10px 20px calc(28px + env(safe-area-inset-bottom));transition:transform .25s ease;z-index:12}
+.sheet.on{transform:translate(-50%,0)}
+.grab{width:40px;height:5px;border-radius:3px;background:var(--fade);margin:0 auto 12px;opacity:.6;cursor:pointer;box-sizing:content-box;padding:8px 30px;background-clip:content-box;margin-top:-8px}
+.sh-head{display:flex;gap:14px;align-items:center}
+.sh-head .pic{width:72px;height:72px;border-radius:17px;overflow:hidden;border:1px solid rgba(0,0,0,.2);flex:none}
+.sh-head .pic img,.sh-head .pic .phi{width:100%;height:100%;border:0;border-radius:0}
+.sh-head h2{font:900 26px/1.05 'Playfair Display'}
+.sh-head .tag{font:700 11px 'Libre Franklin';letter-spacing:.08em;color:var(--ink2);margin-top:4px;text-transform:uppercase}
+.sheet h2.t{font:900 26px 'Playfair Display'}
+.sheet p{font:500 14.5px/1.5 'Libre Franklin';color:var(--ink2);margin-top:12px}
+.sheet h3{font:800 12px 'Libre Franklin';letter-spacing:.1em;margin-top:18px;color:var(--ink2)}
+.big-btn{display:block;width:100%;text-align:center;font:800 15px 'Libre Franklin';letter-spacing:.06em;background:var(--ink);color:var(--card);padding:15px;border-radius:8px;margin-top:16px}
+.big-btn.o{background:none;color:var(--ink);border:2px solid var(--ink);margin-top:10px}
+.big-btn.off{background:none;color:var(--fade);border:2px dashed var(--fade);cursor:default}
+.small{font:500 12px/1.4 'Libre Franklin';color:var(--fade);margin-top:10px;text-align:center}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);border-top:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink);margin-top:14px}
+.stats div{text-align:center;padding:10px 0}.stats div+div{border-left:1px solid var(--fade)}
+.stats b{display:block;font:900 26px 'Playfair Display'}.stats span{font:700 10.5px 'Libre Franklin';letter-spacing:.06em;color:var(--ink2)}
+.list{margin-top:10px}.list .li{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 2px;border-bottom:1px solid var(--paper2);font:600 14px 'Libre Franklin'}
+.list .li em{font-style:normal;color:var(--fade);font-weight:500;font-size:13px;text-align:right}
+.dots{display:flex;gap:5px}.dots i{width:22px;height:22px;border-radius:6px;overflow:hidden;opacity:.22;filter:grayscale(1)}.dots i.on{opacity:1;filter:none}.dots img{width:100%;height:100%;display:block}
+.plan{display:block;width:100%;text-align:left;margin-top:10px;background:var(--card);color:var(--ink);border:2px solid var(--ink);border-radius:10px;padding:12px 14px;box-shadow:2px 2px 0 var(--shadow)}
+.plan b{display:block;font:900 18px 'Playfair Display'}.plan span{display:block;font:600 13.5px/1.35 'Libre Franklin';color:var(--ink2);margin-top:3px}.plan.best{background:var(--hi);color:var(--hi-ink)}.plan.best span{color:var(--hi-ink)}
+.fm{display:inline-block;font:800 11px 'Libre Franklin';letter-spacing:.08em;background:var(--hi);color:var(--hi-ink);border:2px solid var(--ink);border-radius:4px;padding:3px 7px;margin-bottom:6px}
+.pmsg{font:700 14px 'Libre Franklin';text-align:center;margin-top:12px}.legal{font:500 11.5px/1.45 'Libre Franklin';color:var(--fade);margin-top:12px;text-align:center}.legal a{color:var(--fade)}
+.linkbtn{background:none;border:0;color:var(--ink2);font:700 13px 'Libre Franklin';text-decoration:underline;margin:12px auto 0;display:block}
+.plus li{list-style:none;padding:8px 0;font:600 14.5px 'Libre Franklin';border-bottom:1px solid var(--paper2)}
+.plus li:before{content:"★ ";color:var(--star)}
+.as{position:absolute;bottom:-7px;left:50%;transform:translateX(-50%);background:#0a84ff;color:#fff;font:800 8.5px 'Libre Franklin';letter-spacing:.04em;padding:2px 5px;border-radius:6px;white-space:nowrap;border:1.5px solid var(--paper)}
+.store-btn{background:#0a84ff;color:#fff}
+.shelf{position:fixed;inset:0;z-index:9;background:var(--paper);background-image:radial-gradient(var(--dot) 1px,transparent 1px);background-size:6px 6px;color:var(--ink);overflow:auto;padding:calc(14px + env(safe-area-inset-top)) 18px 40px;transform:translateY(100%);transition:transform .3s ease;visibility:hidden}
+.shelf.on{transform:none;visibility:visible}
+.shelf>*{max-width:440px;margin-left:auto;margin-right:auto}
+.shelf-h{margin-top:10px;border-top:4px double var(--ink);border-bottom:4px double var(--ink);padding:8px 0 6px;text-align:center}
+.shelf-h b{display:block;font:900 38px/1.05 'Playfair Display';letter-spacing:-.01em}
+.shelf-h span{display:block;font:700 13px 'Libre Franklin';color:var(--ink2);margin-top:4px}
+.shelf .as{border-color:var(--paper)}
+.shelf .sec{margin-top:22px;margin-bottom:12px}
+.shelf .grid{margin-top:0}
+.shelf .ico{border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shadow)}
+.shelf .ver{margin-top:34px}
+.back{color:var(--hi-ink);font:800 13px 'Libre Franklin';padding:7px 14px;background:var(--hi);border:2px solid var(--ink);border-radius:8px}
+.r .b:not(.done):not(.go),.big-btn:not(.o):not(.off):not(.store-btn){background:var(--btn);color:var(--btn-ink)}
+.logo .sm,.r .b.go{color:var(--hi-ink)}
+.mode{display:flex;border:2px solid var(--ink);border-radius:8px;overflow:hidden;margin-top:8px}
+.mode button{flex:1;padding:10px 4px;font:800 12px 'Libre Franklin';letter-spacing:.06em;text-transform:uppercase;color:var(--ink);background:var(--card)}
+.mode button+button{border-left:2px solid var(--ink)}.mode button.on{background:var(--btn);color:var(--btn-ink)}
+.htop{position:sticky;top:0;z-index:4;margin:calc(-12px - env(safe-area-inset-top)) -18px 0;padding:calc(12px + env(safe-area-inset-top)) 18px 2px;background:var(--paper)}
+#pshelf{overflow:hidden;display:flex;flex-direction:column;padding-bottom:0}#pshelf>.phead{flex:none;width:100%}#pshelf>#pscroll{flex:1 1 0;min-height:0;width:calc(100% + 36px);max-width:none;margin:0 -18px;padding:6px 18px 40px;overflow:auto;-webkit-overflow-scrolling:touch}#pscroll>*{max-width:440px;margin-left:auto;margin-right:auto}
+.pint{font:500 14px/1.45 'Libre Franklin';color:var(--ink2);margin:16px auto 12px;text-align:center}
+.pjump{display:flex;gap:7px;padding:8px 0;margin-bottom:4px;background:var(--paper)}.pjump button{flex:1 1 0;min-height:42px;padding:0 6px;background:var(--card);color:var(--ink);border:2px solid var(--ink);border-radius:6px;box-shadow:2px 2px 0 var(--shadow);font:800 13px 'Libre Franklin';cursor:pointer}.pjump button.on{background:var(--ink);color:var(--paper)}
+.pcat{margin-bottom:8px;transition:opacity .15s}.pcat.dim{opacity:.28}.pcat h3{margin:10px 0 7px;font:800 12px 'Libre Franklin';letter-spacing:.1em;text-transform:uppercase;color:var(--ink2)}
+#pshelf .r{text-decoration:none;color:var(--ink)}#pshelf .r .b.pv{background:none;color:var(--ink);border:2px solid var(--ink);padding:6px 9px}
+#hello .intg{display:inline-block;font-size:.92em;padding:1px 6px;margin:0 1px;vertical-align:1px}
+</style></head><body><div style="background:#ffd84d;color:#1a1a1a;font:700 12px/1.3 system-ui;text-align:center;padding:6px 10px;border-bottom:2px solid #1a1a1a">MOCKUP · smAisle Daily on the website after launch · <span id="d2st"></span></div>
+<div class="wrap">
+ <div class="htop"><div class="bar"><div class="logo"><span class="sm">smAisle</span><span class="d">Daily</span></div><span class="date" id="date"></span></div>
+ <div class="today"><b id="streak"></b><span><span id="played"></span> · <span id="next"></span></span></div>
+ <div class="prog" id="prog"></div>
+ <div class="saved" id="saved" hidden></div>
+ <div class="lbl">TODAY'S GAMES</div></div>
+ <div id="daily"></div>
+ <div class="pause"></div>
+ <button class="pc" id="openPlus"><div class="mini" id="pmini"></div><div class="tx"><div class="n" id="pname"></div><div class="s" id="psub"></div></div><span class="arr">›</span></button>
+ <button class="pc" id="openShelf" style="display:none"><div class="mini" id="mini"></div><div class="tx"><div class="n">More games</div><div class="s">Arcade, puzzle and strategy games</div></div><span class="arr">›</span></button>
+ <div class="bottom">
+  <nav class="links"><button data-sheet="archive">Archive</button><button data-sheet="stats">Stats</button><button data-sheet="plus">Plus</button><button data-sheet="help">How to Play</button><button data-sheet="settings">Settings</button></nav>
+  <div class="foot"><a class="home" href="https://smaisle.app/">smAisle Home</a><div class="ver" id="ver"></div></div>
+ </div>
+</div>
+<div class="shelf" id="pshelf"><div class="phead"><div><button id="closePlus" class="back">‹ smAisle Daily</button></div>
+ <div class="shelf-h"><b>Plus Games</b><span>with smAisle Daily Plus</span></div>
+ <p class="pint" id="pint"></p>
+ <div class="pjump" id="pjump"><button data-c="word">Word</button><button data-c="num">Numbers</button><button data-c="brain">Memory</button></div></div>
+ <div id="pscroll"><div id="plist"></div>
+ <button class="big-btn" id="getPlus" style="background:var(--hi);color:var(--hi-ink);border:2px solid var(--ink)">GET SMAISLE DAILY PLUS</button>
+ <div class="small" id="pfoot">Plus also unlocks the full Archive and extras in every daily game.</div>
+</div></div>
+<div class="shelf" id="shelf"><div><button id="closeShelf" class="back">‹ smAisle Daily</button></div>
+ <div class="shelf-h"><b>More Games</b><span>by smAisle</span></div>
+ <div id="more"></div>
+ <div class="ver" id="ver2"></div>
+</div>
+<div class="scrim" id="scrim"></div>
+<div id="hello" hidden><div class="hc"><span class="tg">smAisle</span><h2>Say it like &ldquo;smile.&rdquo;</h2><p>My family and I created these games together, and we&rsquo;re so excited to share them with you.</p><p>We hope to bring a <span class="tg intg">smAisle</span> to your day.</p><button id="helloGo">Let&rsquo;s play</button></div></div>
+<div class="sheet" id="sheet"><div class="grab"></div><div id="sheetBody"></div></div>
+<script src="games.js?v=1.51"></script>
+<script>document.addEventListener('click',function(e){if(e.target.closest('#d2in'))D2.set(1);if(e.target.closest('#d2out'))D2.set(0)});addEventListener('DOMContentLoaded',function(){var s=document.getElementById('d2st');if(s)s.textContent=D2.signed()?'Signed in (Plus)':'Not signed in (previews)'})</script>
+<script>
+const VERSION='1.51',VDATE='Nov 6',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
+const $=id=>document.getElementById(id);
+const SM=window.SMAISLE,GAMES=SM.games,DAILY=GAMES.filter(g=>g.daily&&!g.plus),PLUSG=GAMES.filter(g=>g.plus&&['ld','cs','tr','md'].indexOf(g.id)>=0).sort((a,b)=>a.name.localeCompare(b.name)),N=DAILY.length;
+// On smaisle.app (or smaisle.github.io) games open in this tab (and share its storage). Anywhere else (the Claude link) they open in a new tab.
+const SITE=/github\.io$|smaisle\.app$/.test(location.hostname);
+const TGT=SITE?'':' target="_blank" rel="noopener"';
+const store={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:v}catch(e){return d}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}},
+  json(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},put(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const esc=t=>String(t??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const dayAt=off=>{const d=new Date();d.setDate(d.getDate()-off);return SM.dayKey(d)};
+const fmtDay=k=>{const [y,m,d]=k.split('-').map(Number);return new Date(y,m-1,d).toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})};
+
+/* ---------- History: which daily games were finished each day ---------- */
+// The games keep their own results; the hub also remembers what it has seen in smd_hist so stats survive the games trimming theirs.
+function doneOn(day){const h=store.json('smd_hist',{}),seen=h[day]||[];return DAILY.filter(g=>seen.indexOf(g.id)>=0||SM.isDone(g.id,day)).map(g=>g.id)}
+function remember(){const h=store.json('smd_hist',{});for(let i=0;i<60;i++){const d=dayAt(i),l=doneOn(d);if(l.length)h[d]=l}
+  const k=Object.keys(h).sort();while(k.length>400)delete h[k.shift()];store.put('smd_hist',h);return h}
+/* ---------- Plus perks ---------- */
+// Plus member: the app tells the hub (DG_APP.plus). On the website Plus is unlocked for everyone for now, so its perks apply there too.
+/* daily2 MOCKUP (Nov 6): the website after launch. Plus games open as their fixed preview unless you're signed in with Apple and have Plus (mocked here with a switch). */
+const D2={signed(){try{return localStorage.getItem('d2_signed')==='1'}catch(e){return false}},set(v){try{localStorage.setItem('d2_signed',v?'1':'0')}catch(e){}location.reload()}};
+const member=()=>window.SMD_APP?!!(window.DG_APP&&DG_APP.plus):D2.signed();
+// Founding Member: the app sets DG_APP.founding when the subscription's original purchase was before Feb 1, 2027 (ET).
+// Website visitors aren't members, so no badge there.
+const founder=()=>!!(window.SMD_APP&&window.DG_APP&&DG_APP.plus&&DG_APP.founding);
+function streaks(h){
+  // Streak protection (Plus): one missed day is forgiven, at most once every 7 days. Forgiven days keep the streak alive but don't add to it.
+  // Today never breaks the streak: it's still in progress.
+  const protect=member(),days=Object.keys(h).sort(),saved=[];
+  const key=t=>SM.dayKey(new Date(t)),D=k=>{const [y,m,d]=k.split('-').map(Number);return new Date(y,m-1,d).getTime()};
+  let cur=0,best=0,last=null;
+  if(days.length){const today=dayAt(0);
+    for(let t=D(days[0]);key(t)<=today;t=new Date(new Date(t).setDate(new Date(t).getDate()+1)).getTime()){const k=key(t);
+      if(h[k]){cur++}
+      else if(k===today){}
+      else if(protect&&cur>0&&(last==null||Math.round((t-last)/864e5)>=7)){last=t;saved.push(k)}
+      else{cur=0;saved.length=0}
+      best=Math.max(best,cur)}}
+  return {cur,best,total:days.length,saved};  // saved: forgiven days in the current streak
+}
+
+/* ---------- Main screen ---------- */
+function pic(g,cls){return g.icon?`<img src="${g.icon}" alt=""${cls?` class="${cls}"`:''}>`:`<div class="phi ${cls||''}" style="background:${g.ph[0]};color:${g.ph[1]}">${g.ph[2]}</div>`}
+function tile(g){return `<button class="app" data-g="${g.id}"><div class="ico" style="${g.icon?'':`background:${g.ph[0]};color:${g.ph[1]}`}"><div class="in">${g.icon?`<img src="${g.icon}" alt="">`:g.ph[2]}</div></div><div class="nm">${esc(g.name).replace(' ','<br>')}</div></button>`}
+let H={};
+function render(){
+  H=remember();const today=dayAt(0),done=H[today]||[],n=done.length,st=streaks(H);
+  $('date').textContent=new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+  $('streak').textContent=st.cur?`🔥 ${st.cur}-day streak`:'Start a streak today';
+  // The day Plus forgave is always a missed day, so the player first sees the save the next day. It shows on that day only.
+  const sv=st.cur&&st.saved.indexOf(dayAt(1))>=0;$('saved').hidden=!sv;if(sv)$('saved').textContent='🛡 Plus saved your streak';
+  $('prog').innerHTML=DAILY.map((g,i)=>`<span class="${i<n?'on':''}"></span>`).join('');
+  $('played').textContent=`${n} of ${N} done`;
+  $('daily').innerHTML=DAILY.map(g=>{const d=done.indexOf(g.id)>=0,s=!d&&SM.isStarted(g.id,today);
+    return `<button class="r" data-g="${g.id}">${pic(g)}<div class="tx"><div class="n">${esc(g.name)}</div><div class="s">${esc(g.sub)}</div></div><span class="b ${d?'done':s?'go':''}">${d?'✓ DONE':s?'KEEP GOING':'PLAY'}</span></button>`}).join('');
+  const owned=member();  // the website plays the Plus games in full for now; the app gates them
+  $('pmini').innerHTML=PLUSG.map(g=>`<img src="${g.icon}" alt="">`).join('');
+  // A real Plus member (app only: website visitors aren't members) sees their games; everyone else sees the invitation.
+  const isPlus=window.SMD_APP?!!(window.DG_APP&&DG_APP.plus):D2.signed(),cnt=['Zero','One','Two','Three','Four','Five','Six','Seven','Eight'][PLUSG.length]||PLUSG.length;
+  $('pname').textContent=isPlus?'Your Plus games':'There’s more in smAisle';
+  $('psub').textContent=isPlus?PLUSG.map(g=>g.name).join(', '):'Lots more games with Plus';
+  $('pint').textContent=owned?'Your daily Plus games. Thanks for getting Plus!':'More daily games for Plus members. Everyone can play a free preview of each one.';
+  const prow=g=>{const d=done.indexOf(g.id)>=0;return `<a class="r" href="${g.url}${owned?'':'?preview=1'}" data-tap="${g.id}${owned?'':'-pv'}">${pic(g)}<div class="tx"><div class="n">${esc(g.name)}</div><div class="s">${esc(g.sub)}</div></div><span class="b ${owned?(d?'done':''):'pv'}">${owned?(d?'✓ DONE':'PLAY'):'PREVIEW'}</span></a>`};
+  $('plist').innerHTML=[['word','Word'],['num','Numbers'],['brain','Memory']].map(([c,t])=>`<section class="pcat" id="pc-${c}"><h3>${t}</h3>${PLUSG.filter(g=>g.cat===c).map(prow).join('')}</section>`).join('');
+  $('getPlus').style.display=$('pfoot').style.display=owned?'none':'';
+  $('mini').innerHTML=GAMES.filter(g=>!g.daily).slice(0,4).map(g=>`<img src="${g.icon}" alt="">`).join('');
+  const store=GAMES.filter(g=>!g.daily&&g.store),web=GAMES.filter(g=>!g.daily&&!g.store);
+  $('more').innerHTML=`<div class="sec">ON THE APP STORE</div><div class="grid">${store.map(tile).join('')}</div>`
+    +`<div class="sec">PLAY ON THE WEB</div><div class="grid">${web.map(tile).join('')}<div class="app soon"><div class="ico"></div><div class="nm">Coming<br>soon</div></div></div>`;
+  $('ver').textContent=$('ver2').textContent=VER;
+}
+function tick(){const now=new Date(),mid=new Date(now);mid.setHours(24,0,0,0);const m=Math.max(0,Math.ceil((mid-now)/60000));$('next').textContent=`${Math.floor(m/60)}h ${m%60}m`;
+  if(dayAt(0)!==lastDay){lastDay=dayAt(0);render()}}
+let lastDay=dayAt(0);
+
+/* ---------- Sheets ---------- */
+const sheet=$('sheet'),scrim=$('scrim'),body=$('sheetBody');
+function open(html){body.innerHTML=html;sheet.scrollTop=0;sheet.classList.add('on');scrim.classList.add('on')}
+function close(){sheet.classList.remove('on');scrim.classList.remove('on')}
+scrim.onclick=close;
+// Swipe the sheet down to close it (from the handle, or anywhere when it's scrolled to the top).
+let dragY=null,dragD=0;
+sheet.addEventListener('touchstart',e=>{if(e.touches.length!==1)return;if(sheet.scrollTop>0&&!e.target.closest('.grab'))return;dragY=e.touches[0].clientY;dragD=0;sheet.style.transition='none'},{passive:true});
+sheet.addEventListener('touchmove',e=>{if(dragY==null)return;dragD=Math.max(0,e.touches[0].clientY-dragY);if(dragD>0){sheet.style.transform=`translate(-50%,${dragD}px)`;e.preventDefault()}},{passive:false});
+sheet.addEventListener('touchend',()=>{if(dragY==null)return;sheet.style.transition='';sheet.style.transform='';if(dragD>70)close();dragY=null;dragD=0});
+document.querySelector('.grab').onclick=close;
+// A game with fullUrl (Straight Down) opens its full version from the hub, carrying this device's invite code.
+function inviteCode(){try{const m=JSON.parse(localStorage.getItem('smaisle_codes')||'{}')||{};return localStorage.getItem('smaisle_code')||m.daily15||m.abcdeal||m.gramble||m.all||Object.values(m)[0]||''}catch(e){return ''}}
+function gameUrl(g){if(!g.fullUrl||!SITE)return g.url;const c=inviteCode();return g.fullUrl+(c?'?code='+encodeURIComponent(c):'')}
+function openGame(id){const g=SM.game(id),d=g.daily&&(H[dayAt(0)]||[]).indexOf(id)>=0;
+  let btns;
+  if(g.store)btns=(g.appStore?`<a class="big-btn store-btn" href="${g.appStore}" data-tap="${g.id}-app"${TGT}>GET THE FREE APP</a>`:`<div class="big-btn off">APP STORE: COMING SOON</div>`)+`<a class="big-btn o" href="${gameUrl(g)}" data-tap="${g.id}"${TGT}>PLAY ON THE WEB</a>`;
+  else btns=`<a class="big-btn" href="${g.url}" data-tap="${g.id}"${TGT}>${g.daily?(d?'PLAY AGAIN':"PLAY TODAY'S GAME"):'PLAY ON THE WEB'}</a>`;
+  open(`<div class="sh-head"><div class="pic">${pic(g)}</div><div><h2>${esc(g.name)}</h2><div class="tag">${esc(g.tag)}${g.daily?'':g.store?' · App Store':' · Play on the web'}</div></div></div>
+  <p>${esc(g.desc)}</p>${btns}
+  ${g.daily&&d?'<div class="small">✓ You finished today\'s game.</div>':''}
+  ${g.daily&&!SITE?'<div class="small">Games open in a new tab here. On smaisle.app/daily your Done checks and streak fill in by themselves.</div>':''}`);
+}
+// smAisle Daily Plus. In the app it's a subscription (monthly or yearly) sold by the App Store; the app sends the
+// plans and prices with dgNative('store',{plus,plan,plans,msg}). Founding Member intro prices run through Jan 31; the
+// App Store decides who still gets them. On the website the Plus games are free for now, so no prices show here.
+let PLANS=[],PMSG='',PLAN='',PWAIT=true,PT=0;
+// Founding Member line on the Plus screen for members: from the app's DG_APP.founding (original purchase before Feb 1, 2027).
+const PERK=()=>`<ul class="plus" style="margin-top:10px"><li>${PLUSG.length} more daily games: ${PLUSG.map(g=>esc(g.name)).join(', ').replace(/, ([^,]*)$/,' and $1')}</li><li>Full Archive for every daily game</li><li>Fresh random games after today's</li><li>New daily games as they're added</li><li>First in line: early access to new games and stores, which may change as we fine-tune them</li><li>Bonus extras in each daily game</li></ul>`;
+function planText(p){const per=p.plan==='yearly'?'year':'month';
+  if(!p.introPrice)return `${p.price} a ${per}`;
+  if(p.introMode==='upfront')return `${p.introPrice} for your first ${p.introPeriods>1?p.introPeriods+' '+per+'s':per}, then ${p.price} a ${per}`;
+  return `${p.introPrice} a ${per} for ${p.introPeriods} ${per}s, then ${p.price} a ${per}`}
+function plusSheet(){
+  if(!window.SMD_APP)return D2.signed()?`<h2 class="t">smAisle Daily Plus</h2><p>Signed in with Apple. Plus is on, from your App Store subscription.</p>${PERK()}<button class="big-btn o" id="d2out">SIGN OUT</button><div class="small">Mockup: no real sign-in happens on this page.</div>`:`<h2 class="t">smAisle Daily Plus</h2><p>Get Plus in the smAisle Daily iPhone app. Already a member? Sign in with the same Apple ID to play everything here too.</p>${PERK()}<button class="big-btn" id="d2in" style="background:#000;color:#fff;border:2px solid #000"> Sign in with Apple</button><a class="big-btn o" href="https://smaisle.app/">GET THE APP</a><div class="small">Mockup: Sign in with Apple here just pretends you have Plus, so you can feel both sides.</div>`;
+  const owned=!!(window.DG_APP&&DG_APP.plus),intro=PLANS.some(p=>p.introPrice);
+  if(owned)return `<h2 class="t">smAisle Daily Plus</h2>${founder()?'<div class="fm">FOUNDING MEMBER</div>':''}<p>${founder()?"You're a Founding Member. ":''}Thanks for supporting smAisle! Plus is on.</p>${PERK()}${PMSG?`<div class="pmsg">${esc(PMSG)}</div>`:''}<button class="big-btn o" data-pcmd="manage">MANAGE SUBSCRIPTION</button>`;
+  const btns=PLANS.length?PLANS.map(p=>`<button class="plan${p.plan==='yearly'?' best':''}" data-buy="${esc(p.id)}"><b>${p.plan==='yearly'?'Yearly':'Monthly'}</b><span>${esc(planText(p))}</span></button>`).join('')
+    :PWAIT?'<div class="big-btn off">LOADING PRICES…</div>':'<div class="pmsg">Can\'t reach the App Store right now. Check your connection and try again.</div><button class="big-btn o" data-pcmd="retry">TRY AGAIN</button>';
+  return `<h2 class="t">smAisle Daily Plus</h2>${intro?'<div class="fm">FOUNDING MEMBER PRICE · THROUGH JAN 31</div>':''}<p>${intro?'Join early and be a Founding Member. These prices are for new members who join by January 31.':'Support smAisle and get more every day.'}</p>${PERK()}${btns}${PMSG?`<div class="pmsg">${esc(PMSG)}</div>`:''}
+  <button class="linkbtn" data-pcmd="restore">Restore Purchases</button>
+  <div class="legal">Plus renews automatically at the regular price until you cancel. Cancel any time in Settings › your name › Subscriptions, at least 24 hours before it renews. Payment is charged to your Apple Account. <a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/">Terms of Use</a> · <a href="https://smaisle.app/privacy.html">Privacy Policy</a></div>`}
+function toNative(m){try{webkit.messageHandlers.dg.postMessage(m)}catch(e){}}
+// Ask the app for the plans and prices. If none come back in 8 seconds (offline, App Store down), offer Try again.
+function plusShown(){return sheet.classList.contains('on')&&body.querySelector('[data-pcmd]')}
+function askPrices(){PWAIT=true;toNative({cmd:'ready'});clearTimeout(PT);PT=setTimeout(()=>{PWAIT=false;if(!PLANS.length&&plusShown())body.innerHTML=plusSheet()},8000)}
+window.dgNative=(cmd,d)=>{if(cmd!=='store'||!window.DG_APP)return;d=d||{};DG_APP.plus=!!d.plus;PLANS=d.plans||PLANS;PLAN=d.plan||'';PMSG=d.msg||'';
+  render();if(sheet.classList.contains('on')&&body.querySelector('[data-pcmd]'))body.innerHTML=plusSheet()};
+document.addEventListener('click',e=>{const b=e.target.closest('[data-buy]');if(b){PMSG='';toNative({cmd:'buy',id:b.dataset.buy});return}
+  const c=e.target.closest('[data-pcmd]');if(c){PMSG='';if(c.dataset.pcmd==='retry'){askPrices();body.innerHTML=plusSheet();return}toNative({cmd:c.dataset.pcmd})}});
+if(window.SMD_APP)askPrices();
+const SHEETS={
+  archive:()=>{let rows='';for(let i=1;i<=14;i++){const d=dayAt(i),l=H[d]||[];
+      rows+=`<div class="li">${fmtDay(d)}<span class="dots">${DAILY.map(g=>`<i class="${l.indexOf(g.id)>=0?'on':''}" title="${esc(g.name)}"><img src="${g.icon}" alt=""></i>`).join('')}</span></div>`}
+    return `<h2 class="t">Archive</h2><p>Which daily games you finished on each day. To play an earlier day, open the game and tap Archive in its menu.${DAILY.some(g=>!g.archive)?' '+DAILY.filter(g=>!g.archive).map(g=>esc(g.name)).join(' and ')+' has no Archive yet.':''}</p>
+    <div class="list">${rows}</div><h3>OPEN A GAME'S ARCHIVE</h3>${DAILY.filter(g=>g.archive).map(g=>`<a class="big-btn o" href="${g.url}" data-tap="${g.id}-arch"${TGT}>${esc(g.name)}</a>`).join('')}`},
+  stats:()=>{const st=streaks(H),days=Object.keys(H),per=id=>days.filter(d=>H[d].indexOf(id)>=0).length,all=days.filter(d=>H[d].length>=N).length;
+    return `<h2 class="t">Stats</h2>${founder()?'<div class="fm">★ FOUNDING MEMBER</div>':''}<p>One streak across all your daily games. A day counts when you finish at least one of them.${member()?' With Plus, one missed day a week won\'t break your streak.':''}</p>
+    <div class="stats"><div><b>${st.cur}</b><span>STREAK</span></div><div><b>${st.best}</b><span>BEST STREAK</span></div><div><b>${st.total}</b><span>DAYS PLAYED</span></div></div>
+    <h3>BY GAME</h3><div class="list">${DAILY.map(g=>`<div class="li">${esc(g.name)}<em>${per(g.id)} ${per(g.id)===1?'day':'days'} finished</em></div>`).join('')}<div class="li">All ${N} in one day<em>${all} ${all===1?'day':'days'}</em></div></div>
+    <div class="small">Each game has its own detailed stats in its menu. Counted on this device only.</div>`},
+  plus:()=>{if(window.SMD_APP&&!PLANS.length&&!PWAIT)askPrices();return plusSheet()},
+  help:()=>`<h2 class="t">How to Play</h2><p><b>Today's Games</b> are the daily ones. Each has a new game every day at midnight, the same for everyone. Tap one to play it.</p><p><b>Done checks</b> fill in by themselves when you finish a game on this device.</p><p><b>Your streak</b> grows each day you finish at least one daily game. With Plus, one missed day a week won't break it. The bars at the top fill as you finish all ${N}. The time beside them counts down to the next games.</p><p><b>More games</b>, below Today's Games, are always-on games you can play any time.</p><p><b>Archive and Stats</b> at the bottom of the screen cover every daily game.</p><div class="small" style="margin-top:18px">${VER}</div>`,
+  settings:()=>`<h2 class="t">Settings</h2><p>These apply to every daily game.</p><div style="font:800 14px 'Libre Franklin';margin-top:10px">Sound</div><div class="mode" id="sndRow">${[['on','On'],['off','Off']].map(([k,l])=>`<button data-snd="${k}" class="${(function(){try{return localStorage.getItem('smaisle-sound')||'on'}catch(e){return 'on'}})()===k?'on':''}">${l}</button>`).join('')}</div><div style="font:800 14px 'Libre Franklin';margin-top:10px">Dark mode</div><div class="mode" id="modeRow">${[['off','Off'],['on','On'],['auto','Match phone']].map(([k,l])=>`<button data-mode="${k}" class="${smMode()===k?'on':''}">${l}</button>`).join('')}</div><div class="small" style="text-align:left">On uses Navy. Match phone switches with your phone.</div><div class="small" style="margin-top:18px">${VER}</div>`
+};
+document.addEventListener('click',e=>{
+  const sn=e.target.closest('#sndRow [data-snd]');if(sn){try{localStorage.setItem('smaisle-sound',sn.dataset.snd)}catch(_){}document.querySelectorAll('#sndRow button').forEach(x=>x.classList.toggle('on',x===sn));tap('sound-'+sn.dataset.snd);return}
+  const md=e.target.closest('#modeRow [data-mode]');if(md){smMode(md.dataset.mode);document.querySelectorAll('#modeRow button').forEach(x=>x.classList.toggle('on',x===md));tap('mode-'+md.dataset.mode);return}
+  const a=e.target.closest('[data-tap]');if(a){tap(a.dataset.tap);return}
+  const g=e.target.closest('[data-g]');if(g)return openGame(g.dataset.g);
+  if(e.target.closest('#openPlus'))return $('pshelf').classList.add('on');
+  if(e.target.closest('#closePlus'))return $('pshelf').classList.remove('on');
+  if(e.target.closest('#getPlus')){$('pshelf').classList.remove('on');return open(SHEETS.plus())}
+  if(e.target.closest('#openShelf'))return $('shelf').classList.add('on');
+  if(e.target.closest('#closeShelf'))return $('shelf').classList.remove('on');
+  const s=e.target.closest('[data-sheet]');if(s)open(SHEETS[s.dataset.sheet]());
+});
+// Coming back to this tab from a game: refresh the Done checks.
+// (Only when the page comes back from the browser's cache: on a fresh load, #plus has just opened the Plus screen.)
+addEventListener('pageshow',e=>{if(e.persisted)close();render()});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)render()});
+
+/* ---------- No zoom on phones: no double-tap or pinch zoom ---------- */
+let lastT=0;document.addEventListener('touchend',e=>{const n=Date.now();if(n-lastT<350&&!e.target.closest('a'))e.preventDefault();lastT=n},{passive:false});
+['gesturestart','gesturechange'].forEach(t=>document.addEventListener(t,e=>e.preventDefault()));
+document.addEventListener('touchmove',e=>{if(e.touches&&e.touches.length>1)e.preventDefault()},{passive:false});
+
+/* ---------- Usage check-in (anonymous, website copy only) -> Firestore smd_devices ---------- */
+const FB_KEY='AIzaSyAlbSCTpAiK-1tojkyWrY3QuJsSzILHSfs',FB_PROJ='aislerun-88e79';
+function devId(){let id=store.get('smd-dev','');if(!id){id=Array.from(crypto.getRandomValues(new Uint8Array(12)),b=>'abcdefghijklmnopqrstuvwxyz0123456789'[b%36]).join('');store.set('smd-dev',id)}return id}
+function trim(m){const k=Object.keys(m).sort();while(k.length>60)delete m[k.shift()];return m}
+// kind: 'open', or a tap on a game ('d15', 'sb-app', 'abc-arch'...). Opens and daily games done are kept per day.
+function checkIn(kind){return;
+  const day=dayAt(0),u=store.json('smd-usage',{first:day,days:0,opens:0,taps:0,o:{},p:{},x:{}});
+  if(u.o[day]==null){u.days++;u.o[day]=0}
+  if(kind==='open'){u.opens++;u.o[day]++}else{u.taps++;u.x[kind]=(u.x[kind]||0)+1}
+  u.p[day]=Math.max(u.p[day]||0,(H[day]||[]).length);trim(u.o);trim(u.p);
+  store.put('smd-usage',u);
+  if(!SITE)return;
+  const I=n=>({integerValue:String(Math.round(n)||0)}),T=v=>({stringValue:String(v)}),M=m=>({mapValue:{fields:Object.fromEntries(Object.entries(m).map(([k,v])=>[k.replace(/[^A-Za-z0-9_-]/g,'_'),I(v)]))}});
+  const st=streaks(H);
+  const body={fields:{first:T(u.first),last:T(day),days:I(u.days),v:T(VERSION),opens:I(u.opens),taps:I(u.taps),streak:I(st.cur),best:I(st.best),played:I(st.total),
+    desk:{booleanValue:innerWidth>=820},t:I(Date.now()),o:M(u.o),p:M(u.p),x:M(u.x)}};
+  try{fetch(`https://firestore.googleapis.com/v1/projects/${FB_PROJ}/databases/(default)/documents/smd_devices/${devId()}?key=${FB_KEY}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),keepalive:true}).catch(()=>{})}catch(e){}
+}
+function tap(k){checkIn(k)}
+
+if(!store.get('smd-hello','')&&!store.get('smaisle_done','')){$('hello').hidden=false;$('helloGo').onclick=()=>{$('hello').hidden=true;store.set('smd-hello','1')}}
+render();tick();setInterval(tick,30000);checkIn('open');
+// #plus (from a Plus game preview's "Get smAisle Daily Plus") opens the Plus screen.
+function hashPlus(){if(location.hash==='#plus'){open(SHEETS.plus());history.replaceState(null,'',location.pathname+location.search)}}hashPlus();addEventListener('hashchange',hashPlus);
+document.querySelectorAll('#pjump button').forEach(b=>{b.onclick=()=>{const off=b.classList.contains('on'),p=$('pscroll'),s=$('pc-'+b.dataset.c);document.querySelectorAll('#pjump button').forEach(x=>x.classList.toggle('on',x===b&&!off));document.querySelectorAll('.pcat').forEach(c=>c.classList.toggle('dim',!off&&c!==s));p.scrollTop=off?0:s.getBoundingClientRect().top-p.getBoundingClientRect().top+p.scrollTop-6}});
+</script></body></html>
