@@ -156,9 +156,9 @@ button,a{font:inherit;color:inherit;background:none;border:0;cursor:pointer;touc
 <div class="scrim" id="scrim"></div>
 <div id="hello" hidden><div class="hc"><span class="tg">smAisle</span><h2>Say it like &ldquo;smile.&rdquo;</h2><p>My family and I created these games together, and we&rsquo;re so excited to share them with you.</p><p>We hope to bring a <span class="tg intg">smAisle</span> to your day.</p><button id="helloGo">Let&rsquo;s play</button></div></div>
 <div class="sheet" id="sheet"><div class="grab"></div><div id="sheetBody"></div></div>
-<script src="games.js?v=1.52"></script>
+<script src="games.js?v=1.53"></script>
 <script>
-const VERSION='1.52',VDATE='Nov 6',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
+const VERSION='1.53',VDATE='Nov 6',VER=`smAisle Daily v${VERSION} · ${VDATE}`;
 const $=id=>document.getElementById(id);
 const SM=window.SMAISLE,GAMES=SM.games,DAILY=GAMES.filter(g=>g.daily&&!g.plus),PLUSG=GAMES.filter(g=>g.plus).sort((a,b)=>a.name.localeCompare(b.name)),N=DAILY.length;
 // On smaisle.app (or smaisle.github.io) games open in this tab (and share its storage). Anywhere else (the Claude link) they open in a new tab.
@@ -209,8 +209,10 @@ function render(){
   const sv=st.cur&&st.saved.indexOf(dayAt(1))>=0;$('saved').hidden=!sv;if(sv)$('saved').textContent='🛡 Plus saved your streak';
   $('prog').innerHTML=DAILY.map((g,i)=>`<span class="${i<n?'on':''}"></span>`).join('');
   $('played').textContent=`${n} of ${N} done`;
-  $('daily').innerHTML=DAILY.map(g=>{const d=done.indexOf(g.id)>=0,s=!d&&SM.isStarted(g.id,today);
-    return `<button class="r" data-g="${g.id}">${pic(g)}<div class="tx"><div class="n">${esc(g.name)}</div><div class="s">${esc(g.sub)}</div></div><span class="b ${d?'done':s?'go':''}">${d?'✓ DONE':s?'KEEP GOING':'PLAY'}</span></button>`}).join('');
+  $('daily').innerHTML=DAILY.map(g=>{let d=done.indexOf(g.id)>=0,s=!d&&SM.isStarted(g.id,today),half=false;
+    // A, B, C, Deal: someone who can play both modes (website, or Plus in the app) sees 1 OF 2 until both are done. The day still counts after one.
+    if(d&&SM.modes&&member()){const m=SM.modes(g.id,today);if(m&&m.filter(Boolean).length===1)half=true}
+    return `<button class="r" data-g="${g.id}">${pic(g)}<div class="tx"><div class="n">${esc(g.name)}</div><div class="s">${esc(g.sub)}</div></div><span class="b ${half?'go':d?'done':s?'go':''}">${half?'1 OF 2':d?'✓ DONE':s?'KEEP GOING':'PLAY'}</span></button>`}).join('');
   const owned=member();  // the website plays the Plus games in full for now; the app gates them
   $('pmini').innerHTML=PLUSG.map(g=>`<img src="${g.icon}" alt="">`).join('');
   // A real Plus member (app only: website visitors aren't members) sees their games; everyone else sees the invitation.

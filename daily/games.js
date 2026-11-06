@@ -87,6 +87,15 @@
       if(s&&(s.indexOf(id)>=0||(ALSO[id]&&s.indexOf(ALSO[id])>=0))) return true;
       try{ return OWN[id]?OWN[id](day):false; }catch(e){ return false; }
     },
+    // A, B, C, Deal's two modes, each finished or not: [Classic, Deal 'Em]. The home screen shows "1 OF 2" when a player who can play both has done one (Jeff, Nov 6).
+    modes:function(id,day){
+      if(id!=='abc') return null; day=day||dayKey(); var s=shared()[day]||[];
+      return ['abc-','abch-'].map(function(p,i){
+        if(s.indexOf(i?'abch':'abc')>=0) return true;
+        try{ var h=json(p+'hist'); if(h&&h[day]&&String(h[day].r||'').length>=5) return true;
+        var k=json(p+'day8'); return !!k&&k.date===day&&(k.hands||[]).filter(function(x){return x&&x.done;}).length>=5; }catch(e){ return false; }
+      });
+    },
     isStarted:function(id,day){ day=day||dayKey(); try{ return STARTED[id]?STARTED[id](day):false; }catch(e){ return false; } },
     markDone:function(id,day){
       day=day||dayKey(); var s=shared(); s[day]=s[day]||[];
