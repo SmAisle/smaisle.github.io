@@ -19,8 +19,11 @@
     {id:'tk',name:'TRACKulate',daily:true,icon:ICONS+'trackulate.png',sub:'Route the train. Hit the exact count.',tag:'Daily number game',
      desc:'Pick a route through the stops, picking up and dropping off passengers. The crossing only opens for the exact count, and you get three trains.',url:BASE+'Trackulate/'},
     // Plus games: daily games for smAisle Daily Plus members. Everyone can play a free preview (?preview=1).
+    // SoliTERMS: website Plus section only for now (Jeff, Nov 7); held back from the app in ios/prepare.py.
+    {id:'stm',cat:'word',name:'SoliTERMS',daily:true,plus:true,archive:true,icon:ICONS+'soliterms.png',sub:'Solitaire with words. Clear the table.',tag:'Plus daily game',
+     desc:'Seven piles of letter cards, one deal a day, the same for everyone. Spell 4 to 8 letter words from the top cards and the draw pile to clear all seven piles.',url:BASE+'soliterms/'},
     {id:'ld',cat:'word',name:'Ledder',daily:true,plus:true,icon:ICONS+'ledder.png',sub:'Climb the letters. Earn 3 stars.',tag:'Plus daily game',
-     desc:'Spell words through seven rows of letters. Each word starts where the last one ended, and reaching the top or bottom sets you free.',url:BASE+'Ledder/word/'},
+     desc:'Spell words through eight rows of letters. Each word starts where the last one ended, and reaching the top or bottom sets you free.',url:BASE+'Ledder/word/'},
     {id:'tr',cat:'num',name:'CalcRU-Late',daily:true,plus:true,icon:ICONS+'calcrulate.png',sub:'Set the lever. Arrive on the dot.',tag:'Plus daily game',
      desc:'Five trains a day. Work out the speed or the time you leave, set the lever, and arrive exactly on time.',url:BASE+'Trackulate/timegame/'},
     {id:'mm',cat:'num',name:'GeoCARphy',daily:true,plus:true,archive:true,icon:ICONS+'geocarphy.png',sub:'One road trip a day. Know your map.',tag:'Plus daily game',
